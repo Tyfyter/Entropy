@@ -1,0 +1,165 @@
+using System;
+using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace Entropy.Items
+{
+	public class Trinity1 : EntModItem
+	{
+		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
+		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
+		float[][] dmgratios = new float[][]{new float[15] {0.88f,0.06f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f},new float[15] {0.06f,0.88f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f},new float[15] {0.06f,0.06f,0.88f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}};
+		int mode = 1;
+		int time = 0;
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Trinity (Blade)");
+			Tooltip.SetDefault("");
+		}
+		public override void SetDefaults() {
+			item.damage = mode==0?60:50;
+			item.melee = true;
+			item.width = 40;
+			item.height = 40;
+			item.useTime = mode==2?15:mode==0?17:20;
+			item.useAnimation = mode==2?15:mode==0?17:20;
+			item.useStyle = 1;
+			item.knockBack = mode==1?12:6;
+			item.value = 10000;
+			item.rare = 2;
+			item.UseSound = SoundID.Item1;
+			item.autoReuse = true;
+			item.useTurn = true;
+			dmgratio = dmgratiobase = dmgratios[mode];
+			critDMG = mode==2?4:2;
+			statchance = 25;
+		}
+		public override Vector2? HoldoutOffset(){
+			return new Vector2(4,4);
+		}
+
+		public override void HoldItem(Player player){
+			SetDefaults();
+			if(time>0)time--;
+			for(int i = 0; i < modsobsolete.Length; i++){
+				/*Entropy.*/ModEffectobsolete(modsobsolete[i], modlevelsobsolete[i]);
+			}
+		}
+		public override bool CanRightClick(){
+			if(time>0){
+				time = 7;
+				return false;
+			}
+			time = 7;
+			mode = ++mode%3;
+			item.type = mod.ItemType("Trinity"+(mode+1));
+			dmgratio = dmgratiobase = dmgratios[mode];
+			return false;
+		}
+		public override bool AltFunctionUse(Player player){
+			if(time>0){
+				time = 7;
+				return false;
+			}
+			time = 7;
+			mode = ++mode%3;
+			item.type = mod.ItemType("Trinity"+(mode+1));
+			dmgratio = dmgratiobase = dmgratios[mode];
+			return false;
+		}
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.DirtBlock, 10);
+			recipe.AddTile(TileID.WorkBenches);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
+	}
+	public class Trinity2 : EntModItem
+	{
+		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
+		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Trinity (Hammer)");
+			Tooltip.SetDefault("");
+		}
+		public override void SetDefaults() {
+			/*item.type = mod.ItemType("Trinity1");
+			item.SetDefaults(item.type);*/
+			item.damage = 50;
+			item.melee = true;
+			item.width = 40;
+			item.height = 40;
+			item.useTime = 20;
+			item.useAnimation = 20;
+			item.useStyle = 1;
+			item.knockBack = 6;
+			item.value = 10000;
+			item.rare = 2;
+			item.UseSound = SoundID.Item1;
+			item.autoReuse = true;
+			dmgratio = dmgratiobase = new float[15] {0.06f,0.88f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
+			critDMG = 2;
+			statchance = 15;
+		}
+
+		public override void HoldItem(Player player){
+			SetDefaults();
+			for(int i = 0; i < modsobsolete.Length; i++){
+				/*Entropy.*/ModEffectobsolete(modsobsolete[i], modlevelsobsolete[i]);
+			}
+		}
+		public override bool CanRightClick(){
+			item.type = mod.ItemType<Trinity3>();
+			return false;
+		}
+	}
+	public class Trinity3 : EntModItem
+	{
+		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
+		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
+		public override void SetStaticDefaults()
+		{
+			DisplayName.SetDefault("Trinity (Scythe)");
+			Tooltip.SetDefault("");
+			Item.staff[item.type] = true;
+		}
+		public override void SetDefaults() {
+			/*item.type = mod.ItemType("Trinity1");
+			item.SetDefaults(item.type);*/
+			item.damage = 50;
+			item.melee = true;
+			item.width = 40;
+			item.height = 40;
+			item.useTime = 20;
+			item.useAnimation = 20;
+			item.useStyle = 1;
+			item.knockBack = 6;
+			item.value = 10000;
+			item.rare = 2;
+			item.UseSound = SoundID.Item1;
+			item.autoReuse = true;
+			dmgratio = dmgratiobase = new float[15] {0.06f,0.06f,0.88f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
+			critDMG = 2;
+			statchance = 15;
+		}
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.DirtBlock, 10);
+			recipe.AddTile(TileID.WorkBenches);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
+		public override bool CanRightClick(){
+			item.type = mod.ItemType<Trinity1>();
+			return false;
+		}
+	}
+}

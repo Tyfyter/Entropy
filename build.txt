@@ -1,0 +1,11 @@
+author = Tyfyter
+
+version = 0.1
+
+displayName = Entropy
+
+homepage = https://sites.google.com/view/tyfyterpoorlymoddingterraria/home
+includeSource = true
+hideCode = false
+hideResources = false
+languageVersion = 6
