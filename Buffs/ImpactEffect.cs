@@ -14,12 +14,14 @@ namespace Entropy.Buffs {
         }
         public override void Update(NPC npc){
             npc.knockBackResist = 0.05f;
-            if(npc.boss||npc.collideX||npc.collideY||npc.noTileCollide||npc.wet||npc.noGravity)base.Update(npc);
+            if(npc.boss||npc.collideX||npc.collideY||npc.noTileCollide||npc.wet||npc.noGravity){
+                base.Update(npc);
+            }
             if(!isActive&&kb){
                 npc.knockBackResist = kbr;
             }
         }
-        public override bool PreUpdate(NPC npc){
+        public override bool PreUpdate(NPC npc, bool canceled){
             return false;
         }
     }

@@ -6,7 +6,7 @@ using Terraria.ID;
 namespace Entropy {
     public class DmgCalcs {
         //{0:"Slash", 1:"Impact", 2:"Puncture", 3:"Cold", 4:"Electric", 5:"Heat", 6:"Toxic", 7:"Blast", 8:"Corrosive", 9:"Gas", 10:"Magnetic", 11:"Radiation", 12:"Viral", 13:"True", 14:"Void"}
-        public static Func<float,NPC,float>[] dmgFuncs = new Func<float,NPC,float>[]{Slash,Impact,Puncture,Cold,Electric,Heat,Toxic,Blast,Corrosive,Gas,Magnetic,Radiation,Viral,True,Void};
+        public static readonly Func<float,NPC,float>[] dmgFuncs = new Func<float,NPC,float>[]{Slash,Impact,Puncture,Cold,Electric,Heat,Toxic,Blast,Corrosive,Gas,Magnetic,Radiation,Viral,True,Void};
         public static float Slash(float dmg, NPC target){
             if(Main.rand.NextDouble()<target.GetGlobalNPC<EntropyGlobalNPC>().dmgDodge[0])return 0;
             return (dmg*target.GetGlobalNPC<EntropyGlobalNPC>().dmgResist[0])*(target.HasBuff(BuffID.Stoned)?0.85f:1);

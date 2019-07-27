@@ -8,6 +8,7 @@ using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Microsoft.Xna.Framework.Graphics;
+using Entropy.Items;
 
 namespace Entropy {
     public class EntropyPlayer : ModPlayer {
@@ -16,17 +17,30 @@ namespace Entropy {
 		public int combocountertime = 0;
 
         public float QTeff = 1;
-
+        public int lastmoddeditem = 0;
         public override bool Autoload(ref string name) {
             return true;
         }
-        public float comboget(){
-            return Math.Max(comboadd(0, 0), 0);
+        static float comboMult(float cc, float ch, float cd){
+            return (float)(Math.Max((Math.Floor(Math.Log(cc/ch, 3))*cd)+cd, 0)+1);
         }
-        public float comboadd(int amount = 1, int duration = 180){
+        public float comboget(float ch, float cd){
+            return comboMult(combocounter, ch, cd);
+        }
+        public float comboget(){
+            EntModItem emi = player.HeldItem.modItem as EntModItem;
+            float ch = 5;
+            float cd = 0.5f;
+            if(emi!=null){
+                ch = emi.combohits;
+                cd = emi.comboDMG;
+            }
+            return comboMult(combocounter, ch, cd);
+        }
+        public float comboadd(int amount = 1, int duration = 180, float ch = 5, float cd = 0.5f){
             combocounter+=amount;
             combocountertime = Math.Max(combocountertime, duration);
-            return (float)(Math.Floor(Math.Max((Math.Log(combocounter/5, 3)/2)+0.5f, 0)*2)/2)+1;//Math.Floor(Math.Max(Math.Log(combocounter/5,3)*2, 0))/2
+            return comboget(ch, cd);//(float)(Math.Floor(Math.Max((Math.Log(combocounter/5, 3)/2)+0.5f, 0)*2)/2)+1;//Math.Floor(Math.Max(Math.Log(combocounter/5,3)*2, 0))/2
         }
 
         public override void ResetEffects()
@@ -51,6 +65,9 @@ namespace Entropy {
                 }
             }
             return true;
+        }
+        public static explicit operator EntropyPlayer(Player player){
+            return player.GetModPlayer<EntropyPlayer>();
         }
 		
         /*public override TagCompound Save()

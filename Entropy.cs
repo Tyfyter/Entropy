@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using Entropy.Buffs;
 using Entropy.Items;
 using Entropy.NPCs;
+using Entropy.Projectiles;
+using Entropy.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace Entropy
 {
@@ -23,20 +26,42 @@ namespace Entropy
             }
         }*/
         public static Entropy mod;
+		internal UserInterface UI;
+		public ModItemsUI modItemUI;
         public override void PostDrawInterface(SpriteBatch spriteBatch){
             Player player = Main.player[Main.myPlayer];
 			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>(mod);
-            if(player.HeldItem.modItem == null){
+            /* if(player.HeldItem.modItem == null){
                 return;
-            }else if(player.HeldItem.modItem.mod!=mod){
+            }else  */if(player.HeldItem.modItem?.mod!=mod){
                 return;
-            }else if(((EntModItem)player.HeldItem.modItem).IsMod){
+            }else if(((EntModItemBase)player.HeldItem.modItem).IsMod){
 				return;
 			}else if(Main.playerInventory){
 				return;
 			}
-			if(modPlayer.combocounter!=0)Utils.DrawBorderStringFourWay(spriteBatch, Main.fontCombatText[1], (modPlayer.comboget() > 0 ? modPlayer.comboget()+"/"+(float)modPlayer.combocounter : (modPlayer.combocounter+"")), Main.screenWidth*0.90f, Main.screenHeight*0.85f, Color.White, Color.Black, new Vector2(0.3f), 1);
+			if(modPlayer.combocounter!=0)Utils.DrawBorderStringFourWay(spriteBatch, Main.fontCombatText[1], (modPlayer.comboget() > 1 ? modPlayer.comboget()+"/"+(float)modPlayer.combocounter : (modPlayer.combocounter+"")), Main.screenWidth*0.90f, Main.screenHeight*0.85f, Color.White, Color.Black, new Vector2(0.3f), 1);
         }
+        public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers) {
+			int inventoryIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
+			if (inventoryIndex != -1) {
+				layers.Insert(inventoryIndex + 1, new LegacyGameInterfaceLayer(
+					"Entropy: ModUI",
+					delegate {
+						// If the current UIState of the UserInterface is null, nothing will draw. We don't need to track a separate .visible value.
+						UI.Draw(Main.spriteBatch, new GameTime());
+						return true;
+					},
+					InterfaceScaleType.UI)
+				);
+			}
+		}
+		public override void UpdateUI(GameTime gameTime) {
+            if(mod.UI.CurrentState!=null&&!Main.playerInventory){
+				UI.SetState(null);
+			}
+			//UI?.Update(gameTime);
+		}
 		public static string[] dmgtypes = new string[15] {"Slash", "Impact", "Puncture", "Cold", "Electric", "Heat", "Toxic", "Blast", "Corrosive", "Gas", "Magnetic", "Radiation", "Viral", "True", "Void"};
 
         public static float[] GetDmgRatio(int dmg, float[] ratioarr, bool outputtext = false)
@@ -61,10 +86,49 @@ namespace Entropy
                 AutoloadGores = true,
                 AutoloadSounds = true
             };
+			if (!Main.dedServ){
+				UI = new UserInterface();
+			}
+        }
+        public static short SetStaticDefaultsGlowMask(ModItem modItem, string suffix = "_Glow")
+        {
+            if (!Main.dedServ)
+            {
+                Texture2D[] glowMasks = new Texture2D[Main.glowMaskTexture.Length + 1];
+                for (int i = 0; i < Main.glowMaskTexture.Length; i++)
+                {
+                    glowMasks[i] = Main.glowMaskTexture[i];
+                }
+                glowMasks[glowMasks.Length - 1] = mod.GetTexture("Items/" + modItem.GetType().Name + suffix);
+                Main.glowMaskTexture = glowMasks;
+                return (short)(glowMasks.Length - 1);
+            }
+            else return 0;
         }
         public static void Proc(EntModItem item, NPC target, int damage){
 			if(item.statchance >= Main.rand.NextFloat(0, 100)){
 				int stattype = Entropy.StatTypeCalc(item.dmgratio);
+				/*if(stattype == 0){
+					target.AddBuff(mod.BuffType("SlashProc"), 600);
+				}else if(stattype == 1){
+					target.AddBuff(mod.BuffType("SlashProc"), 600);
+				}else if(stattype == 2){
+					target.AddBuff(mod.BuffType("SlashProc"), 600);
+				}else{*/
+				//if(Entropy.dmgtypes[stattype] == "Slash" && !target.HasBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc")))target.AddBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc"), 1);
+				//Main.NewText(Entropy.dmgtypes[stattype]+"Proc");
+				//target.AddBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc"), (int)(item.item.damage*0.35));
+                BuffBase buff = BuffBase.GetFromIndex(target, stattype, damage);
+                EntropyGlobalNPC.AddBuff(buff);
+                //Main.NewText(buff);
+				Dust.NewDust(target.Center - new Vector2(0,target.height/2),0,0,mod.DustType(Entropy.dmgtypes[stattype]+"ProcDust"));
+				//}
+
+			}
+        }
+        public static void Proc(EntModProjectile proj, NPC target, int damage){
+			if(proj.statchance >= Main.rand.NextFloat(0, 100)){
+				int stattype = Entropy.StatTypeCalc(proj.dmgratio);
 				/*if(stattype == 0){
 					target.AddBuff(mod.BuffType("SlashProc"), 600);
 				}else if(stattype == 1){
@@ -195,11 +259,23 @@ namespace Entropy
             foreach (BuffBase item in npc.GetGlobalNPC<EntropyGlobalNPC>().Buffs)if(item is T)return true;
             return false;
         }
+        public static int CountBuff<T>(this NPC npc) where T : BuffBase{
+            int o = 0;
+            foreach (BuffBase item in npc.GetGlobalNPC<EntropyGlobalNPC>().Buffs)if(item is T)o++;
+            return o;
+        }
         public static Vector2 constrain(Vector2 i, Vector2 low, Vector2 high){
             //Main.NewText(high+">"+i+">"+low);
             float x = i.X<low.X?low.X:(i.X>high.X?high.X:i.X);
             float y = i.Y<low.Y?low.Y:(i.Y>high.Y?high.Y:i.Y);
             return new Vector2(x, y);
+        }
+        public static Vector2 getHandPos(this Player player){
+            if(((!(player.velocity.Y > 0))&&!(player.wingTime!=player.wingTimeMax)) || player.sliding){
+                return (player.direction==1?player.Left:player.Right)+new Vector2(0,8);
+            }else{
+                return (player.direction==1?player.TopLeft:player.TopRight)+new Vector2(0,8);
+            }
         }
     }
 }

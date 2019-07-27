@@ -11,7 +11,7 @@ namespace Entropy.Items
 		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
 		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
 		float[][] dmgratios = new float[][]{new float[15] {0.88f,0.06f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f},new float[15] {0.06f,0.88f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f},new float[15] {0.06f,0.06f,0.88f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}};
-		int mode = 1;
+		int mode = 0;
 		int time = 0;
 		public override void SetStaticDefaults()
 		{
@@ -19,7 +19,7 @@ namespace Entropy.Items
 			Tooltip.SetDefault("");
 		}
 		public override void SetDefaults() {
-			item.damage = mode==0?60:50;
+			item.damage = realdmg = dmgbase = mode==0?60:50;
 			item.melee = true;
 			item.width = 40;
 			item.height = 40;
@@ -33,21 +33,32 @@ namespace Entropy.Items
 			item.autoReuse = true;
 			item.useTurn = true;
 			dmgratio = dmgratiobase = dmgratios[mode];
-			critDMG = mode==2?4:2;
-			statchance = 25;
+			critDMG = baseCD = mode==2?2.5f:2;
+			comboDMG = mode==1?0.75f:0.5f;
+			combohits = mode==0?4:5;
+			statchance = basestat = 25;
 		}
 		public override Vector2? HoldoutOffset(){
 			return new Vector2(4,4);
 		}
 
-		public override void HoldItem(Player player){
-			SetDefaults();
-			if(time>0)time--;
+		/* void ME(){
 			for(int i = 0; i < modsobsolete.Length; i++){
-				/*Entropy.*/ModEffectobsolete(modsobsolete[i], modlevelsobsolete[i]);
+				/*Entropy.ModEffectobsolete(modsobsolete[i], modlevelsobsolete[i]);
 			}
+		} */
+
+		public override void HoldItem(Player player){
+			/* SetDefaults();
+			ME(); */
+			if(time>0)time--;
+			base.HoldItem(player);
+			/*
+			for(int i = 0; i < modsobsolete.Length; i++){
+				ModEffectobsolete(modsobsolete[i], modlevelsobsolete[i]);
+			}*/
 		}
-		public override bool CanRightClick(){
+		/* public override bool CanRightClick(){
 			if(time>0){
 				time = 7;
 				return false;
@@ -57,7 +68,7 @@ namespace Entropy.Items
 			item.type = mod.ItemType("Trinity"+(mode+1));
 			dmgratio = dmgratiobase = dmgratios[mode];
 			return false;
-		}
+		} */
 		public override bool AltFunctionUse(Player player){
 			if(time>0){
 				time = 7;
@@ -105,7 +116,7 @@ namespace Entropy.Items
 			item.autoReuse = true;
 			dmgratio = dmgratiobase = new float[15] {0.06f,0.88f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
 			critDMG = 2;
-			statchance = 15;
+			statchance = basestat = 25;
 		}
 
 		public override void HoldItem(Player player){
@@ -146,7 +157,7 @@ namespace Entropy.Items
 			item.autoReuse = true;
 			dmgratio = dmgratiobase = new float[15] {0.06f,0.06f,0.88f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
 			critDMG = 2;
-			statchance = 15;
+			statchance = basestat = 25;
 		}
 
 		public override void AddRecipes()

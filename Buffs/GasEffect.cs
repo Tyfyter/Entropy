@@ -15,8 +15,9 @@ namespace Entropy.Buffs {
                 Vector2 va = constrain(npc.Center, npc2.TopLeft, npc2.BottomRight);
                 Vector2 vb = constrain(npc2.Center, npc.TopLeft, npc.BottomRight);
                 if((va-vb).Length()>96)continue;
-                AddBuff(new ToxicEffect(npc, damage, duration));
+                AddBuff(new ToxicEffect(npc2, damage, duration));
             }
+            duration = 2;
         }
     }
 }

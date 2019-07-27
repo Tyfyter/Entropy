@@ -29,13 +29,13 @@ namespace Entropy.Items
             //Player owner = Main.player[item.owner];
 			//item.name = "Willbreaker";
 			//entmoditem = ((EntModItem)this);
-            item.damage = dmgbase = 40;
+            item.damage = realdmg = dmgbase = 40;
 			item.melee = true;
 			item.width = 40;
 			item.height = 40;
 			//item.toolTip = owner.meleeDamage+"\nBreak your enemy's will! (and bones) \n "+(int)(14*owner.meleeDamage)+" slash damage \n " +(int)(14*owner.meleeDamage)+ " impact damage \n " +(int)(2*owner.meleeDamage)+ " puncture damage";
             //item.toolTip2 = "" + Entropy.SlashCalcNPC((int)(14 * owner.meleeDamage)) + Entropy.ImpactCalcNPC((int)(14 * owner.meleeDamage)) + Entropy.PunctureCalcNPC((int)(2 * owner.meleeDamage));
-			item.crit = 15;
+			item.crit = 0;
             item.useTime = 20;
 			item.useAnimation = 20;
 			item.useStyle = 1;
@@ -47,17 +47,24 @@ namespace Entropy.Items
 			item.useTurn = true;
 			realcrit = basecrit = 15;
 			statchance = 100;
-			critDMG = 2;
+			critDMG = baseCD = 2;
 			dmgratio = dmgratiobase = new float[15] {0f,0f,0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
 			dmgratio[mode] = 1;
+		}
+		/*void ME(){
+			for(int i = 0; i < modsobsolete.Length; i++){
+				/*Entropy.ModEffectobsolete(modsobsolete[i], modlevelsobsolete[i]);
+			}
 		}
 
 		public override void HoldItem(Player player){
 			SetDefaults();
+			ME();
+			/*
 			for(int i = 0; i < modsobsolete.Length; i++){
-				/*Entropy.*/ModEffectobsolete(modsobsolete[i], modlevelsobsolete[i]);
-			}
-		}
+				ModEffectobsolete(modsobsolete[i], modlevelsobsolete[i]);
+			}*
+		}*/
 		
 		/*public void ModEffect(int modid, float level){
             switch (modid)
@@ -107,7 +114,7 @@ namespace Entropy.Items
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}
-		
+		/*/
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
 			//HoldItem(Main.player[item.owner]);
@@ -147,8 +154,8 @@ namespace Entropy.Items
                     tooltips.RemoveAt(i);
                     tooltips.Insert(i, tip);
                 }
-            }//*/
-        }
+            }//*
+        }*/
 
         /*public override void ModifyHitNPC(Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
         {

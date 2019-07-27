@@ -23,7 +23,7 @@ namespace Entropy.Buffs {
                 npc.knockBackResist = kbr;
             }
         }
-        public override bool PreUpdate(NPC npc){
+        public override bool PreUpdate(NPC npc, bool canceled){
             return false;
         }
     }

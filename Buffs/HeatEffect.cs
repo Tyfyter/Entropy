@@ -20,7 +20,7 @@ namespace Entropy.Buffs {
             }
             base.Update(npc);
         }
-        public override bool PreUpdate(NPC npc){
+        public override bool PreUpdate(NPC npc, bool canceled){
             return Main.rand.Next(0,10)!=0;
         }
     }
