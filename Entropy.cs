@@ -60,7 +60,7 @@ namespace Entropy
             if(mod.UI.CurrentState!=null&&!Main.playerInventory){
 				UI.SetState(null);
 			}
-			//UI?.Update(gameTime);
+			UI?.Update(gameTime);
 		}
 		public static string[] dmgtypes = new string[15] {"Slash", "Impact", "Puncture", "Cold", "Electric", "Heat", "Toxic", "Blast", "Corrosive", "Gas", "Magnetic", "Radiation", "Viral", "True", "Void"};
 
@@ -106,7 +106,11 @@ namespace Entropy
             else return 0;
         }
         public static void Proc(EntModItem item, NPC target, int damage){
-			if(item.statchance >= Main.rand.NextFloat(0, 100)){
+            int statloss = 0;
+            float basestat = item.realstat;
+            reproc:
+            float stat = statloss==0?basestat:(basestat-(100*statloss))/(statloss+1);
+			if(stat >= Main.rand.NextFloat(0, 100)){
 				int stattype = Entropy.StatTypeCalc(item.dmgratio);
 				/*if(stattype == 0){
 					target.AddBuff(mod.BuffType("SlashProc"), 600);
@@ -118,16 +122,24 @@ namespace Entropy
 				//if(Entropy.dmgtypes[stattype] == "Slash" && !target.HasBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc")))target.AddBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc"), 1);
 				//Main.NewText(Entropy.dmgtypes[stattype]+"Proc");
 				//target.AddBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc"), (int)(item.item.damage*0.35));
-                BuffBase buff = BuffBase.GetFromIndex(target, stattype, damage);
+                BuffBase buff = BuffBase.GetFromIndex(target, stattype, damage, Main.player[item.item.owner]);
                 EntropyGlobalNPC.AddBuff(buff);
                 //Main.NewText(buff);
-				Dust.NewDust(target.Center - new Vector2(0,target.height/2),0,0,mod.DustType(Entropy.dmgtypes[stattype]+"ProcDust"));
+				//Dust.NewDust(target.Center - new Vector2(0,target.height/2),0,0,mod.DustType(Entropy.dmgtypes[stattype]+"ProcDust"));
 				//}
 
 			}
+            if(item.reproc&&(stat-100)>0){
+                statloss++;
+                goto reproc;
+            }
         }
         public static void Proc(EntModProjectile proj, NPC target, int damage){
-			if(proj.statchance >= Main.rand.NextFloat(0, 100)){
+            int statloss = 0;
+            float basestat = proj.statchance;
+            reproc:
+            float stat = statloss==0?basestat:(basestat-(100*statloss))/(statloss+1);
+			if(stat >= Main.rand.NextFloat(0, 100)){
 				int stattype = Entropy.StatTypeCalc(proj.dmgratio);
 				/*if(stattype == 0){
 					target.AddBuff(mod.BuffType("SlashProc"), 600);
@@ -139,6 +151,31 @@ namespace Entropy
 				//if(Entropy.dmgtypes[stattype] == "Slash" && !target.HasBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc")))target.AddBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc"), 1);
 				//Main.NewText(Entropy.dmgtypes[stattype]+"Proc");
 				//target.AddBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc"), (int)(item.item.damage*0.35));
+                BuffBase buff = BuffBase.GetFromIndex(target, stattype, damage, Main.player[proj.projectile.owner]);
+                EntropyGlobalNPC.AddBuff(buff);
+                //Main.NewText(buff);
+				//Dust.NewDust(target.Center - new Vector2(0,target.height/2),0,0,mod.DustType(Entropy.dmgtypes[stattype]+"ProcDust"));
+				//}
+
+			}
+            if(proj.reproc&&(stat-100)>0){
+                statloss++;
+                goto reproc;
+            }
+        }
+        /* public static void Proc(EntModProjectile proj, NPC target, int damage){
+			if(proj.statchance >= Main.rand.NextFloat(0, 100)){
+				int stattype = Entropy.StatTypeCalc(proj.dmgratio);
+				/*if(stattype == 0){
+					target.AddBuff(mod.BuffType("SlashProc"), 600);
+				}else if(stattype == 1){
+					target.AddBuff(mod.BuffType("SlashProc"), 600);
+				}else if(stattype == 2){
+					target.AddBuff(mod.BuffType("SlashProc"), 600);
+				}else{
+				//if(Entropy.dmgtypes[stattype] == "Slash" && !target.HasBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc")))target.AddBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc"), 1);
+				//Main.NewText(Entropy.dmgtypes[stattype]+"Proc");
+				//target.AddBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc"), (int)(item.item.damage*0.35));
                 BuffBase buff = BuffBase.GetFromIndex(target, stattype, damage);
                 EntropyGlobalNPC.AddBuff(buff);
                 //Main.NewText(buff);
@@ -146,7 +183,7 @@ namespace Entropy
 				//}
 
 			}
-        }
+        } */
         public static int StatTypeCalc(float[] ratioarr){
             float totalweight = 0;
             float[] ratioarr2 = (float[])ratioarr.Clone();
@@ -276,6 +313,21 @@ namespace Entropy
             }else{
                 return (player.direction==1?player.TopLeft:player.TopRight)+new Vector2(0,8);
             }
+        }
+    }
+    public class TrueNullable<T> {
+        public T value;
+        public TrueNullable(T value){
+            this.value=value;
+        }
+        public static implicit operator T(TrueNullable<T> input){
+            return input.value;
+        }
+        public static implicit operator TrueNullable<T>(T input){
+            return new TrueNullable<T>(input);
+        }
+        public override string ToString(){
+            return value.ToString()+"?";
         }
     }
 }

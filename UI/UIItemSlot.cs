@@ -17,10 +17,12 @@ namespace Entropy.UI
 		internal Item Item;
 		private readonly int _context;
 		private readonly float _scale;
-		internal Func<Item, bool> ValidItemFunc;
-		public VanillaItemSlotWrapper(int context = ItemSlot.Context.BankItem, float scale = 1f, Item item = null) {
+		internal Func<Item, int, bool> ValidItemFunc;
+		public readonly int _index;
+		public VanillaItemSlotWrapper(int context = ItemSlot.Context.BankItem, float scale = 1f, Item item = null, int index = -1) {
 			_context = context;
 			_scale = scale;
+			_index = index;
 			if(item == null){
 				Item = new Item();
 				Item.SetDefaults(0);
@@ -41,7 +43,7 @@ namespace Entropy.UI
 
 			if (ContainsPoint(Main.MouseScreen) && !PlayerInput.IgnoreMouseInterface) {
 				Main.LocalPlayer.mouseInterface = true;
-				if (ValidItemFunc == null || ValidItemFunc(Main.mouseItem)) {
+				if (ValidItemFunc == null || ValidItemFunc(Main.mouseItem,_index)) {
 					// Handle handles all the click and hover actions based on the context.
 					ItemSlot.Handle(ref Item, _context);
 					try {
@@ -50,11 +52,9 @@ namespace Entropy.UI
 				}
 			}
 			// Draw draws the slot itself and Item. Depending on context, the color will change, as will drawing other things like stack counts.
-			if(spriteBatch!=null){
-				if(Item!=null){
-					ItemSlot.Draw(spriteBatch, ref Item, _context, rectangle.TopLeft());
-				}//else{Main.NewText("noitem");}
-			}//else{Main.NewText("nosprite");}
+			if(spriteBatch!=null&&Item!=null){
+				ItemSlot.Draw(spriteBatch, ref Item, _context, rectangle.TopLeft());
+			}
 			Main.inventoryScale = oldScale;
 		}
 	}

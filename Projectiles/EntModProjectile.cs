@@ -20,6 +20,10 @@ namespace Entropy.Projectiles
         public float[] dmgratiobase = new float[15] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 		public float[] dmgratio = new float[15] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
         public Item[] mods = new Item[8];
+		public int critcombo = 0;
+        public int wallPenProgress = 0;
+        public int wallPenMax => 8;
+        public virtual bool reproc => false;
         public virtual bool IsMod => false;
         public override bool CloneNewInstances => true;
         public override bool Autoload(ref string name){
@@ -38,6 +42,16 @@ namespace Entropy.Projectiles
         public void ModEffect(EntModItemMod Mod){
 
         }*/
+        public override bool OnTileCollide(Vector2 oldVelocity){
+            if(projectile.penetrate>0){
+                if(++wallPenProgress>=wallPenMax){
+                    projectile.penetrate--;
+                    wallPenProgress = 0;
+                }
+                projectile.velocity = oldVelocity;
+            }
+            return projectile.penetrate<0;
+        }
         public void ModEffectobsolete(int modid, float level){
             Player player = Main.player[projectile.owner];
             EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>(mod);
@@ -73,6 +87,7 @@ namespace Entropy.Projectiles
 				}
 				damage = (int)(damage * critDMG);
 			}
+            if(crit && critcombo!=0)modPlayer.comboadd(critcombo);
 			Entropy.Proc(this, target, damage);
         }
     }

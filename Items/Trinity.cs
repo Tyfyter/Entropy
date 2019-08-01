@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Entropy.Items
 {
@@ -10,7 +12,10 @@ namespace Entropy.Items
 	{
 		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
 		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
-		float[][] dmgratios = new float[][]{new float[15] {0.88f,0.06f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f},new float[15] {0.06f,0.88f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f},new float[15] {0.06f,0.06f,0.88f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}};
+		List<float>[] dmgratios = new List<float>[]{
+			new List<float>(new float[15] {0.88f,0.06f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}),
+			new List<float>(new float[15] {0.06f,0.88f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f}),
+			new List<float>(new float[15] {0.06f,0.06f,0.88f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f})};
 		int mode = 0;
 		int time = 0;
 		public override void SetStaticDefaults()
@@ -32,10 +37,10 @@ namespace Entropy.Items
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			item.useTurn = true;
-			dmgratio = dmgratiobase = dmgratios[mode];
-			critDMG = baseCD = mode==2?2.5f:2;
+			dmgratio = dmgratiobase = dmgratios[mode].ToArray();
+			critDMG = baseCD = mode==2?2f:1.5f;
 			comboDMG = mode==1?0.75f:0.5f;
-			combohits = mode==0?4:5;
+			combohits = mode==0?6:8;
 			statchance = basestat = 25;
 		}
 		public override Vector2? HoldoutOffset(){
@@ -77,17 +82,8 @@ namespace Entropy.Items
 			time = 7;
 			mode = ++mode%3;
 			item.type = mod.ItemType("Trinity"+(mode+1));
-			dmgratio = dmgratiobase = dmgratios[mode];
+			dmgratio = dmgratiobase = dmgratios[mode].ToArray();
 			return false;
-		}
-
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.DirtBlock, 10);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
 		}
 	}
 	public class Trinity2 : EntModItem
@@ -160,14 +156,6 @@ namespace Entropy.Items
 			statchance = basestat = 25;
 		}
 
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.DirtBlock, 10);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-		}
 		public override bool CanRightClick(){
 			item.type = mod.ItemType<Trinity1>();
 			return false;

@@ -26,8 +26,7 @@ namespace Entropy.Items
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Willbreaker");
-			Tooltip.SetDefault(@"Break your enemy's will! (and bones)
-			infoidk");
+			Tooltip.SetDefault("Break your enemy's will! (and bones)");
 		}
 		public override void SetDefaults()
 		{
@@ -52,7 +51,6 @@ namespace Entropy.Items
 			item.autoReuse = true;
 			item.useTurn = true;
 			dmgratio = dmgratiobase = new float[15] {0.47f,0.47f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
-			critDMG = baseCD = 2;
 			statchance = basestat = 15;
 			//item.shoot = mod.ProjectileType("FakeGrapple");
 		}
@@ -98,18 +96,6 @@ namespace Entropy.Items
                 break;
             }
         }*/
-
-		/*public override TagCompound Save()
-		{
-			return new TagCompound {
-				{"mods",mods}
-			};
-		}
-		
-		public override void Load(TagCompound tag)
-		{
-			mods = tag.GetTag<EntModItem[]>("mods");
-		}*/
 		/*
 
 		public override bool CanRightClick(){
@@ -119,14 +105,6 @@ namespace Entropy.Items
 			Main.NewText("test");
 		}
 
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.DirtBlock, 10);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-		}
 		/*
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
         {

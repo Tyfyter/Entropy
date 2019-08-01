@@ -46,9 +46,13 @@ namespace Entropy {
         public override void ResetEffects()
         {
             combocountertime = Math.Max(combocountertime-1, 0);
-            if(combocountertime == 0){
-                combocounter = 0;
+            if(combocountertime == 0 && combocounter > 0){
+                combocounter--;
+                //combocounter = 0;
             }
+        }
+        public override void ModifyZoom(ref float zoom){
+            if(player.controlUseTile&&player.HeldItem.type==mod.ItemType<CorrSniper>())zoom+=1.7f;
         }
 
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource){
@@ -69,17 +73,5 @@ namespace Entropy {
         public static explicit operator EntropyPlayer(Player player){
             return player.GetModPlayer<EntropyPlayer>();
         }
-		
-        /*public override TagCompound Save()
-		{
-			return new TagCompound
-			{
-			};
-		}
-
-		public override void Load(TagCompound tag)
-		{
-
-		}*/
     }
 }

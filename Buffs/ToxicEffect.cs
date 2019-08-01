@@ -8,7 +8,7 @@ namespace Entropy.Buffs {
         int rate = 1;
         int damage = 1;
         public override Color? color => Color.DarkGreen;
-        public ToxicEffect(NPC npc, int damage, int duration, int rate = 10) : base(npc){
+        public ToxicEffect(NPC npc, int damage, int duration, int rate = 10, Entity cause = null) : base(npc, cause){
             this.damage = damage;
             this.duration = duration;
             this.rate = rate;
@@ -16,9 +16,11 @@ namespace Entropy.Buffs {
         public override void Update(NPC npc){
             if(duration%rate==0){
                 int[] a = npc.immune;
-                npc.StrikeNPC((int)Entropy.DmgCalcNPC(damage, npc, 6), 0, 0, false, true, true);
+                int dmg = (int)Entropy.DmgCalcNPC(damage, npc, 6);
+                npc.StrikeNPC(dmg, 0, 0, false, true, true);
                 npc.immune = a;
                 Dust.NewDust(npc.position,npc.width,npc.height,DustID.Fire, newColor:color.Value*3);
+                (cause as Player)?.addDPS(dmg);
             }
             base.Update(npc);
         }

@@ -21,8 +21,7 @@ namespace Entropy.Items
         public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("∞ + 2 sword");
-			Tooltip.SetDefault(@"technically it should be the same as an ∞ + 1 or even ∞ - 1 sword
-			infoidk");
+			Tooltip.SetDefault("technically it should be the same as an ∞ + 1 or even ∞ - 1 sword");
 		}
 		public override void SetDefaults()
 		{
@@ -47,7 +46,6 @@ namespace Entropy.Items
 			item.useTurn = true;
 			realcrit = basecrit = 15;
 			statchance = 100;
-			critDMG = baseCD = 2;
 			dmgratio = dmgratiobase = new float[15] {0f,0f,0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
 			dmgratio[mode] = 1;
 		}
@@ -76,18 +74,6 @@ namespace Entropy.Items
                 break;
             }
         }*/
-
-		/*public override TagCompound Save()
-		{
-			return new TagCompound {
-				{"mods",mods}
-			};
-		}
-		
-		public override void Load(TagCompound tag)
-		{
-			mods = tag.GetTag<EntModItem[]>("mods");
-		}*/
 		/*
 
 		public override bool CanRightClick(){
@@ -106,14 +92,6 @@ namespace Entropy.Items
 			return true;
 		}
 
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.DirtBlock, 10);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-		}
 		/*/
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
         {

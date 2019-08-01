@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Entropy.UI;
 using Entropy.Items.Mods;
+using Entropy.Projectiles;
 
 namespace Entropy.Items
 {
@@ -23,12 +24,12 @@ namespace Entropy.Items
     }
 	public class EntModItem : EntModItemBase
 	{
-		public float critDMG = 2;
+		public float critDMG = 1.5f;
 		public float baseCD = 2;
 		public float basestat = 15;
 		public float statchance = 15;
         public float comboDMG = 0.5f;
-        public int combohits = 5;
+        public int combohits = 8;
         public float combotime = 1800;
         public float[] dmgratiobase = new float[15] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 		public float[] dmgratio = new float[15] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
@@ -38,7 +39,15 @@ namespace Entropy.Items
         public int realcrit = 15;
         public float normcritmult = 1;
         public float combospeedmult = 0;
+        public float combostatmult = 0;
+        public float combocritmult = 0;
+        public int critcomboboost = 0;
+        public int punchthrough = 0;
         public Item[] mods = new Item[8];
+        public virtual bool reproc => false;
+        public virtual bool realCombo => true;
+        public virtual bool isGun => !realCombo;
+        public float realstat {get{return combostatmult==0?statchance:statchance*(combostatmult+1)*comboMult(Main.player[item.owner].GetModPlayer<EntropyPlayer>(mod).combocounter, combohits, comboDMG);}}
         int timesinceright = 0;
         public override bool Autoload(ref string name){
             if(name == "EntModItem")return false;
@@ -68,10 +77,20 @@ namespace Entropy.Items
             if(mod!=null)ModEffectobsolete(mod.type, mod.level);
         }
         public override void HoldItem(Player player){
-            SetDefaults();
-            for(int i = 0; i < mods.Length; i++){
-				/*Entropy.*/ModEffect(mods[i].modItem as EntModItemMod);
-			}
+            try{
+                critcomboboost = 0;
+                combocritmult = 0;
+                combostatmult = 0;
+                punchthrough = 0;
+                //combospeedmult = 0;
+                SetDefaults();
+                for(int i = 0; i < mods.Length; i++){
+                    /*Entropy.*/ModEffect(mods[i]?.modItem as EntModItemMod);
+                }
+            }
+            catch (System.Exception e){
+                Main.NewText(e);
+            }
         }
         public void ModEffectobsolete(int modid, float level){
             Player player = Main.player[item.owner];
@@ -99,12 +118,13 @@ namespace Entropy.Items
                 critDMG += (baseCD * (float)(level * 0.15));
                 break;
                 case 4://br
-                if(modPlayer.combocounter < combohits)break;
+                combocritmult = (float)(level * 0.15);
                 //realcrit = (float)((item.crit + usedcrit) * (1 + (((1 + level) * 0.15)*(1+(comboDMG*modPlayer.comboget())))));
+                //realcrit = (int)(basecrit * (1 + ((level * 0.15)*comboMult(modPlayer.combocounter, combohits, comboDMG))));
                 break;
                 case 5://ww
-                if(modPlayer.combocounter < combohits)break;
-                statchance = (float)(statchance * (1 + ((level * 0.15)*comboMult(modPlayer.combocounter, combohits, comboDMG))));
+                combostatmult = (float)(level * 0.075);
+                //statchance = (float)(basestat * (1 + ((level * 0.075)*comboMult(modPlayer.combocounter, combohits, comboDMG))));
                 break;
                 case 6://speed
                 if(modPlayer.combocounter < combohits){
@@ -113,33 +133,101 @@ namespace Entropy.Items
                 }
                 //item.useAnimation = (int)(item.useAnimation / (1 + (((1 + level) * 0.15)*(1+(comboDMG*modPlayer.comboget())))));
                 //item.useTime = (int)(item.useTime / (1 + (((1 + level) * 0.15)*(1+(comboDMG*modPlayer.comboget())))));
-                combospeedmult = (float)(level * 0.05);
+                combospeedmult = (float)(level * 0.0001);
                 break;
                 case 7://base speed
-                item.useTime = (int)(item.useTime*(1-(0.05*level)));
-                item.useAnimation = (int)(item.useAnimation*(1-(0.05*level)));
+                item.useTime = (int)(item.useTime*(1-(0.1*level)));
+                item.useAnimation = (int)(item.useAnimation*(1-(0.1*level)));
                 break;
                 case 8://slash
-                dmgratio[0] += (int)(dmgratio[0]*(0.15*level));
+                dmgratio[0] += (float)(dmgratiobase[0]*(0.15*level));
                 break;
                 case 9://impact
-                dmgratio[1] += (int)(dmgratio[1]*(0.15*level));
+                dmgratio[1] += (float)(dmgratiobase[1]*(0.15*level));
                 break;
                 case 10://puncure
-                dmgratio[2] += (int)(dmgratio[2]*(0.15*level));
+                dmgratio[2] += (float)(dmgratiobase[2]*(0.15*level));
                 break;
                 case 11://slash
-                dmgratio[0] += (int)(dmgratio[0]*(0.2*level));
+                dmgratio[0] += (float)(dmgratiobase[0]*(0.2*level));
                 break;
                 case 12://impact
-                dmgratio[1] += (int)(dmgratio[1]*(0.2*level));
+                dmgratio[1] += (float)(dmgratiobase[1]*(0.2*level));
                 break;
-                case 13://puncure
-                dmgratio[2] += (int)(dmgratio[2]*(0.2*level));
+                case 13://puncture
+                dmgratio[2] += (float)(dmgratiobase[2]*(0.2*level));
+                break;
+                case 14://
+                addElement(3, level*0.15f);
+                break;
+                case 15://
+                addElement(5, level*0.15f);
+                break;
+                case 16://
+                addElement(4, level*0.15f);
+                break;
+                case 17://
+                addElement(6, level*0.15f);
+                break;
+                case 18://
+                critcomboboost = (int)level;
+                break;
+                case 19://
+                punchthrough += (int)level;
                 break;
                 default:
                 break;
             }
+        }
+        //{3:"Cold", 4:"Electric", 5:"Heat", 6:"Toxic", 7:"Blast", 8:"Corrosive", 9:"Gas", 10:"Magnetic", 11:"Radiation", 12:"Viral"}
+        public class elementCombo {
+            public static elementCombo[] combos = new elementCombo[]{
+                new elementCombo(7, new int[]{3,5}),
+                new elementCombo(8, new int[]{4,6}),
+                new elementCombo(9, new int[]{5,6}),
+                new elementCombo(10, new int[]{3,4}),
+                new elementCombo(11, new int[]{4,5}),
+                new elementCombo(12, new int[]{3,6})
+                };
+            public readonly int result;
+            public readonly int[] components;
+            elementCombo(int r, int[] comps){
+                result = r;
+                components = comps;
+            }
+            /* public static elementCombo[] GetCombos(int element){
+                elementCombo[] output = new elementCombo[3];
+                int a = 0;
+                for (int i = 0; i < combos.Length; i++){
+                    if(combos[i].components[0]!=element && combos[i].components[1]!=element)continue;
+                    output[a++] = combos[i];
+                    if(a>3)break;
+                }
+                return output;
+            } */
+        }
+        ///<summary>3:Cold, 4:Electric, 5:Heat, 6:Toxic, 7:Blast, 8:Corrosive, 9:Gas, 10:Magnetic, 11:Radiation, 12:Viral</summary>
+        public void addElement(int element, float amount){
+            for(int c = 0; c < elementCombo.combos.Length; c++){
+                elementCombo ec = elementCombo.combos[c];
+                int i = -1;
+                if(ec.components[0]==element){
+                    i = 0;
+                }else if(ec.components[1]==element){
+                    i = 1;
+                }
+                if(i<0)continue;
+                if(dmgratio[ec.components[1-i]]>0){
+                    dmgratio[ec.result]+=amount+dmgratio[ec.components[1-i]];
+                    dmgratio[ec.components[1-i]] = 0;
+                    return;
+                }
+                if(dmgratio[ec.result]>0){
+                    dmgratio[ec.result]+=amount;
+                    return;
+                }
+            }
+            dmgratio[element]+=amount;
         }
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
@@ -155,7 +243,7 @@ namespace Entropy.Items
 					string alltypesstring = "";
 					for(int i2 = 0; i2 < dmgarray.Length; i2++){
 						if(dmgratio[i2] != 0){
-							alltypesstring = alltypesstring + (dmgarray[i2]+" "+Entropy.dmgtypes[i2].ToLower()+" damage");
+							alltypesstring = alltypesstring + (Math.Round(dmgarray[i2], 2)+" "+Entropy.dmgtypes[i2].ToLower()+" damage");
 						}
 						if(i2 < dmgarray.Length-1){
 							if(dmgarray[i2+1] != 0&&alltypesstring.Length>0){
@@ -175,30 +263,26 @@ namespace Entropy.Items
                     //tooltips[i].text.Replace("\\d+",realcrit+"");
                     string critd = Regex.Replace(Lang.tip[5].Value.Replace("%", "x"), " [^ ]+$", "")+Regex.Replace(Lang.tip[2].Value, ".+ ", " ");
                     if(!tooltips.Exists(isCD))tooltips.Insert(i+1, new TooltipLine(mod, "CritDamage", critDMG+critd));
+                    if(!tooltips.Exists(isStat))tooltips.Insert(i+2, new TooltipLine(mod, "StatChance", Math.Round(realstat,2)+Lang.tip[5].Value.Replace("critical strike", "status")));
                 }else if (tooltips[i].Name.Equals("CritDamage"))
                 {
                     string ccString = Regex.Replace(Lang.tip[5].Value.Replace("%", "x")," [^ ]+$", "");
                     tooltips[i].text = critDMG+ccString+Regex.Replace(Lang.tip[2].Value, ".+ ", " ");//+Lang.tip[5].Value.Split()[1];
-                }else if(tooltips[i].text.Contains("infoidk"))
-                {
-					String[] SplitText = tooltips[i].text.Split();
-                    TooltipLine tip;
-					tip = new TooltipLine(mod, "info", basecrit+":"+item.crit+":"+Main.player[item.owner].meleeCrit);
-                    //tip = new TooltipLine(mod, "melee", dmgarray[0]+" slash damage\n"+dmgarray[1]+" puncture damage\n"+dmgarray[2]+" impact damage\n");
-                    //tip.overrideColor = new Color(255, 32, 174, 200);
-					tip.overrideColor = new Color(255, 255, 255);
-                    tooltips.RemoveAt(i);
-                    tooltips.Insert(i, tip);
+                }else if (tooltips[i].Name.Equals("StatChance")){
+                    tooltips[i].text = Math.Round(realstat,2)+Lang.tip[5].Value.Replace("critical strike", "status");//+Lang.tip[5].Value.Split()[1];
                 }
             }//*/
         }
         static bool isCD(TooltipLine tl){
             return tl.Name.Equals("CritDamage");
         }
+        static bool isStat(TooltipLine tl){
+            return tl.Name.Equals("StatChance");
+        }
 
         public override void ModifyHitNPC(Player player, NPC target, ref int damage, ref float knockBack, ref bool crit){
 			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>(mod);
-			modPlayer.comboadd();
+			modPlayer.comboadd(1);
 			float[] dmgarray = Entropy.GetDmgRatio(damage, dmgratio);
 			damage = (int)Entropy.DmgCalcNPC(dmgarray, target);
 			int cc = 0;
@@ -226,6 +310,7 @@ namespace Entropy.Items
                     Dust.NewDustPerfect(target.Center, 267, new Vector2(0,16).RotatedByRandom(0.5f)).noGravity = true;
                 }
 			}
+            if(crit && critcomboboost!=0)modPlayer.comboadd(critcomboboost);
 			Entropy.Proc(this, target, damage);
         }
         public override void GetWeaponDamage(Player player, ref int damage){
@@ -239,10 +324,12 @@ namespace Entropy.Items
             }if(item.thrown){
                 dmg*=player.thrownDamage;
             }
+            if(realCombo)dmg*= comboMult(((EntropyPlayer)player).combocounter, combohits, comboDMG);
+            dmg/=3;
             damage = (int)dmg;
         }
         public override void GetWeaponCrit(Player player, ref int crit){
-            crit = realcrit-4;
+            crit = (int)(realcrit*(combocritmult==0?1:(combospeedmult+1)*comboMult(Main.player[item.owner].GetModPlayer<EntropyPlayer>(mod).combocounter, combohits, comboDMG)))-4;
             if(item.melee){
                 player.meleeCrit+=crit;
             }if(item.ranged){
@@ -264,7 +351,7 @@ namespace Entropy.Items
         }
         public override float MeleeSpeedMultiplier(Player player){
 			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>(mod);
-            return combospeedmult==0?1:combospeedmult*comboMult(modPlayer.combocounter, combohits, comboDMG);
+            return combospeedmult==0?1:(combospeedmult+1)*comboMult(modPlayer.combocounter, combohits, comboDMG);
         }
         public override void UpdateInventory(Player player){
             /*
@@ -282,11 +369,9 @@ namespace Entropy.Items
         public override bool CanRightClick(){
             if(timesinceright<=0){
                 if(Entropy.mod.UI.CurrentState!=null){
-                    Entropy.mod.UI.SetState(null);
                     Entropy.mod.modItemUI.Deactivate();
                     Entropy.mod.modItemUI = null;
-                    timesinceright=7;
-                    return false;
+                    Entropy.mod.UI.SetState(null);
                 }
                 ((EntropyPlayer)Main.player[item.owner]).lastmoddeditem = getItemIndex(Main.player[item.owner].inventory);
                 Entropy.mod.modItemUI = new ModItemsUI();
@@ -296,6 +381,25 @@ namespace Entropy.Items
             timesinceright=7;
             return false;
         }
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack){
+            int proj = Projectile.NewProjectile(position, new Vector2(speedX,speedY), type, damage, knockBack, item.owner);
+            Main.projectile[proj].friendly = true;
+            Main.projectile[proj].hostile = false;
+            Main.projectile[proj].usesLocalNPCImmunity = true;
+            Main.projectile[proj].localNPCHitCooldown = 9;
+            Main.projectile[proj].maxPenetrate += punchthrough;
+            Main.projectile[proj].penetrate += punchthrough;
+            EntModProjectile p = Main.projectile[proj].modProjectile as EntModProjectile;
+            if(p!=null){
+                p.critDMG = critDMG;
+                p.statchance = statchance;
+                p.dmgratio = dmgratio;
+                if(critcomboboost!=0)p.critcombo += Math.Sign(critcomboboost);
+            }
+            PostShoot(Main.projectile[proj]);
+            return false;
+        }
+        public virtual void PostShoot(Projectile p){}
         static float comboMult(float cc, float ch, float cd){
             return (float)(Math.Max((Math.Floor(Math.Log(cc/ch, 3))*cd)+cd, 0)+1);
         }

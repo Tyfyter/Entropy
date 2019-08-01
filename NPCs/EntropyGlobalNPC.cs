@@ -81,7 +81,7 @@ namespace Entropy.NPCs {
 			bool a = true;
             Buffs.RemoveAll(BuffBase.GC);
 			if(Buffs.Count>0)for(int i = 0; i<Buffs.Count; i++){
-				a = a&&Buffs[i].PreUpdate(npc, a);
+				a = a&&Buffs[i].PreUpdate(npc, !a);
             }
             if(!a)AI(npc);
 			return a;
@@ -100,6 +100,9 @@ namespace Entropy.NPCs {
                 damage+=a;
                 for(int i = 0; i < 5; i++)Dust.NewDustDirect(npc.position, npc.width, npc.height, 267, Alpha:100, newColor:Color.LimeGreen).noGravity = true;
             }
+			for(int i = 0; i<Buffs.Count; i++){
+				Buffs[i].ModifyHitItem(player, item, npc, ref damage, ref crit);
+            }
         }
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection){
             List<CorrEffect> corrs = Buffs.FindAll(FindCorr).ConvertAll(MakeCorr);
@@ -108,6 +111,9 @@ namespace Entropy.NPCs {
                 for(int i = 0; a < npc.defense+30 && i < corrs.Count; i++)a+=corrs[0].severity/2;
                 damage+=a;
                 for(int i = 0; i < 5; i++)Dust.NewDustDirect(npc.position, npc.width, npc.height, 267, Alpha:100, newColor:Color.LimeGreen).noGravity = true;
+            }
+			for(int i = 0; i<Buffs.Count; i++){
+				Buffs[i].ModifyHitProjectile(projectile, npc, ref damage, ref crit);
             }
         }
         public override void DrawEffects(NPC npc, ref Color drawColor){
@@ -121,6 +127,23 @@ namespace Entropy.NPCs {
                 a++;
             }
             if(a>0)drawColor = Color.Lerp(drawColor, new Color(r/a,g/a,b/a), 0.75f);
+        }
+        public override bool? CanBeHitByItem(NPC npc, Player player, Item item){
+            return npc.HasBuff<RadEffect>()?new bool?(true):base.CanBeHitByItem(npc, player,item);
+        }
+        public override bool? CanBeHitByProjectile(NPC npc, Projectile projectile){
+            return npc.HasBuff<RadEffect>()?new bool?(true):base.CanBeHitByProjectile(npc, projectile);
+        }
+        public override bool? CanHitNPC(NPC npc, NPC target){
+            if(npc.HasBuff<RadEffect>()){
+                return true;
+            }else if(target.HasBuff<RadEffect>()){
+                return true;
+            }
+            return base.CanHitNPC(npc, target);
+        }
+        public static bool FindRad(BuffBase b){
+            return b is RadEffect;
         }
         public static bool FindCorr(BuffBase b){
             return b is CorrEffect;

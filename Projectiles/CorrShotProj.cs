@@ -11,45 +11,42 @@ using static Entropy.NPCs.EntropyGlobalNPC;
 namespace Entropy.Projectiles
 {
 
-    public class IceShotProj : EntModProjectile
+    public class CorrShotProj : EntModProjectile
     {
-        public override string Texture => "Terraria/Projectile_638";
+        public override string Texture => "Terraria/Projectile_207";
         public override void SetDefaults(){
             projectile.CloneDefaults(14);
             projectile.friendly = true;
             projectile.magic = true;
             projectile.ranged = true;
             projectile.tileCollide = true;
-            projectile.penetrate = 2;
             projectile.timeLeft = 900;
-            projectile.extraUpdates = 3;
+            projectile.extraUpdates = 9;
             projectile.ignoreWater = true;   
             projectile.alpha = 150;
             projectile.aiStyle = 0;
-			dmgratio = dmgratiobase = new float[15] {0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
+            projectile.light = 0;
+			dmgratio = dmgratiobase = new float[15] {0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f};
         }
 		public override void SetStaticDefaults()
 		{
 			//DisplayName.SetDefault("Crystal Shard"); Original name
-			DisplayName.SetDefault("Ice Bullet");
+			DisplayName.SetDefault("Magnus Kirudo");
 		}
         public override void AI(){
             projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;  
         }
-        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit){
-            AddBuff(new ColdEffect(target, (target.boss?60:360)/(target.HasBuff<ColdEffect>()?2:1), 4-(Math.Max((target.CountBuff<ColdEffect>()),1))).withColor(new Color(0,235,255)));
-            if(projectile.penetrate<=1){
-                if(Main.player[projectile.owner].HeldItem!=null){
-                    Ice_Revolver ir = (Main.player[projectile.owner].HeldItem.modItem as Ice_Revolver);
-                    if(ir!=null&&ir.RoundsLeft<Ice_Revolver.RoundsMax)ir.RoundsLeft++;
-                }
-            }
+        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockBack, ref bool crit, ref int hitDirection){
+            AddBuff(new CorrEffect(target, (int)(damage*0.75f), damage>66?(int)(damage*0.015f):1));
+			EntropyPlayer modPlayer = Main.player[projectile.owner].GetModPlayer<EntropyPlayer>(mod);
+			modPlayer.comboadd(1);
+            base.ModifyHitNPC(target, ref damage, ref knockBack, ref crit, ref hitDirection);
         }
 		public override bool PreDraw (SpriteBatch spriteBatch, Color lightColor)
 		{
-            lightColor = Color.Cyan;
-			for(int i = 0; i < 3; i++){
-			    Dust.NewDustPerfect(projectile.Center, 264, projectile.velocity*-0.5f, 0, Color.Cyan, 0.5f).noGravity = true;
+            lightColor = Color.LimeGreen;
+			for(int i = 0; i < 6; i++){
+			    Dust.NewDustPerfect(projectile.Center-((projectile.velocity/6)*(i+1)), 264, projectile.velocity*0.5f, 0, Color.LimeGreen, 0.5f).noGravity = true;
 			}
 			return true;
 		}

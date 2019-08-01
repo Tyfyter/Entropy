@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Entropy.Buffs;
 using Entropy.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -21,11 +22,12 @@ namespace Entropy.Items
         public static short customGlowMask = 0;
 		bool boosted = false;
 		bool boosting = false;
+		public override bool realCombo => false;
 		public override bool CloneNewInstances => true;
         public override void SetDefaults()
         {
             //item.name = "lightning";          
-            item.damage = realdmg = dmgbase = 95;                        
+            item.damage = realdmg = dmgbase = 125;                        
 			item.ranged = true;
             item.width = 24;
             item.height = 28;
@@ -35,14 +37,15 @@ namespace Entropy.Items
             item.noMelee = true;
             item.knockBack = 7.5f;        
             item.value = 1000;
-            item.rare = 6;
+            item.rare = ItemRarityID.Cyan;
 			item.alpha = 100;
             item.autoReuse = false;
 			item.shoot = mod.ProjectileType<IceShotProj>();
             item.shootSpeed = 12.5f;
 			realcrit = basecrit = 25;
-			dmgratio = dmgratiobase = new float[15] {0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
-			combohits = 100;
+			dmgratio = dmgratiobase = new float[15] {0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
+			combohits = RoundsMax;
+			comboDMG = RoundsLeft>0?RoundsLeft-1:1;
             item.glowMask = customGlowMask;
         }      
 		
@@ -68,8 +71,10 @@ namespace Entropy.Items
 		}
 		public override void HoldItem (Player player){
 			base.HoldItem(player);
+			addElement(3, 0.15f);
+			dmgratio[3]+=0.85f;
             EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>(mod);
-			modPlayer.combocounter = RoundsLeft;
+			modPlayer.combocounter = RoundsLeft>0?RoundsMax:0;
             item.autoReuse = false;
 			reloading = Math.Max(reloading, 0);   
 			if(RoundsLeft <= 0 && reloading == 0)reloading = 1;
@@ -81,7 +86,6 @@ namespace Entropy.Items
 			boosting = false;
 			boosted = false;
 			reloading = Math.Max(reloading, 0);
-			if(reloaddelay>0)if(++reloaddelay>=60)reloaddelay = 0;
 			if(RoundsLeft < RoundsMax){
 				if(++passivereload>=180){
 					RoundsLeft++;
@@ -118,7 +122,7 @@ namespace Entropy.Items
 						}
 					}
 				}
-			}
+			}else if(reloaddelay>0)if(++reloaddelay>=15)reloaddelay = 0;
 		}
 		
         public override bool AltFunctionUse(Player player)
@@ -144,10 +148,14 @@ namespace Entropy.Items
 			item.useAnimation = 15;
             return base.CanUseItem(player);
         }
-		
+		readonly string white = Colors.RarityNormal.Hex3();
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
+			bool a = false;
+			if(dmgratio[3]<=0.15f)a=true;
+			if(a)dmgratio[3]+=1f;
 			base.ModifyTooltips(tooltips);
+			if(a)dmgratio[3]-=1f;
             for (int i = 0; i < tooltips.Count; i++)
             {
                 TooltipLine tip;
@@ -234,7 +242,7 @@ namespace Entropy.Items
 				if(player.itemAnimation<8)item.noUseGraphic = true;
 				return false;
 			}
-			return true;
+			return base.Shoot(player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
 		}
     }
 }
