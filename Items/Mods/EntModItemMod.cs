@@ -180,6 +180,20 @@ namespace Entropy.Items.Mods
 		  DisplayName.SetDefault("Primed Metal Auger");
 		}
 	}
+	public class LackThereof : EntModItemMod {
+		public override int type => -1;
+		public override int maxlevel => 0;
+		public override Color Rarity => Color.DimGray;
+		public override string Texture => "Entropy/Items/Mods/Force";
+		public override void SetStaticDefaults(){
+		  DisplayName.SetDefault("Lack Thereof");
+		}
+		public override void ModifyTooltips(List<TooltipLine> tooltips){
+			TooltipLine tip = new TooltipLine(mod, "Desc", "-100% damage");
+			tooltips.Add(tip);
+			base.ModifyTooltips(tooltips);
+		}
+	}
 	public class EntModItemMod : EntModItemBase
 	{
 		//public modData data;

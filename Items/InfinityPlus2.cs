@@ -91,7 +91,6 @@ namespace Entropy.Items
 			}
 			return true;
 		}
-
 		/*/
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
         {

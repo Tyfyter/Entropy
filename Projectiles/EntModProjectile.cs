@@ -10,6 +10,7 @@ using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using System.Text;
 using System.Reflection;
+using static Entropy.Items.EntModItem;
 
 namespace Entropy.Projectiles
 {
@@ -29,6 +30,30 @@ namespace Entropy.Projectiles
         public override bool Autoload(ref string name){
             if(name == "EntModProjectile")return false;
             return true;
+        
+        }
+        ///<summary>3:Cold, 4:Electric, 5:Heat, 6:Toxic, 7:Blast, 8:Corrosive, 9:Gas, 10:Magnetic, 11:Radiation, 12:Viral</summary>
+        public void addElement(int element, float amount){
+            for(int c = 0; c < elementCombo.combos.Length; c++){
+                elementCombo ec = elementCombo.combos[c];
+                int i = -1;
+                if(ec.components[0]==element){
+                    i = 0;
+                }else if(ec.components[1]==element){
+                    i = 1;
+                }
+                if(i<0)continue;
+                if(dmgratio[ec.components[1-i]]>0){
+                    dmgratio[ec.result]+=amount+dmgratio[ec.components[1-i]];
+                    dmgratio[ec.components[1-i]] = 0;
+                    return;
+                }
+                if(dmgratio[ec.result]>0){
+                    dmgratio[ec.result]+=amount;
+                    return;
+                }
+            }
+            dmgratio[element]+=amount;
         }
         /*public static EntModItem New(int type = 0, int id = 0, int level = 0){
             EntModItem output;
@@ -50,7 +75,7 @@ namespace Entropy.Projectiles
                 }
                 projectile.velocity = oldVelocity;
             }
-            return projectile.penetrate<0;
+            return projectile.penetrate==0;
         }
         public void ModEffectobsolete(int modid, float level){
             Player player = Main.player[projectile.owner];

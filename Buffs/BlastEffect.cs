@@ -7,7 +7,7 @@ namespace Entropy.Buffs {
         float kbr = 1;
         bool kb = false;
         public BlastEffect(NPC npc, int duration) : base(npc){
-            this.duration = duration;
+            baseduration = this.duration = duration;
             if(npc.knockBackResist>=0.9f)return;
             kb = true;
             kbr = npc.knockBackResist;

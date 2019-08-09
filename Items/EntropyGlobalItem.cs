@@ -1,3 +1,4 @@
+/*
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -7,7 +8,8 @@ namespace Entropy.Items
 {
 	public class EntropyGlobalItem : GlobalItem
 	{
-		/*public override void ModifyHitNPC(Item item, Player player, NPC target, ref int damage, ref float knockBack, ref bool crit){
+		//*
+		public override void ModifyHitNPC(Item item, Player player, NPC target, ref int damage, ref float knockBack, ref bool crit){
 				if(crit){
 					damage = (int)(damage/2);
 				}
@@ -26,9 +28,9 @@ namespace Entropy.Items
 					}
 					damage *= 2;
 				}
-		}*/
+		}//* /
 		public override bool Shoot(Item item, Player player, ref Microsoft.Xna.Framework.Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack){
 			return type != mod.ProjectileType("FakeGrapple");
 		}
 	}
-}
+}// */

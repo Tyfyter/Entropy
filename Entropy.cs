@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Entropy.Buffs;
 using Entropy.Items;
 using Entropy.NPCs;
@@ -33,14 +34,46 @@ namespace Entropy
 			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>(mod);
             /* if(player.HeldItem.modItem == null){
                 return;
-            }else  */if(player.HeldItem.modItem?.mod!=mod){
+            }else  */
+            EntModItemBase MI = player.HeldItem.modItem as EntModItemBase;
+            if(MI==null){
                 return;
-            }else if(((EntModItemBase)player.HeldItem.modItem).IsMod){
+            }else if(MI.IsMod){
 				return;
 			}else if(Main.playerInventory){
 				return;
 			}
-			if(modPlayer.combocounter!=0)Utils.DrawBorderStringFourWay(spriteBatch, Main.fontCombatText[1], (modPlayer.comboget() > 1 ? modPlayer.comboget()+"/"+(float)modPlayer.combocounter : (modPlayer.combocounter+"")), Main.screenWidth*0.90f, Main.screenHeight*0.85f, Color.White, Color.Black, new Vector2(0.3f), 1);
+			if(modPlayer.combocounter!=0){
+                string st = (modPlayer.comboget() > 1 ? modPlayer.comboget()+"/"+(float)modPlayer.combocounter : (modPlayer.combocounter+""));
+                Utils.DrawBorderStringFourWay(spriteBatch, Main.fontCombatText[1], st, Main.screenWidth*0.90f, Main.screenHeight*0.85f, Color.White, Color.Black, new Vector2(0.3f), 1);
+            }
+            if(MI is CompModItem){
+                CompModItem CMI = (MI as CompModItem);
+                int i = CMI.ability;
+                string a = "";
+                string b = "";
+                for(int i2 = 1; i2 < CMI.maxabilities; i2++){
+                    a+="●";
+                    b+=" ";
+                }
+                Color selColor = Color.Aqua;
+                Sekkal Sk = CMI as Sekkal;
+                if(Sk!=null){
+                    switch(Sk.element){
+                        case 0:
+                        selColor = Color.OrangeRed;
+                        break;
+                        case 2:
+                        selColor = Color.MediumPurple;
+                        break;
+                        case 3:
+                        selColor = Color.DarkGreen;
+                        break;
+                    }
+                }
+                Utils.DrawBorderStringFourWay(spriteBatch, Main.fontMouseText, /* "●●●" */a.Insert(i," "), Main.MouseScreen.X, Main.MouseScreen.Y+(Main.screenHeight/40), Color.White, Color.Black, new Vector2(0.3f), 1);
+                Utils.DrawBorderStringFourWay(spriteBatch, Main.fontMouseText, /* "   " */b.Insert(i,"●"), Main.MouseScreen.X, Main.MouseScreen.Y+(Main.screenHeight/40), selColor, Color.Black, new Vector2(0.3f), 1);
+            }
         }
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers) {
 			int inventoryIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
@@ -77,6 +110,9 @@ namespace Entropy
 			}
             return output;
         }
+        /* public override void PostAddRecipes(){
+            Valhalla.InitClaws();
+        } */
         public override void Load()
         {
             mod = this;
@@ -301,6 +337,26 @@ namespace Entropy
             foreach (BuffBase item in npc.GetGlobalNPC<EntropyGlobalNPC>().Buffs)if(item is T)o++;
             return o;
         }
+        public static bool CanAttack(this NPC npc){
+            foreach (BuffBase item in npc.GetGlobalNPC<EntropyGlobalNPC>().Buffs)if(item is ImpactEffect || item is BlastEffect || item is SleepEffect)return false;
+            return true;
+        }
+        public static bool HasBuff<T>(this Player player) where T : PlayerBuffBase{
+            foreach (PlayerBuffBase item in player.GetModPlayer<EntropyPlayer>().Buffs)if(item is T)return true;
+            return false;
+        }
+        public static T GetBuff<T>(this Player player) where T : PlayerBuffBase{
+            foreach (PlayerBuffBase item in player.GetModPlayer<EntropyPlayer>().Buffs)if(item is T)return (T)item;
+            return null;
+        }
+        public static Vector2 lerp(Vector2 a, Vector2 b, float c){
+            //Main.NewText(a+" and "+b+" lerped by "+c+" equal "+((a*(1-c))+(b*c)));
+            return (a*(1-c))+(b*c);
+        }
+        public static float constrain(float i, float low, float high){
+            //Main.NewText(high+">"+i+">"+low);
+            return i<low?low:(i>high?high:i);
+        }
         public static Vector2 constrain(Vector2 i, Vector2 low, Vector2 high){
             //Main.NewText(high+">"+i+">"+low);
             float x = i.X<low.X?low.X:(i.X>high.X?high.X:i.X);
@@ -313,6 +369,38 @@ namespace Entropy
             }else{
                 return (player.direction==1?player.TopLeft:player.TopRight)+new Vector2(0,8);
             }
+        }
+        public static float[] Sum(this float[] a, float[] b){
+            int i = 0;
+            return a.Select(x => x + b[i++%b.Length]).ToArray();
+        }
+		public static Vector2 toVector2(this Vector3 i){
+			return new Vector2(i.X,i.Y);
+		}
+        public static Rectangle ProperBox(Point a, Point b){
+			int x1,x2,y1,y2;
+			if(b.X>a.X){
+				x1=a.X;
+				x2=b.X-a.X;
+			}else{
+				x1=b.X;
+				x2=a.X-b.X;
+			}
+			if(b.Y>a.Y){
+				y1=a.Y;
+				y2=b.Y-a.Y;
+			}else{
+				y1=b.Y;
+				y2=a.Y-b.Y;
+			}
+			return new Rectangle(x1,y1,x2,y2);
+        }
+        public static Rectangle ProperBox(Vector2 a, Vector2 b){
+
+			return ProperBox(a.ToPoint(),b.ToPoint());
+        }
+        public static Rectangle ProperBox(this Ray ray){
+			return ProperBox(ray.Position.toVector2(), (ray.Position+ray.Direction).toVector2());
         }
     }
     public class TrueNullable<T> {

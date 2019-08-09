@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using Entropy.UI;
 using Entropy.Items.Mods;
 using Entropy.Projectiles;
+using Entropy.Buffs;
 
 namespace Entropy.Items
 {
@@ -76,6 +77,7 @@ namespace Entropy.Items
         public void ModEffect(EntModItemMod mod){
             if(mod!=null)ModEffectobsolete(mod.type, mod.level);
         }
+        public virtual void PostSetDefaults(Player player){}
         public override void HoldItem(Player player){
             try{
                 critcomboboost = 0;
@@ -84,6 +86,7 @@ namespace Entropy.Items
                 punchthrough = 0;
                 //combospeedmult = 0;
                 SetDefaults();
+                PostSetDefaults(player);
                 for(int i = 0; i < mods.Length; i++){
                     /*Entropy.*/ModEffect(mods[i]?.modItem as EntModItemMod);
                 }
@@ -108,6 +111,9 @@ namespace Entropy.Items
             level++;
             switch (modid)
             {
+                case -1://no damage
+                realdmg = 1;
+                break;
                 case 1://base damage
                 realdmg += (int)(dmgbase * (level * 0.20));
                 break;
@@ -283,6 +289,10 @@ namespace Entropy.Items
         public override void ModifyHitNPC(Player player, NPC target, ref int damage, ref float knockBack, ref bool crit){
 			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>(mod);
 			modPlayer.comboadd(1);
+            modPlayer.Buffs.RemoveAll(PlayerBuffBase.GC);
+            foreach (PlayerBuffBase i in modPlayer.Buffs){
+                i.ModifyHitItem(player, this, target, ref damage, ref crit, ref dmgratio);
+            }
 			float[] dmgarray = Entropy.GetDmgRatio(damage, dmgratio);
 			damage = (int)Entropy.DmgCalcNPC(dmgarray, target);
 			int cc = 0;

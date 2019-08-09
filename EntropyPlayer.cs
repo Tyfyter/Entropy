@@ -9,6 +9,8 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Microsoft.Xna.Framework.Graphics;
 using Entropy.Items;
+using Terraria.GameInput;
+using Entropy.Buffs;
 
 namespace Entropy {
     public class EntropyPlayer : ModPlayer {
@@ -18,6 +20,7 @@ namespace Entropy {
 
         public float QTeff = 1;
         public int lastmoddeditem = 0;
+        public List<PlayerBuffBase> Buffs = new List<PlayerBuffBase>{};
         public override bool Autoload(ref string name) {
             return true;
         }
@@ -50,6 +53,20 @@ namespace Entropy {
                 combocounter--;
                 //combocounter = 0;
             }
+            foreach (PlayerBuffBase i in Buffs){
+                i.Update(player);
+            }
+            Buffs.RemoveAll(PlayerBuffBase.GC);
+        }
+        public override void SetControls(){
+            if(!player.controlTorch)return;
+            CompModItem item = player.HeldItem?.modItem as CompModItem;
+            if(item==null)return;
+            player.controlTorch = false;
+            if(Math.Abs(PlayerInput.ScrollWheelDelta)<60)return;
+            Main.PlaySound(12, player.Center);
+            item.tryScroll(PlayerInput.ScrollWheelDelta / -120);
+			PlayerInput.ScrollWheelDelta = 0;
         }
         public override void ModifyZoom(ref float zoom){
             if(player.controlUseTile&&player.HeldItem.type==mod.ItemType<CorrSniper>())zoom+=1.7f;
@@ -72,6 +89,9 @@ namespace Entropy {
         }
         public static explicit operator EntropyPlayer(Player player){
             return player.GetModPlayer<EntropyPlayer>();
+        }
+        public static void AddBuff(PlayerBuffBase buff){
+            buff.victim.GetModPlayer<EntropyPlayer>().Buffs.Add(buff);
         }
     }
 }
