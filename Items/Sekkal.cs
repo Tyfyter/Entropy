@@ -53,7 +53,7 @@ namespace Entropy.Items
 				goto default;
 			} */
 			item.damage = 1;
-			realdmg = dmgbase = 80;
+			realdmg = dmgbase = 160;
 			item.knockBack = 8;
 			//item.ranged = mode == 0;
 			//item.melee = !item.ranged;
@@ -157,6 +157,7 @@ namespace Entropy.Items
 				ElementBuff eb = player.GetBuff<ElementBuff>();
 				if(eb!=null){
 					eb.isActive = false;
+					el = eb.type;
 					if(player.CheckMana(15, true))goto case 3;
 					return;
 				}
@@ -201,6 +202,7 @@ namespace Entropy.Items
 			}
 		}
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack){
+			//Main.NewText(Main.time);
 			if(charge<=0&&combo!=2){
 				if(player.controlUseItem){
 					if(charge>-30)charge--;

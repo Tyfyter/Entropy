@@ -25,7 +25,7 @@ namespace Entropy {
             return true;
         }
         static float comboMult(float cc, float ch, float cd){
-            return (float)(Math.Max((Math.Floor(Math.Log(cc/ch, 3))*cd)+cd, 0)+1);
+            return (float)(Math.Max((Math.Floor(Math.Log(cc/ch, 4))*cd)+cd, 0)+1);
         }
         public float comboget(float ch, float cd){
             return comboMult(combocounter, ch, cd);

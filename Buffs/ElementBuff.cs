@@ -27,7 +27,7 @@ namespace Entropy.Buffs {
                 return Color.Black;
             }
         }
-        int type = 0;
+        public int type {get; private set;} = 0;
         float amount = 0;
         //new string[15] {"Slash", "Impact", "Puncture", "Cold", "Electric", "Heat", "Toxic", "Blast", "Corrosive", "Gas", "Magnetic", "Radiation", "Viral", "True", "Void"}
         public ElementBuff(Player player, int duration, int type, float amount = 0.5f) : base(player){
@@ -37,7 +37,7 @@ namespace Entropy.Buffs {
         }
         public override void ModifyHitItem(Player attacker, EntModItem item, NPC target, ref int damage, ref bool crit, ref float[] dr){
             item.addElement(type, amount);
-            if(crit)AddBuff(BuffBase.GetFromIndex(target, type, damage/2, attacker));
+            if(crit)AddBuff(BuffBase.GetFromIndex(target, type, damage/3, attacker));
         }
     }
 }

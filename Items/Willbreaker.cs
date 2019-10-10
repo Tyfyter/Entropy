@@ -33,13 +33,13 @@ namespace Entropy.Items
             //Player owner = Main.player[item.owner];
 			//item.name = "Willbreaker";
 			//entmoditem = ((EntModItem)this);
-            item.damage = realdmg = dmgbase;
+            item.damage = realdmg = dmgbase = 125;
 			item.melee = true;
 			item.width = 40;
 			item.height = 40;
 			//item.toolTip = owner.meleeDamage+"\nBreak your enemy's will! (and bones) \n "+(int)(14*owner.meleeDamage)+" slash damage \n " +(int)(14*owner.meleeDamage)+ " impact damage \n " +(int)(2*owner.meleeDamage)+ " puncture damage";
             //item.toolTip2 = "" + Entropy.SlashCalcNPC((int)(14 * owner.meleeDamage)) + Entropy.ImpactCalcNPC((int)(14 * owner.meleeDamage)) + Entropy.PunctureCalcNPC((int)(2 * owner.meleeDamage));
-			item.crit = 0;
+			item.crit = 1;
 			realcrit = basecrit;
             item.useTime = 20;
 			item.useAnimation = 20;
@@ -50,8 +50,9 @@ namespace Entropy.Items
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			item.useTurn = true;
-			dmgratio = dmgratiobase = new float[15] {0.47f,0.47f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
+			dmgratio = dmgratiobase = new float[15] {0.47f,0.47f,0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0.06f, 0f};
 			statchance = basestat = 15;
+
 			//item.shoot = mod.ProjectileType("FakeGrapple");
 		}
 
@@ -101,9 +102,6 @@ namespace Entropy.Items
 		public override bool CanRightClick(){
 			return true;
 		}//*/
-		public override void RightClick(Player player){
-			Main.NewText("test");
-		}
 
 		/*
 		public override void ModifyTooltips(List<TooltipLine> tooltips)

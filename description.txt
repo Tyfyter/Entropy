@@ -1,5 +1,8 @@
-Entropy adds a better damage system for it's own weapons based heavily on Warframe's damage 2.0,
-some enemies will be more or less vulnerable to different damage types
+Entropy adds a better damage system for it's own weapons based heavily on Warframe's damage 2.0, some enemies are more or less vulnerable to different damage types.
+It also adds a basic mod system.
+–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+Content:
+9 Unique weapons
+–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 Credits:
-the author of article 11939 on codeproject.com (because you can't pass properties with ref and c# doesn't have a built-in eval function)

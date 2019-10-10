@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Enrtopy.Items;
 using Entropy.Buffs;
 using Entropy.Items;
 using Entropy.NPCs;
 using Entropy.Projectiles;
 using Entropy.UI;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
@@ -29,6 +32,7 @@ namespace Entropy
         public static Entropy mod;
 		internal UserInterface UI;
 		public ModItemsUI modItemUI;
+        public NarulSound ns = new NarulSound();
         public override void PostDrawInterface(SpriteBatch spriteBatch){
             Player player = Main.player[Main.myPlayer];
 			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>(mod);
@@ -125,6 +129,7 @@ namespace Entropy
 			if (!Main.dedServ){
 				UI = new UserInterface();
 			}
+            AddSound(SoundType.Item, "Entropy/Sounds/Items/NarulSound", ns);
         }
         public static short SetStaticDefaultsGlowMask(ModItem modItem, string suffix = "_Glow")
         {
@@ -338,7 +343,7 @@ namespace Entropy
             return o;
         }
         public static bool CanAttack(this NPC npc){
-            foreach (BuffBase item in npc.GetGlobalNPC<EntropyGlobalNPC>().Buffs)if(item is ImpactEffect || item is BlastEffect || item is SleepEffect)return false;
+            foreach (BuffBase item in npc.GetGlobalNPC<EntropyGlobalNPC>().Buffs)if(item is ImpactEffect || item is BlastEffect || item is SleepEffect || item is YoteEffect)return false;
             return true;
         }
         public static bool HasBuff<T>(this Player player) where T : PlayerBuffBase{

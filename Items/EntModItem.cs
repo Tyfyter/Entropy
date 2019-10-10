@@ -26,7 +26,7 @@ namespace Entropy.Items
 	public class EntModItem : EntModItemBase
 	{
 		public float critDMG = 1.5f;
-		public float baseCD = 2;
+		public float baseCD = 1.5f;
 		public float basestat = 15;
 		public float statchance = 15;
         public float comboDMG = 0.5f;
@@ -118,7 +118,7 @@ namespace Entropy.Items
                 realdmg += (int)(dmgbase * (level * 0.20));
                 break;
                 case 2://base cc
-                realcrit += (int)((usedcrit) * (level * 0.10));
+                realcrit += (int)(usedcrit * (level * 0.10));
                 break;
                 case 3://base cd
                 critDMG += (baseCD * (float)(level * 0.15));
@@ -411,7 +411,7 @@ namespace Entropy.Items
         }
         public virtual void PostShoot(Projectile p){}
         static float comboMult(float cc, float ch, float cd){
-            return (float)(Math.Max((Math.Floor(Math.Log(cc/ch, 3))*cd)+cd, 0)+1);
+            return (float)(Math.Max((Math.Floor(Math.Log(cc/ch, 4))*cd)+cd, 0)+1);
         }
         int getItemIndex(Item[] inventory){
             for (int i = 0; i < inventory.Length; i++){

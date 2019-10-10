@@ -26,6 +26,7 @@ namespace Entropy.Buffs {
         public virtual void ModifyHit(NPC npc, Player target, ref int damage, ref bool crit){}
         public virtual void ModifyHitItem(Player attacker, Item item, NPC target, ref int damage, ref bool crit){}
         public virtual void ModifyHitProjectile(Projectile proj, NPC target, ref int damage, ref bool crit){}
+        public virtual void ModifyHitNPC(NPC npc, NPC target, ref int damage, ref float knockback, ref bool crit){}
         public virtual void OnDeath(NPC npc){duration=-1;}
         public override string ToString(){return Name;}
         public override bool Equals(object a2){

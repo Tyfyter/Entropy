@@ -30,6 +30,8 @@ namespace Entropy.Projectiles
         }
 		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Feathered Claw");
+            ProjectileID.Sets.TrailingMode[projectile.type] = 2;
+            ProjectileID.Sets.TrailCacheLength[projectile.type] = 16;
 		}
         public override void AI(){
             projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
