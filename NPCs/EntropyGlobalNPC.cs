@@ -161,6 +161,9 @@ namespace Entropy.NPCs {
             if(!npc.CanAttack())return false;
             return base.CanHitPlayer(npc, target, ref cooldownSlot);
         }
+        public override void OnHitNPC(NPC npc, NPC target, int damage, float knockback, bool crit){
+
+        }
         public static bool FindRad(BuffBase b){
             return b is RadEffect;
         }

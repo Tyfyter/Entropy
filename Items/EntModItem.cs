@@ -71,8 +71,11 @@ namespace Entropy.Items
             for(int i = 0; i < 8; i++)o.Add("mod"+i,mods[i]);
             return o;
         }
+
         public override void Load(TagCompound tag){
+            #pragma warning disable 0612
             for(int i = 0; i < 8; i++)if(tag.HasTag("mod"+i))mods[i] = tag.Get<Item>("mod"+i);
+            #pragma warning restore 0612
         }
         public void ModEffect(EntModItemMod mod){
             if(mod!=null)ModEffectobsolete(mod.type, mod.level);
@@ -239,6 +242,7 @@ namespace Entropy.Items
         {
 			//HoldItem(Main.player[item.owner]);
 			float[] dmgarray = Entropy.GetDmgRatio(Main.player[item.owner].GetWeaponDamage(item), dmgratio);
+            #pragma warning disable 0618
             for (int i = 0; i < tooltips.Count; i++)
             {
                 if (tooltips[i].Name.Equals("Damage"))
@@ -278,6 +282,7 @@ namespace Entropy.Items
                     tooltips[i].text = Math.Round(realstat,2)+Lang.tip[5].Value.Replace("critical strike", "status");//+Lang.tip[5].Value.Split()[1];
                 }
             }//*/
+            #pragma warning restore 0618
         }
         static bool isCD(TooltipLine tl){
             return tl.Name.Equals("CritDamage");

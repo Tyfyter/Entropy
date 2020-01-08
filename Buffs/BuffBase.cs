@@ -32,6 +32,10 @@ namespace Entropy.Buffs {
         public override bool Equals(object a2){
             return this.GetType() == a2.GetType();
         }
+
+        public override int GetHashCode(){
+            return GetType().GetHashCode();
+        }
         public static bool GC(BuffBase buff){return !buff.isActive;}
         //{0:"Slash", 1:"Impact", 2:"Puncture", 3:"Cold", 4:"Electric", 5:"Heat", 6:"Toxic", 7:"Blast", 8:"Corrosive", 9:"Gas", 10:"Magnetic", 11:"Radiation", 12:"Viral", 13:"True", 14:"Void"}
         public static BuffBase GetFromIndex(NPC npc, int type, int dmg, Player player){

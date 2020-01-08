@@ -63,10 +63,26 @@ namespace Entropy {
             CompModItem item = player.HeldItem?.modItem as CompModItem;
             if(item==null)return;
             player.controlTorch = false;
-            if(Math.Abs(PlayerInput.ScrollWheelDelta)<60)return;
-            Main.PlaySound(12, player.Center);
-            item.tryScroll(PlayerInput.ScrollWheelDelta / -120);
-			PlayerInput.ScrollWheelDelta = 0;
+            if(Math.Abs(PlayerInput.ScrollWheelDelta)>=60){
+                Main.PlaySound(12, player.Center);
+                item.tryScroll(PlayerInput.ScrollWheelDelta / -120);
+                PlayerInput.ScrollWheelDelta = 0;
+            }
+            for(int i = 1; i <= item.maxabilities; i++){
+                string s = "Hotbar"+(i==10?0:i);
+                if(PlayerInput.Triggers.JustPressed.KeyStatus[s]){
+                    item.ability = i-1;
+                    //int h = player.selectedItem;
+                    PlayerInput.Triggers.Old.KeyStatus[s] = false;
+                    PlayerInput.Triggers.Current.KeyStatus[s] = false;
+                    PlayerInput.Triggers.JustPressed.KeyStatus[s] = false;
+                    PlayerInput.Triggers.JustReleased.KeyStatus[s] = false;
+                    //player.controlUseTile = true;
+                    Main.PlaySound(12, player.Center);
+                    //player.selectedItem = h;
+                    break;
+                }
+            }
         }
         public override void ModifyZoom(ref float zoom){
             if(player.controlUseTile&&player.HeldItem.type==mod.ItemType<CorrSniper>())zoom+=1.7f;

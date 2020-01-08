@@ -84,7 +84,9 @@ namespace Entropy.Items.Mods
 		  DisplayName.SetDefault("Blood Rush");
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips){
+			#pragma warning disable 0618
 			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*15f)+Lang.tip[5]+"\nStacks with combo multiplier");
+			#pragma warning disable 0618
 			tooltips.Add(tip);
 			base.ModifyTooltips(tooltips);
 		}
@@ -218,7 +220,9 @@ namespace Entropy.Items.Mods
             return o;
         }
         public override void Load(TagCompound tag){
+			#pragma warning disable 0612
             if(tag.HasTag("lvl"))level = tag.Get<int>("lvl");
+			#pragma warning restore 0612
         }
 		public override void ModifyTooltips(List<TooltipLine> tooltips){
 			tooltips[0].overrideColor = Rarity;

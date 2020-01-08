@@ -8,7 +8,7 @@ namespace Entropy.Buffs {
         bool kb = false;
         public YoteEffect(NPC npc, int duration) : base(npc){
             this.duration = duration;
-            npc.damage+=10;
+            npc.damage+=20;
             if(npc.knockBackResist>=0.4f)return;
             kb = true;
             kbr = npc.knockBackResist;
@@ -21,12 +21,14 @@ namespace Entropy.Buffs {
                 base.Update(npc);
             }
             if(!isActive){
-                npc.damage-=10;
+                npc.damage-=20;
                 if(kb)npc.knockBackResist = kbr;
             }
         }
         public override void ModifyHitNPC(NPC npc, NPC target, ref int damage, ref float knockback, ref bool crit){
-            damage*=2;
+            damage+=(int)(npc.velocity.Length()*5);
+            damage*=5;
+            npc.StrikeNPC(damage/2, knockback, 0, crit);
         }
         public override bool PreUpdate(NPC npc, bool canceled){
             return false;

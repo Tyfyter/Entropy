@@ -35,6 +35,10 @@ namespace Entropy.Buffs {
         public override bool Equals(object a2){
             return this.GetType() == a2.GetType();
         }
+
+        public override int GetHashCode(){
+            return GetType().GetHashCode();
+        }
         public static bool GC(PlayerBuffBase buff){return !buff.isActive;}
     }
 }
