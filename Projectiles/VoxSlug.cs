@@ -41,11 +41,11 @@ namespace Entropy.Projectiles{
             d.fadeIn = 0.7f;
             d.noGravity = true;
         }
-        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockBack, ref bool crit, ref int hitDirection){
+        /*public override void ModifyHitNPC(NPC target, ref int damage, ref float knockBack, ref bool crit, ref int hitDirection){
             if(Main.player[projectile.owner].HasBuff(BuffID.Hunter)){
                 damage = (int)(damage*1.25f);
                 crit = true;
             }
-        }
+        }*/
     }
 }

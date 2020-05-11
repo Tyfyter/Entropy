@@ -15,7 +15,7 @@ namespace Entropy.Items{
 			//Item.claw[item.type] = true;
 		}
 		public override void SetDefaults() {
-			item.damage = realdmg = dmgbase = 23;
+			item.damage = 23;//realdmg = dmgbase = 23;
 			item.melee = true;
 			item.width = 26;
 			item.height = 26;

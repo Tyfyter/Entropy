@@ -23,34 +23,7 @@ namespace Entropy.Items{
 			Tooltip.SetDefault("Untold Destruction\n-Aurdeorum");
 		}
 		public override void SetDefaults() {
-			/* switch (mode){
-				case 0:
-				realdmg = dmgbase = 40;
-				item.useStyle = 5;
-				statchance = basestat = 28;
-				item.ranged = true;
-				item.melee = false;
-				item.noMelee = true;
-				item.noUseGraphic = false;
-				item.shoot = ModContent.ProjectileType<ValhallaArrow>();
-				item.useTime = 20;
-				item.useAnimation = 20;
-				break;
-				case 1:
-				realdmg = dmgbase = 60;
-				statchance = basestat = 22;
-				item.useTime = 15;
-				item.useAnimation = 15;
-				goto default;
-				case 2:
-				realdmg = dmgbase = 90;
-				statchance = basestat = 38;
-				item.useTime = 8;
-				item.useAnimation = 8;
-				goto default;
-			} */
-			item.damage = 1;
-			realdmg = dmgbase = 160;
+			item.damage = 160;//realdmg = dmgbase = 160;
 			item.knockBack = 8;
 			//item.ranged = mode == 0;
 			//item.melee = !item.ranged;
@@ -86,10 +59,9 @@ namespace Entropy.Items{
 			charge = 0;
 			combo = 0;
 		}
-		public override void PostSetDefaults(Player player){
-			if(charge>0){
-				realdmg = dmgbase+=charge;
-			}
+		public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat){
+			base.ModifyWeaponDamage(player, ref add, ref mult, ref flat);
+			if(charge>0)flat+=charge;
 		}
 		/* public override Vector2? HoldoutOffset(){
 			return new Vector2(4,4);
@@ -142,7 +114,7 @@ namespace Entropy.Items{
 			switch(i){
 				case 3:
 				if(i==3&&!player.CheckMana(75, true))return;
-				EntModProjectile emp2 = Projectile.NewProjectileDirect(player.Center, new Vector2(), ModContent.ProjectileType<SekkalAbility2>(), (int)(realdmg*1.5f), 0, player.whoAmI, el).modProjectile as EntModProjectile;
+				EntModProjectile emp2 = Projectile.NewProjectileDirect(player.Center, new Vector2(), ModContent.ProjectileType<SekkalAbility2>(), (int)(player.GetWeaponDamage(item)*1.5f), 0, player.whoAmI, el).modProjectile as EntModProjectile;
 				if(emp2!=null){
 					emp2.dmgratio[el] = 1;
 				}
@@ -164,7 +136,7 @@ namespace Entropy.Items{
 				case 1:
 				if(!player.CheckMana(element==2?2:25, true))return;
 				//int el = 13;
-				int dmg = realdmg;
+				int dmg = player.GetWeaponDamage(item);
 				float speed = 9.5f;
 				float spread = 0.06f;
 				if(element==0){

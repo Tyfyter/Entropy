@@ -21,7 +21,7 @@ namespace Entropy.Items{
 			Tooltip.SetDefault("");
 		}
 		public override void SetDefaults() {
-			item.damage = realdmg = dmgbase = mode==0?60:50;
+			item.damage = mode==0?60:50;//realdmg = dmgbase = mode==0?60:50;
 			item.melee = true;
 			item.width = 40;
 			item.height = 40;

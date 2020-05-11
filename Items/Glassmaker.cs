@@ -38,7 +38,7 @@ namespace Entropy.Items{
             item.width = 44;
             item.height = 24;
 			if(!item.noUseGraphic){
-				item.damage = realdmg = dmgbase = 35;
+				item.damage = 35;//realdmg = dmgbase = 35;
 				item.useTime = 1;
 				item.useAnimation = 7;
 				item.shootSpeed = 15.5f;
@@ -49,9 +49,9 @@ namespace Entropy.Items{
 			}else{
 				item.useTime = 28;
 				item.useAnimation = 28;
-				if(ability == 0)realdmg = dmgbase = 140;
-				else if(ability == 2)realdmg = dmgbase = 120;
-				else if(ability == 3)realdmg = dmgbase = 180;
+				if(ability == 0)item.damage = 140;//realdmg = dmgbase = 140;
+				else if(ability == 2)item.damage = 120;//realdmg = dmgbase = 120;
+				else if(ability == 3)item.damage = 180;//realdmg = dmgbase = 180;
 				realcrit = basecrit = 17;
 				statchance = basestat = 37;
 				item.shoot = ProjectileID.InfernoFriendlyBolt;
@@ -85,12 +85,13 @@ namespace Entropy.Items{
 				item.noUseGraphic = true;
 				item.useTime = 28;
 				item.useAnimation = 28;
-				if(ability == 0)realdmg = dmgbase = 140;
-				else if(ability == 2){
-					realdmg = dmgbase = 120;
+				//if(ability == 0)item.damage = 140;//realdmg = dmgbase = 140;
+				//else 
+				if(ability == 2){
+					//item.damage = 120;//realdmg = dmgbase = 120;
 					if(!player.CheckMana(150))return false;
 				}
-				else if(ability == 3)realdmg = dmgbase = 180;
+				//else if(ability == 3)realdmg = dmgbase = 180;
 				realcrit = basecrit = 17;
 				statchance = basestat = 37;
 				item.magic = true;
@@ -118,16 +119,37 @@ namespace Entropy.Items{
 				if(!player.CheckMana(150, true))return;
 				modPlayer.infernorate = Math.Max(modPlayer.infernorate-2f, 0.25f);
 				modPlayer.inferno = Math.Min(modPlayer.inferno+EntropyPlayer.InfernoMax/4, EntropyPlayer.InfernoMax);
-				Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<GlassmakerBlast>(), realdmg, item.knockBack*1.5f, player.whoAmI);
+				Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<GlassmakerBlast>(), player.GetWeaponDamage(item), item.knockBack*1.5f, player.whoAmI);
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 34, 1f, -0.15f);
 				break;
 				case 3:
-				modPlayer.infernorate+=0.5f;
-				if(Projectile.NewProjectileDirect(player.Center, Vector2.Zero, ModContent.ProjectileType<GlassmakerTargeting>(), realdmg, 0, player.whoAmI).modProjectile is GlassmakerTargeting p)p.dmgratio = dmgratio;
+				modPlayer.infernorate = Math.Min(modPlayer.infernorate+3f, 12.5f);
+				if(Projectile.NewProjectileDirect(player.Center, Vector2.Zero, ModContent.ProjectileType<GlassmakerTargeting>(), player.GetWeaponDamage(item), 0, player.whoAmI).modProjectile is GlassmakerTargeting p)p.dmgratio = dmgratio;
 				break;
 			}
 		}
-
+		public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat){
+			base.ModifyWeaponDamage(player, ref add, ref mult, ref flat);
+			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
+			if(modPlayer.inferno>0){
+				float infernoPercent = 1-(modPlayer.inferno/EntropyPlayer.InfernoMax);
+				if(player.altFunctionUse==2){
+					switch (ability){
+						case 0:
+						add+=infernoPercent;
+						break;
+						case 2:
+						add+=infernoPercent/4;
+						break;
+						default:
+						add+=infernoPercent/2;
+						break;
+					}
+				}else{
+					add+=infernoPercent/4;
+				}
+			}
+		}
 		public override void SetStaticDefaults(){
 		  DisplayName.SetDefault("Glassmaker");
 		  Tooltip.SetDefault("Fire, all-consuming.");
@@ -171,6 +193,7 @@ namespace Entropy.Items{
 		}
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack){
 			Vector2 speed;
+			//damage = getDamage(player, damage, player.altFunctionUse==2);
 			if(player.altFunctionUse==2){
 				if(ability == 0){
 					//realdmg = dmgbase = 140;
@@ -183,9 +206,8 @@ namespace Entropy.Items{
 					speed = new Vector2(speedX, speedY).SafeNormalize(Vector2.Zero);
 					position+=speed*16;
 					return base.Shoot(player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);;
-				}
-				if(ability==2)player.itemRotation = player.direction;
-				if(ability==3)player.itemRotation = -player.direction;
+				}else if(ability==2)player.itemRotation = player.direction;
+				else player.itemRotation = -player.direction;
 				return false;
 			}
 			Main.PlaySound(2, (int)position.X, (int)position.Y, 34, 1f, -0.5f);

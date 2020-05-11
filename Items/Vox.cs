@@ -21,10 +21,9 @@ namespace Entropy.Items{
 			Tooltip.SetDefault("Wrath without sound\n-Aurdeorum");
 		}
 		public override void SetDefaults() {
-			realdmg = dmgbase = 210;
+			item.damage = 210;//realdmg = dmgbase = 210;
 			statchance = basestat = 8;
 			realcrit = basecrit = 26;
-			item.damage = 1;//realdmg = dmgbase = mode==0?60:50;
 			//item.ranged = mode == 0;
 			//item.melee = !item.ranged;
 			item.width = 38;
@@ -75,7 +74,7 @@ namespace Entropy.Items{
 			if(!base.CanUseItem(player))return false;
 			if(player.altFunctionUse==2){
 				if(ability == 0){
-					realdmg = dmgbase = 140;
+					item.damage = 140;//realdmg = dmgbase = 140;
 					statchance = basestat = 22;
 					realcrit = basecrit = 6;
 					item.shoot = ModContent.ProjectileType<VoxSlash>();
@@ -92,14 +91,18 @@ namespace Entropy.Items{
 			return true;
 		}
 		public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat){
+			base.ModifyWeaponDamage(player, ref add, ref mult, ref flat);
 			if(player.detectCreature)mult*=1.25f;
+		}
+		public override void GetWeaponCrit(Player player, ref int crit){
+			if(player.detectCreature)crit = 100;
 		}
 		public void CastAbility(int i){
 			Player player = Main.player[item.owner];
 			switch(i){
 				case 1:
 				if(!player.CheckMana(50, true))return;
-				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<VoxAbility>(), realdmg, 15, player.whoAmI);
+				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<VoxAbility>(), player.GetWeaponDamage(item), 15, player.whoAmI);
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:-0.55f);
 				break;
 				case 2:

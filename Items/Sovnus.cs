@@ -30,10 +30,9 @@ namespace Entropy.Items{
           	customGlowMask = Entropy.SetStaticDefaultsGlowMask(this);
 		}
 		public override void SetDefaults() {
-			realdmg = dmgbase = 140;
+			item.damage = 140;//realdmg = dmgbase = 140;
 			statchance = basestat = 17;
 			realcrit = basecrit = 36;
-			item.damage = 1;//realdmg = dmgbase = mode==0?60:50;
 			//item.ranged = mode == 0;
 			//item.melee = !item.ranged;
 			item.width = 62;
@@ -111,12 +110,12 @@ namespace Entropy.Items{
 				break; */
 				case 2:
 				if(!player.CheckMana(75, true))return;
-				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<SovnusAbility>(), realdmg/3, 1, player.whoAmI);
+				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<SovnusAbility>(), player.GetWeaponDamage(item)/3, 1, player.whoAmI);
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.55f);
 				break;
 				case 3:
 				if(!player.CheckMana(75, true))return;
-				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<SovnusAbility>(), realdmg, 15, player.whoAmI, 1);
+				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<SovnusAbility>(), player.GetWeaponDamage(item), 15, player.whoAmI, 1);
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.55f);
 				break;
 			}

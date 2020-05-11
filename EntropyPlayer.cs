@@ -17,7 +17,6 @@ namespace Entropy {
     public class EntropyPlayer : ModPlayer {
 		public int combocounter = 0;
 		public int combocountertime = 0;
-        public float QTeff = 1;
         public int lastmoddeditem = 0;
 		public int WorldonFiretime = 0;
 		public const float InfernoMax = 3000;
@@ -60,7 +59,7 @@ namespace Entropy {
             if(inferno>0){
                 if(inferno>infernorate){
                     inferno-=infernorate;
-                }else if(!player.CheckMana(player.manaRegenBuff?7:2, true)){
+                }else if(!player.CheckMana(player.manaRegenBuff?5:1, true)){
                     inferno = -1;
                 }
             }
@@ -103,8 +102,14 @@ namespace Entropy {
         }
         public override void ModifyDrawLayers(List<PlayerLayer> layers){
             if(inferno>0){
-                FireHelm.visible = true;
-                layers.Add(FireHelm);
+                if(player.Male){
+                    FireHelm.visible = true;
+                    layers.Add(FireHelm);
+                }else{
+                    FireHelm.visible = true;
+                    int hi = layers.IndexOf(PlayerLayer.Head);
+                    layers[hi] = FireHelm;
+                }
                 FireArm.visible = true;
                 layers.Add(FireArm);
                 FireLegs.visible = true;
@@ -113,13 +118,20 @@ namespace Entropy {
                 layers.Add(FireChest);
             }
         }
+        public override void ModifyDrawInfo(ref PlayerDrawInfo drawInfo){
+            if(inferno>0 && !player.Male){
+                drawInfo.drawHair = true;
+                drawInfo.drawPlayer.head = 0;
+            }
+        }
 #region PlayerLayers
-        public static PlayerLayer FireHelm = new PlayerLayer("Entropy", "FireArmorHead", PlayerLayer.Head, delegate(PlayerDrawInfo drawInfo2){
+        public static PlayerLayer FireHelm = new PlayerLayer("Entropy", "FireArmorHead", null, delegate(PlayerDrawInfo drawInfo2){
             Player drawPlayer = drawInfo2.drawPlayer;
             if(drawPlayer.shadow!=0)return;
-            Vector2 Position = new Vector2((float)((int)(drawInfo2.position.X - Main.screenPosition.X - (float)drawPlayer.bodyFrame.Width / 2f + (float)drawPlayer.width / 2f)), (float)((int)(drawInfo2.position.Y - Main.screenPosition.Y + (float)drawPlayer.height - (float)drawPlayer.bodyFrame.Height + 4f))) + drawPlayer.bodyPosition + drawInfo2.bodyOrigin;
-            Rectangle? Frame = new Rectangle?(drawPlayer.headFrame);
+            Vector2 Position = new Vector2((float)((int)(drawInfo2.position.X - Main.screenPosition.X - (float)drawPlayer.bodyFrame.Width / 2f + (float)drawPlayer.width / 2f)), (float)((int)(drawInfo2.position.Y - Main.screenPosition.Y + (float)drawPlayer.height - (float)drawPlayer.bodyFrame.Height + 4f))) + drawPlayer.headPosition + drawInfo2.headOrigin;
+            Rectangle? Frame = new Rectangle?(drawPlayer.bodyFrame);
             Texture2D Texture = drawPlayer.Male?Main.armorHeadTexture[134]:Main.armorHeadTexture[181];
+            if(!drawPlayer.Male)drawPlayer.head = 191;
             SpriteEffects spriteEffects = SpriteEffects.None;
             if (drawPlayer.direction == -1){
                 spriteEffects |= SpriteEffects.FlipHorizontally;
@@ -127,8 +139,8 @@ namespace Entropy {
             if (drawPlayer.gravDir == -1f){
                 spriteEffects |= SpriteEffects.FlipVertically;
             }
-            int a = (int)Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.9)*drawPlayer.stealth*230)/EntropyPlayer.InfernoMax, 255);
-            DrawData item = new DrawData(Texture, Position, Frame, new Color(a,a,a,a), drawPlayer.bodyRotation, drawInfo2.bodyOrigin, 1f, spriteEffects, 0);
+            int a = (int)Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.9)*drawPlayer.stealth*255)/EntropyPlayer.InfernoMax, 255);
+            DrawData item = new DrawData(Texture, Position, Frame, new Color(a,a,a,a), drawPlayer.headRotation, drawInfo2.headOrigin, 1f, spriteEffects, 0);
             item.shader = GameShaders.Armor.GetShaderIdFromItemId(ItemID.SolarDye);
             Main.playerDrawData.Add(item);
         });
@@ -145,7 +157,7 @@ namespace Entropy {
             if (drawPlayer.gravDir == -1f){
                 spriteEffects |= SpriteEffects.FlipVertically;
             }
-            int a = (int)Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.9)*drawPlayer.stealth*230)/EntropyPlayer.InfernoMax, 255);
+            int a = (int)Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.75)*drawPlayer.stealth*190)/EntropyPlayer.InfernoMax, 255);
             DrawData item = new DrawData(Texture, Position, Frame, new Color(a,a,a,a), drawPlayer.bodyRotation, drawInfo2.bodyOrigin, 1f, spriteEffects, 0);
             item.shader = GameShaders.Armor.GetShaderIdFromItemId(ItemID.SolarDye);
             Main.playerDrawData.Add(item);
@@ -153,7 +165,7 @@ namespace Entropy {
         public static PlayerLayer FireLegs = new PlayerLayer("Entropy", "FireArmorLegs", PlayerLayer.Legs, delegate(PlayerDrawInfo drawInfo2){
             Player drawPlayer = drawInfo2.drawPlayer;
             if(drawPlayer.shadow!=0)return;
-            Vector2 Position = new Vector2((float)((int)(drawInfo2.position.X - Main.screenPosition.X - (float)drawPlayer.bodyFrame.Width / 2f + (float)drawPlayer.width / 2f)), (float)((int)(drawInfo2.position.Y - Main.screenPosition.Y + (float)drawPlayer.height - (float)drawPlayer.bodyFrame.Height + 4f))) + drawPlayer.bodyPosition + drawInfo2.bodyOrigin;
+            Vector2 Position = new Vector2((float)((int)(drawInfo2.position.X - Main.screenPosition.X - (float)drawPlayer.bodyFrame.Width / 2f + (float)drawPlayer.width / 2f)), (float)((int)(drawInfo2.position.Y - Main.screenPosition.Y + (float)drawPlayer.height - (float)drawPlayer.bodyFrame.Height + 4f))) + drawPlayer.legPosition + drawInfo2.legOrigin;
             Rectangle? Frame = new Rectangle?(drawPlayer.legFrame);
             Texture2D Texture = Main.armorLegTexture[130];
             SpriteEffects spriteEffects = SpriteEffects.None;
@@ -163,8 +175,8 @@ namespace Entropy {
             if (drawPlayer.gravDir == -1f){
                 spriteEffects |= SpriteEffects.FlipVertically;
             }
-            int a = (int)Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.9)*drawPlayer.stealth*230)/EntropyPlayer.InfernoMax, 255);
-            DrawData item = new DrawData(Texture, Position, Frame, new Color(a,a,a,a), drawPlayer.bodyRotation, drawInfo2.bodyOrigin, 1f, spriteEffects, 0);
+            int a = (int)Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.75)*drawPlayer.stealth*190)/EntropyPlayer.InfernoMax, 255);
+            DrawData item = new DrawData(Texture, Position, Frame, new Color(a,a,a,a), drawPlayer.legRotation, drawInfo2.legOrigin, 1f, spriteEffects, 0);
             item.shader = GameShaders.Armor.GetShaderIdFromItemId(ItemID.SolarDye);
             Main.playerDrawData.Add(item);
         });
@@ -181,7 +193,7 @@ namespace Entropy {
             if (drawPlayer.gravDir == -1f){
                 spriteEffects |= SpriteEffects.FlipVertically;
             }
-            int a = (int)Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.9)*drawPlayer.stealth*230)/EntropyPlayer.InfernoMax, 255);
+            int a = (int)Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.75)*drawPlayer.stealth*190)/EntropyPlayer.InfernoMax, 255);
             DrawData item = new DrawData(Texture, Position, Frame, new Color(a,a,a,a), drawPlayer.bodyRotation, drawInfo2.bodyOrigin, 1f, spriteEffects, 0);
             item.shader = GameShaders.Armor.GetShaderIdFromItemId(ItemID.SolarDye);
             Main.playerDrawData.Add(item);
@@ -247,21 +259,6 @@ namespace Entropy {
 				Main.playerDrawData.Add(item);
 			});
         }//*/
-        /*public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource){
-            if(damage >= player.statLife-1 && damage < player.statLife + player.statMana && QTeff != 0){
-                if(QTeff > 0){
-                    if(player.CheckMana((int)(damage/QTeff), true)){
-                        damage = 0;
-                    }else if(player.statMana >= 1){
-                        damage -= (int)(player.statMana*QTeff);
-                        player.CheckMana(player.statMana, true);
-                    }
-                }else{
-                    player.CheckMana((int)(damage/QTeff), true);
-                }
-            }
-            return true;
-        }*/
         public static explicit operator EntropyPlayer(Player player){
             return player.GetModPlayer<EntropyPlayer>();
         }

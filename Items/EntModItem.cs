@@ -24,7 +24,7 @@ namespace Entropy.Items{
         public override bool Autoload(ref string name){return false;}
     }
 	public class EntModItem : EntModItemBase{
-		public float critDMG = 1.5f;
+		public float critDMG = 2f;//1.5f;
 		public float baseCD = 1.5f;
 		public float basestat = 15;
 		public float statchance = 15;
@@ -33,8 +33,9 @@ namespace Entropy.Items{
         public float combotime = 1800;
         public float[] dmgratiobase = new float[15] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 		public float[] dmgratio = new float[15] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
-        public int dmgbase = 50;
+        //public int dmgbase = 50;
         public int realdmg = 50;
+        public double dmgmult = 1;
         public int basecrit = 15;
         public int realcrit = 15;
         public float normcritmult = 1;
@@ -119,10 +120,10 @@ namespace Entropy.Items{
             switch (modid)
             {
                 case -1://no damage
-                realdmg = 1;
+                dmgmult = 0;
                 break;
                 case 1://base damage
-                realdmg += (int)(dmgbase * (level * 0.05));
+                dmgmult += (level * 0.05);
                 break;
                 case 2://base cc
                 realcrit += (int)(usedcrit * (level * 0.10));
@@ -332,7 +333,7 @@ namespace Entropy.Items{
             }
 			float[] dmgarray = Entropy.GetDmgRatio(damage, dmgratio);
 			damage = (int)Entropy.DmgCalcNPC(dmgarray, target);
-			int cc = 0;
+			/*int cc = 0;
             if(item.melee){
                 cc = player.meleeCrit;
             }else if(item.ranged){
@@ -356,12 +357,15 @@ namespace Entropy.Items{
                 if(++ccolor>1){
                     Dust.NewDustPerfect(target.Center, 267, new Vector2(0,16).RotatedByRandom(0.5f)).noGravity = true;
                 }
+			}*/
+			if(crit){
+				damage = (int)(damage * critDMG/2);
 			}
             if(crit && critcomboboost!=0)modPlayer.comboadd(critcomboboost);
 			Entropy.Proc(this, target, damage);
         }
 #pragma warning disable 672
-        public override void GetWeaponDamage(Player player, ref int damage){
+        /*public override void GetWeaponDamage(Player player, ref int damage){
             float dmg = realdmg;
             if(item.melee){
                 dmg*=player.meleeDamage;
@@ -375,8 +379,13 @@ namespace Entropy.Items{
             if(realCombo)dmg*= comboMult(((EntropyPlayer)player).combocounter, combohits, comboDMG);
             dmg/=3;
             damage = (int)dmg;
-        }
+        }*/
 #pragma warning restore 672
+        public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat){
+            if(realCombo)mult*= comboMult(((EntropyPlayer)player).combocounter, combohits, comboDMG);
+            mult*=(float)dmgmult;
+            mult/=3;
+        }
         public override void GetWeaponCrit(Player player, ref int crit){
             crit = (int)(realcrit*(combocritmult==0?1:(combocritmult+1)*comboMult(Main.player[item.owner].GetModPlayer<EntropyPlayer>().combocounter, combohits, comboDMG)))-4;
             if(item.melee){

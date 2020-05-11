@@ -45,7 +45,7 @@ namespace Entropy.Items{
 		public override void SetDefaults() {
 			switch (mode){
 				case 0:
-				realdmg = dmgbase = 40;
+				item.damage = 40;//realdmg = dmgbase = 40;
 				item.useStyle = 5;
 				statchance = basestat = 22;
 				item.ranged = true;
@@ -57,13 +57,13 @@ namespace Entropy.Items{
 				item.useAnimation = 20;
 				break;
 				case 1:
-				realdmg = dmgbase = 60;
+				item.damage = 60;//realdmg = dmgbase = 60;
 				statchance = basestat = 18;
 				item.useTime = 15;
 				item.useAnimation = 15;
 				goto default;
 				case 2:
-				realdmg = dmgbase = 90;
+				item.damage = 90;//realdmg = dmgbase = 90;
 				statchance = basestat = 28;
 				item.useTime = 12;
 				item.useAnimation = 12;

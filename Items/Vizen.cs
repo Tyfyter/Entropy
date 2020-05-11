@@ -30,10 +30,9 @@ namespace Entropy.Items{
           	customGlowMask = Entropy.SetStaticDefaultsGlowMask(this);
 		}
 		public override void SetDefaults() {
-			realdmg = dmgbase = 50;
+			item.damage = 50;//realdmg = dmgbase = 50;
 			statchance = basestat = 27;
 			realcrit = basecrit = 30;
-			item.damage = 1;//realdmg = dmgbase = mode==0?60:50;
 			//item.ranged = mode == 0;
 			//item.melee = !item.ranged;
 			item.width = 59;
