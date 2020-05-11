@@ -7,10 +7,8 @@ using Terraria.ModLoader;
 using Terraria.DataStructures;
 using Terraria.ModLoader.IO;
 
-namespace Entropy.Items
-{
-	public class InfinityPlus2 : EntModItem
-	{
+namespace Entropy.Items{
+	public class InfinityPlus2 : EntModItem{
 		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
 		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
         int mode = 0;
@@ -18,13 +16,11 @@ namespace Entropy.Items
         //public EntModItem[] mods = new EntModItem[8] {EntModItem.New(), EntModItem.New(), EntModItem.New(), EntModItem.New(), EntModItem.New(), EntModItem.New(), EntModItem.New(), EntModItem.New()};
         //public EntModItem entmoditem;
         //Chest mods = new Chest();
-        public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("∞ + 2 sword");
-			Tooltip.SetDefault("technically it should be the same as an ∞ + 1 or even ∞ - 1 sword");
+        public override void SetStaticDefaults(){
+			DisplayName.SetDefault("∞+2 sword");
+			Tooltip.SetDefault("technically it's the same as an ∞ + 1 sword");
 		}
-		public override void SetDefaults()
-		{
+		public override void SetDefaults(){
             //Player owner = Main.player[item.owner];
 			//item.name = "Willbreaker";
 			//entmoditem = ((EntModItem)this);
@@ -136,7 +132,7 @@ namespace Entropy.Items
 
         /*public override void ModifyHitNPC(Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
         {
-			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>(mod);
+			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
             //Main.NewText("precalc:"+damage, Color.White, true);
 			//Main.NewText("ratio:"+Entropy.ToStringReal(dmgratio, ", "));
 			float[] dmgarray = Entropy.GetDmgRatio(damage, dmgratio);

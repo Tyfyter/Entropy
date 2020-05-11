@@ -9,8 +9,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Entropy.NPCs.EntropyGlobalNPC;
 
-namespace Entropy.Projectiles
-{
+namespace Entropy.Projectiles{
 
     public class ValhallaAbility : EntModProjectile{
 		public override string Texture => "Entropy/Items/Mods/ComboSpeed";
@@ -40,7 +39,7 @@ namespace Entropy.Projectiles
         }
         public override void ModifyHitPlayer(Player target, ref int damage, ref bool crit){
             if(target.team == Main.player[projectile.owner].team){
-                target.AddBuff(mod.BuffType<Warcry>(), 600);
+                target.AddBuff(ModContent.BuffType<Warcry>(), 600);
             }else{
                 target.noKnockback = false;
             }

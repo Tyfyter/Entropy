@@ -5,8 +5,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Entropy.Projectiles
-{
+namespace Entropy.Projectiles{
 
     public class FakeGrapple : ModProjectile
     {
@@ -21,8 +20,7 @@ namespace Entropy.Projectiles
             projectile.aiStyle = 7;
             projectile.Kill();
         }
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Fake Grappling Hook");
 		}
         public override void AI()           //this make that the projectile will face the corect way

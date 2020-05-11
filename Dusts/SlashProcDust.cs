@@ -7,8 +7,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Entropy.Dusts
-{
+namespace Entropy.Dusts{
     class SlashProcDust : ModDust
     {
         public override void OnSpawn(Dust dust)

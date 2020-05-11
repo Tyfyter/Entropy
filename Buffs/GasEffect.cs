@@ -7,7 +7,7 @@ using static Entropy.EntropyExt;
 namespace Entropy.Buffs {
     public class GasEffect : BuffBase{
         int damage = 1;
-        int basedamage = 1;
+        //int basedamage = 1;
         public override bool isActive => false;
         public GasEffect(NPC npc, int damage, int duration, Entity cause = null) : base(npc, cause){
             this.damage = damage;

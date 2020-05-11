@@ -23,7 +23,7 @@ namespace Entropy {
                 num150 = (float)num145 / num150;
                 num148 *= num150;
                 num149 *= num150;
-                Projectile.NewProjectile(vector.X, vector.Y, num148, num149, mod.ProjectileType<FallenWillbreaker>(), 1000, 10f, Main.myPlayer, 0f, 0f);
+                Projectile.NewProjectile(vector.X, vector.Y, num148, num149, ModContent.ProjectileType<FallenWillbreaker>(), 1000, 10f, Main.myPlayer, 0f, 0f);
                 //Main.NewText((vector.X-(Main.rightWorld/2))/8);
             }
         }

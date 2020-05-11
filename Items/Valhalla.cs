@@ -9,8 +9,7 @@ using System.Reflection;
 using Entropy.Projectiles;
 using Entropy.Buffs;
 
-namespace Entropy.Items
-{
+namespace Entropy.Items{
 	public class CompModItem : EntModItem{
 		internal int ability = 0;
 		public virtual int maxabilities => 4;
@@ -21,8 +20,7 @@ namespace Entropy.Items
             return true;
         }
 	}
-	public class Valhalla : CompModItem
-	{
+	public class Valhalla : CompModItem{
 		public override string Texture => "Entropy/Items/Valhalla";
 		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
 		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
@@ -39,11 +37,10 @@ namespace Entropy.Items
 
 		public delegate bool UIH(Player player, ref Rectangle hitbox, int distance, float jumpSpeed = 9, float fallSpeedXmod = 0.5F, float fallSpeedY = 8, bool disableBounce = false);
 		delegate bool SDOM(float dashSpeed = 14.5F, float dashMaxSpeedThreshold = 12, float dashMaxFriction = 0.992F, float dashMinFriction = 0.96F, bool forceDash = false, int dashEffect = 0);
-		//public override bool realCombo => mode!=0;
-		public override void SetStaticDefaults()
-		{
+		public override bool realCombo => true;
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Valhalla");
-			Tooltip.SetDefault("Trapped and tortured\n-Aurdeorum");
+			Tooltip.SetDefault("Trapped and tortured"/*\n-Aurdeorum*/);
 		}
 		public override void SetDefaults() {
 			switch (mode){
@@ -55,7 +52,7 @@ namespace Entropy.Items
 				item.melee = false;
 				item.noMelee = true;
 				item.noUseGraphic = false;
-				item.shoot = mod.ProjectileType<ValhallaArrow>();
+				item.shoot = ModContent.ProjectileType<ValhallaArrow>();
 				item.useTime = 20;
 				item.useAnimation = 20;
 				break;
@@ -170,7 +167,7 @@ namespace Entropy.Items
 			//SetDashOnMovement = Delegate.CreateDelegate(typeof(Func<ModPlayer, float, float, float, float, bool, int, bool> ),MPF.GetMethod("SetDashOnMovement")) as Func<ModPlayer, float, float, float, float, bool, int, bool>;//SetDashOnMovement
 			//ModifyTooltips
 		}
-		public static void ComboEffects(Player player, Item item, bool initial){}
+		//public static void ComboEffects(Player player, Item item, bool initial){}
 		public void CastAbility(int i){
 			if(!initialized)InitClaws();
 			Player player = Main.player[item.owner];
@@ -182,13 +179,13 @@ namespace Entropy.Items
 				case 2:
 				if(player.statMana<3)return;
 				int dmg = player.statMana;
-				Projectile.NewProjectile(player.Center, new Vector2(), mod.ProjectileType<ValhallaAbility>(), dmg/2+1, 10, player.whoAmI);
+				Projectile.NewProjectile(player.Center, new Vector2(), ModContent.ProjectileType<ValhallaAbility>(), dmg/2+1, 10, player.whoAmI);
 				player.CheckMana(dmg/3, true);
 				Main.PlaySound(15, (int)player.Center.X, (int)player.Center.Y, 0, pitchOffset:0.55f);
 				break;
 				case 1:
 				if(!player.CheckMana(150, true))return;
-				Projectile.NewProjectile(player.Center, new Vector2(), mod.ProjectileType<ValhallaAbility>(), 1, 0, player.whoAmI);
+				Projectile.NewProjectile(player.Center, new Vector2(), ModContent.ProjectileType<ValhallaAbility>(), 1, 0, player.whoAmI);
 				Main.PlaySound(29, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.25f);
 				break;
 				default:
@@ -197,7 +194,7 @@ namespace Entropy.Items
 			}
 		}
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack){
-			type = mod.ProjectileType<ValhallaArrow>();
+			type = ModContent.ProjectileType<ValhallaArrow>();
 			Vector2 vec = new Vector2(speedX, speedY).SafeNormalize(new Vector2()).RotatedBy(Math.PI/2)*8;
 			position+=vec;
 			base.Shoot(player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
@@ -211,17 +208,15 @@ namespace Entropy.Items
 			base.ModifyHitNPC(player, target, ref damage, ref knockBack, ref crit);
         }
 	}
-	/* public class Valhalla2 : Valhalla
-	{
+	/* public class Valhalla2 : Valhalla{
 		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
 		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Valhalla");
 			Tooltip.SetDefault("");
 		}
 		public override void SetDefaults() {
-			item.type = mod.ItemType("Trinity1");
+			item.type = ModContent.ItemType("Trinity1");
 			item.SetDefaults(item.type);
 			item.damage = 50;
 			item.melee = true;
@@ -247,22 +242,20 @@ namespace Entropy.Items
 			}
 		}
 		public override bool CanRightClick(){
-			item.type = mod.ItemType<Trinity3>();
+			item.type = ModContent.ItemType<Trinity3>();
 			return false;
 		}
 	}
-	public class Valhalla3 : Valhalla
-	{
+	public class Valhalla3 : Valhalla{
 		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
 		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Valhalla");
 			Tooltip.SetDefault("");
 			Item.staff[item.type] = true;
 		}
 		public override void SetDefaults() {
-			item.type = mod.ItemType("Trinity1");
+			item.type = ModContent.ItemType("Trinity1");
 			item.SetDefaults(item.type);
 			item.damage = 50;
 			item.melee = true;
@@ -282,7 +275,7 @@ namespace Entropy.Items
 		}
 
 		public override bool CanRightClick(){
-			item.type = mod.ItemType<Trinity1>();
+			item.type = ModContent.ItemType<Trinity1>();
 			return false;
 		}
 	} */

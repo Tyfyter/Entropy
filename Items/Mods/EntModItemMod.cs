@@ -12,13 +12,20 @@ using System.Text;
 using System.Reflection;
 using Terraria.Utilities;
 
-namespace Entropy.Items.Mods
-{
+namespace Entropy.Items.Mods{
 	public class Hornet : EntModItemMod {
 		public override int type => 1;
 		public override Color Rarity => Color.Silver;
+		public override int basereenforcement => 2;
+		public override (int,int)[] reenforcePrice => new (int, int)[]{
+			(2,ItemID.IronBar),
+			(2,ItemID.IronBar),
+			(1,ItemID.SoulofMight),
+			(2,ItemID.HallowedBar),
+			(2,ItemID.HallowedBar)
+		};
 		public override void ModifyTooltips(List<TooltipLine> tooltips){
-			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*20f)+"% damage");
+			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*5f)+"% damage");
 			tooltips.Add(tip);
 			base.ModifyTooltips(tooltips);
 		}
@@ -27,8 +34,7 @@ namespace Entropy.Items.Mods
 		public override int type => 6;
 		public override Color Rarity => Color.Silver;
 		public override bool CanApply(EntModItem item) => item.realCombo;
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 		  DisplayName.SetDefault("Relentless Fury");
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips){
@@ -64,12 +70,18 @@ namespace Entropy.Items.Mods
 		public override int type => 5;
 		public override Color Rarity => Color.Silver;
 		public override bool CanApply(EntModItem item) => item.realCombo;
-		public override void SetStaticDefaults()
-		{
+		public override (int,int)[] reenforcePrice => new (int, int)[]{
+			(2,ItemID.IronBar),
+			(2,ItemID.IronBar),
+			(1,ItemID.SoulofSight),
+			(2,ItemID.HallowedBar),
+			(2,ItemID.HallowedBar)
+		};
+		public override void SetStaticDefaults(){
 		  DisplayName.SetDefault("Weeping Wounds");
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips){
-			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*7.5f)+"% status chance\nStacks with combo multiplier");
+			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*5f)+"% status chance\nStacks with combo multiplier");
 			tooltips.Add(tip);
 			base.ModifyTooltips(tooltips);
 		}
@@ -79,13 +91,19 @@ namespace Entropy.Items.Mods
 		public override int maxlevel => 10;
 		public override Color Rarity => Color.Silver;
 		public override bool CanApply(EntModItem item) => item.realCombo;
-		public override void SetStaticDefaults()
-		{
+		public override (int,int)[] reenforcePrice => new (int, int)[]{
+			(2,ItemID.IronBar),
+			(2,ItemID.IronBar),
+			(1,ItemID.SoulofSight),
+			(2,ItemID.HallowedBar),
+			(2,ItemID.HallowedBar)
+		};
+		public override void SetStaticDefaults(){
 		  DisplayName.SetDefault("Blood Rush");
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips){
 			#pragma warning disable 0618
-			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*15f)+Lang.tip[5]+"\nStacks with combo multiplier");
+			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*10f)+Lang.tip[5]+"\nStacks with combo multiplier");
 			#pragma warning disable 0618
 			tooltips.Add(tip);
 			base.ModifyTooltips(tooltips);
@@ -94,8 +112,15 @@ namespace Entropy.Items.Mods
 	public class Force : EntModItemMod {
 		public override int type => 9;
 		public override Color Rarity => Color.Goldenrod;
+		public override (int,int)[] reenforcePrice => new (int, int)[]{
+			(2,ItemID.IronBar),
+			(2,ItemID.IronBar),
+			(1,ItemID.SoulofMight),
+			(2,ItemID.HallowedBar),
+			(2,ItemID.HallowedBar)
+		};
 		public override void ModifyTooltips(List<TooltipLine> tooltips){
-			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*15f)+"% impact damage");
+			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*10f)+"% impact damage");
 			tooltips.Add(tip);
 			base.ModifyTooltips(tooltips);
 		}
@@ -103,8 +128,15 @@ namespace Entropy.Items.Mods
 	public class Thorn : EntModItemMod {
 		public override int type => 10;
 		public override Color Rarity => Color.Goldenrod;
+		public override (int,int)[] reenforcePrice => new (int, int)[]{
+			(2,ItemID.IronBar),
+			(2,ItemID.IronBar),
+			(1,ItemID.SoulofMight),
+			(2,ItemID.HallowedBar),
+			(2,ItemID.HallowedBar)
+		};
 		public override void ModifyTooltips(List<TooltipLine> tooltips){
-			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*15f)+"% puncture damage");
+			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*10f)+"% puncture damage");
 			tooltips.Add(tip);
 			base.ModifyTooltips(tooltips);
 		}
@@ -112,9 +144,18 @@ namespace Entropy.Items.Mods
 	public class Cutting_Edge : EntModItemMod {
 		public override int type => 8;
 		public override Color Rarity => Color.Goldenrod;
+		public override (int,int)[] reenforcePrice => new (int, int)[]{
+			(2,ItemID.IronBar),
+			(2,ItemID.IronBar),
+			(1,ItemID.SoulofMight),
+			(2,ItemID.HallowedBar),
+			(2,ItemID.HallowedBar)
+		};
+		public override void SetStaticDefaults(){
+		  DisplayName.SetDefault("Cutting Edge");
+		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips){
-			tooltips[0].text.Replace("_", " ");
-			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*15f)+"% slash damage");
+			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*10f)+"% slash damage");
 			tooltips.Add(tip);
 			base.ModifyTooltips(tooltips);
 		}
@@ -122,8 +163,15 @@ namespace Entropy.Items.Mods
 	public class Frost : EntModItemMod {
 		public override int type => 14;
 		public override Color Rarity => Color.Silver;
+		public override (int,int)[] reenforcePrice => new (int, int)[]{
+			(2,ItemID.IronBar),
+			(2,ItemID.IronBar),
+			(1,ItemID.SoulofFright),
+			(2,ItemID.HallowedBar),
+			(2,ItemID.HallowedBar)
+		};
 		public override void ModifyTooltips(List<TooltipLine> tooltips){
-			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*15f)+"% cold damage");
+			TooltipLine tip = new TooltipLine(mod, "Desc", "[c/"+Entropy.dmgcolor[Entropy.id_cold]+":+"+((level+1)*6f)+$"%{Entropy.dmgtypes[Entropy.id_cold]} damage]");
 			tooltips.Add(tip);
 			base.ModifyTooltips(tooltips);
 		}
@@ -131,8 +179,15 @@ namespace Entropy.Items.Mods
 	public class Cinder : EntModItemMod {
 		public override int type => 15;
 		public override Color Rarity => Color.Silver;
+		public override (int,int)[] reenforcePrice => new (int, int)[]{
+			(2,ItemID.IronBar),
+			(2,ItemID.IronBar),
+			(1,ItemID.SoulofFright),
+			(2,ItemID.HallowedBar),
+			(2,ItemID.HallowedBar)
+		};
 		public override void ModifyTooltips(List<TooltipLine> tooltips){
-			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*15f)+"% heat damage");
+			TooltipLine tip = new TooltipLine(mod, "Desc", "[c/"+Entropy.dmgcolor[Entropy.id_heat]+":+"+((level+1)*6f)+$"%{Entropy.dmgtypes[Entropy.id_heat]} damage]");
 			tooltips.Add(tip);
 			base.ModifyTooltips(tooltips);
 		}
@@ -140,8 +195,15 @@ namespace Entropy.Items.Mods
 	public class Shock : EntModItemMod {
 		public override int type => 16;
 		public override Color Rarity => Color.Silver;
+		public override (int,int)[] reenforcePrice => new (int, int)[]{
+			(2,ItemID.IronBar),
+			(2,ItemID.IronBar),
+			(1,ItemID.SoulofFright),
+			(2,ItemID.HallowedBar),
+			(2,ItemID.HallowedBar)
+		};
 		public override void ModifyTooltips(List<TooltipLine> tooltips){
-			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*15f)+"% electric damage");
+			TooltipLine tip = new TooltipLine(mod, "Desc", "[c/"+Entropy.dmgcolor[Entropy.id_electric]+":+"+((level+1)*6f)+$"%{Entropy.dmgtypes[Entropy.id_electric]} damage]");
 			tooltips.Add(tip);
 			base.ModifyTooltips(tooltips);
 		}
@@ -149,8 +211,15 @@ namespace Entropy.Items.Mods
 	public class Toxin : EntModItemMod {
 		public override int type => 17;
 		public override Color Rarity => Color.Silver;
+		public override (int,int)[] reenforcePrice => new (int, int)[]{
+			(2,ItemID.IronBar),
+			(2,ItemID.IronBar),
+			(1,ItemID.SoulofFright),
+			(2,ItemID.HallowedBar),
+			(2,ItemID.HallowedBar)
+		};
 		public override void ModifyTooltips(List<TooltipLine> tooltips){
-			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*15f)+"% toxic damage");
+			TooltipLine tip = new TooltipLine(mod, "Desc", "[c/"+Entropy.dmgcolor[Entropy.id_toxic]+":+"+((level+1)*6f)+$"%{Entropy.dmgtypes[Entropy.id_toxic]} damage]");
 			tooltips.Add(tip);
 			base.ModifyTooltips(tooltips);
 		}
@@ -177,6 +246,7 @@ namespace Entropy.Items.Mods
 	public class PrimedPunchThrough : PunchThrough {
 		public override int maxlevel => 10;
 		public override Color Rarity => Color.GhostWhite;
+		public override int basereenforcement => 3;
 		public override string Texture => "Entropy/Items/Mods/PunchThrough";
 		public override void SetStaticDefaults(){
 		  DisplayName.SetDefault("Primed Metal Auger");
@@ -196,17 +266,51 @@ namespace Entropy.Items.Mods
 			base.ModifyTooltips(tooltips);
 		}
 	}
-	public class EntModItemMod : EntModItemBase
-	{
+	public class EtherealForce : EntModItemMod {
+		public override int type => 20;
+		public override Color Rarity => Color.GhostWhite;
+		public override (int,int)[] reenforcePrice => new (int, int)[]{
+			(2,ItemID.IronBar),
+			(2,ItemID.IronBar),
+			(1,ItemID.SoulofSight),
+			(2,ItemID.HallowedBar),
+			(2,ItemID.HallowedBar)
+		};
+		public override void SetStaticDefaults(){
+		  DisplayName.SetDefault("Ethereal Force");
+		}
+		public override void ModifyTooltips(List<TooltipLine> tooltips){
+			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+((level+1)*10f)+"% impact damage");
+			tooltips.Add(tip);
+			tip = new TooltipLine(mod, "Desc", "+"+((reenforcement)*5f)+"% light damage");
+			tooltips.Add(tip);
+			base.ModifyTooltips(tooltips);
+		}
+	}
+	public class EntModItemMod : EntModItemBase{
 		//public modData data;
 		public virtual int type => 0;
 		public virtual int level {get;set;}
 		public virtual int maxlevel => 5;
+		public virtual int reenforcement {get;set;}
+		public virtual int basereenforcement => 1;
 		public virtual int refPrice =>(int)(5000*Math.Pow(3,level));
 		public virtual Color Rarity => Color.Sienna;
         public virtual bool CanApply(EntModItem item) => true;
         public override bool IsMod => true;
+		///<summary>
+		///price and item type
+		///</summary>
+		public virtual (int,int)[] reenforcePrice => new (int, int)[]{
+			(2,ItemID.IronBar),
+			(2,ItemID.IronBar),
+			(2,ItemID.IronBar),
+			(2,ItemID.HallowedBar),
+			(2,ItemID.HallowedBar)
+		};
+		//bool reenforcing = false;
 		static int tempint = 0;
+		static int tempint2 = 0;
         public override bool Autoload(ref string name){
             if(name == "EntModItemMod")return false;
             return true;
@@ -214,24 +318,70 @@ namespace Entropy.Items.Mods
 		public override void SetDefaults(){
 			item.width = item.height = 32;
 			item.rare = 2;
+			if(reenforcement<basereenforcement)reenforcement=basereenforcement;
 		}
         public override TagCompound Save(){
-            TagCompound o = new TagCompound(){{"lvl",level}};
+            TagCompound o = new TagCompound(){{"lvl",level},{"reenforce",reenforcement}};
             return o;
         }
         public override void Load(TagCompound tag){
 			#pragma warning disable 0612
             if(tag.HasTag("lvl"))level = tag.Get<int>("lvl");
+            if(tag.HasTag("reenforce")){
+				reenforcement = tag.Get<int>("reenforce");
+			}else{
+				reenforcement = level;
+			}
+			if(reenforcement<basereenforcement)reenforcement=basereenforcement;
 			#pragma warning restore 0612
         }
+		double rcdelay = 0;
+        public override bool CanRightClick(){
+			if(reenforcement>=maxlevel)return false;
+			if(rcdelay<Main.time){
+				Player player = Main.player[item.owner];
+				if(player.HeldItem!=null){
+					int i = Math.Min(reenforcement,reenforcePrice.Length-1);
+					if(i<0){
+						i = 0;
+					}
+					if(i>=reenforcePrice.Length)return false;
+					if(player.HeldItem.type==reenforcePrice[i].Item2&&player.HeldItem.stack>=reenforcePrice[i].Item1){
+						player.HeldItem.stack-=reenforcePrice[i].Item1;
+						Main.NewText(player.HeldItem.whoAmI);
+						reenforcement++;
+						Main.PlaySound(12, player.Center);
+					}
+				}
+				rcdelay = Main.time+4;
+				return false;
+			}else{
+				rcdelay = Main.time+4;
+				return false;
+			}
+        }
 		public override void ModifyTooltips(List<TooltipLine> tooltips){
-			tooltips[0].overrideColor = Rarity;
+			if(tooltips.Count>0)tooltips[0].overrideColor = Rarity;
 			TooltipLine tip = new TooltipLine(mod, "ModLevel", "");
 			int i = 0;
+			if(reenforcement>0)tip.text+=$"[c/{Rarity.Hex3()}:";
 			for(; i < level; i++)tip.text+="◈";
-			for(; i < maxlevel; i++)tip.text+="◇";
-			tip.overrideColor = Rarity;
+			for(; i < maxlevel; i++){
+				if(i==reenforcement)tip.text+=(reenforcement>0?"]":"")+$"[c/{Color.Lerp(Rarity, Color.Black, 0.75f).Hex3()}:";
+				tip.text+="◇";
+			}
+			tip.text+="]";
+			//tip.overrideColor = Rarity;
 			tooltips.Add(tip);
+			if(reenforcement<maxlevel){
+				int r = Math.Min(reenforcement,reenforcePrice.Length-1);
+				if(r<0){
+					r = 0;
+				}
+				if(r>=reenforcePrice.Length)return;
+				//string name = Lang.GetItemNameValue(reenforcePrice[r].Item2);
+				tooltips.Add(new TooltipLine(mod, "Reenforce",$"Right click with [i/s{reenforcePrice[r].Item1}:{reenforcePrice[r].Item2}] to reenforce "));
+			}
 		}
         public override bool ReforgePrice(ref int reforgePrice, ref bool canApplyDiscount){
 			reforgePrice = level<maxlevel?refPrice:0;
@@ -239,9 +389,11 @@ namespace Entropy.Items.Mods
 		}
 		public override bool NewPreReforge(){
 			tempint = level;
-			return level<maxlevel;
+			tempint2 = reenforcement;
+			return level<reenforcement;
 		}
 		public override void PostReforge(){
+			reenforcement = tempint2;
 			level = tempint+1;
 			item.prefix = 0;
 		}

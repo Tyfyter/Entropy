@@ -12,10 +12,8 @@ using System.Text;
 using System.Reflection;
 using static Entropy.Items.EntModItem;
 
-namespace Entropy.Projectiles
-{
-	public class EntModProjectile : ModProjectile
-	{
+namespace Entropy.Projectiles{
+	public class EntModProjectile : ModProjectile{
 		public float critDMG = 2;
 		public float statchance = 15;
         public float[] dmgratiobase = new float[15] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
@@ -25,7 +23,6 @@ namespace Entropy.Projectiles
         public int wallPenProgress = 0;
         public int wallPenMax => 8;
         public virtual bool reproc => false;
-        public virtual bool IsMod => false;
         public override bool CloneNewInstances => true;
         public override bool Autoload(ref string name){
             if(name == "EntModProjectile")return false;
@@ -79,16 +76,18 @@ namespace Entropy.Projectiles
         }
         public void ModEffectobsolete(int modid, float level){
             Player player = Main.player[projectile.owner];
-            EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>(mod);
+            EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
             switch (modid){
                 default:
                 break;
             }
         }
-
+        public virtual void PostShoot(){}
+        public virtual void PreProc(){}
+        public virtual void PostProc(){}
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockBack, ref bool crit, ref int hitDirection){
             Player player = Main.player[projectile.owner];
-			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>(mod);
+			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
 			//modPlayer.comboadd();
 			float[] dmgarray = Entropy.GetDmgRatio(damage, dmgratio);
 			damage = (int)Entropy.DmgCalcNPC(dmgarray, target);
@@ -113,7 +112,9 @@ namespace Entropy.Projectiles
 				damage = (int)(damage * critDMG);
 			}
             if(crit && critcombo!=0)modPlayer.comboadd(critcombo);
+            PreProc();
 			Entropy.Proc(this, target, damage);
+            PostProc();
         }
     }
 }

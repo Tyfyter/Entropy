@@ -3,10 +3,8 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Entropy.Projectiles
-{
-	public class EntropyGlobalProjectile : GlobalProjectile
-	{
+namespace Entropy.Projectiles{
+	public class EntropyGlobalProjectile : GlobalProjectile{
 		/*public override void ModifyHitNPC(Terraria.Projectile projectile, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection){
 			if(target.modNPC != null)if((target.modNPC.GetType()+"").Contains("CalamityMod.NPCs.Yharon")){
 				damage = damage+(int)(target.lifeMax*0.0025);

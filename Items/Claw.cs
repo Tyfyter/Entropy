@@ -7,12 +7,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Entropy.Projectiles;
 
-namespace Entropy.Items
-{
-	public class Claw : EntModItem
-	{
-		public override void SetStaticDefaults()
-		{
+namespace Entropy.Items{
+	public class Claw : EntModItem{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Laceres");
 			Tooltip.SetDefault("");
 			//Item.claw[item.type] = true;
@@ -42,12 +39,12 @@ namespace Entropy.Items
 		}
 		
         public override bool CanUseItem(Player player){
-            EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>(mod);
+            EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
             if (player.altFunctionUse == 2){
 				if(modPlayer.combocounter>0){
 					item.useTime = 8;
 					item.useAnimation = 8;
-					item.shoot = mod.ProjectileType<ClawFeather>();
+					item.shoot = ModContent.ProjectileType<ClawFeather>();
 					item.useStyle = 5;
 					item.autoReuse = false;
 					modPlayer.comboadd(-1, 150);
@@ -58,7 +55,7 @@ namespace Entropy.Items
 				}else{
 					item.useTime = 18;
 					item.useAnimation = 18;
-					item.shoot = mod.ProjectileType<ClawFeather>();
+					item.shoot = ModContent.ProjectileType<ClawFeather>();
 					item.useStyle = 5;
 					item.autoReuse = false;
 					item.UseSound = SoundID.Item39;
@@ -81,6 +78,7 @@ namespace Entropy.Items
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack){
 			if(player.itemAnimation==14)return false;
 			if(player.itemAnimation==4)damage = (int)(damage/1.4f);
+			//try{Main.PlaySound(71).Pitch = Main.mouseY/(Main.screenHeight/2f);}catch(Exception){Main.NewText(Main.mouseY/(Main.screenHeight/2f)+"is out of bounds");}
 			return base.Shoot(player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
 		}
 	}

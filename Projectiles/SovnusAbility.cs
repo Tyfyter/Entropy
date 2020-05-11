@@ -10,8 +10,7 @@ using Terraria.ModLoader;
 using static Entropy.NPCs.EntropyGlobalNPC;
 using static Entropy.EntropyExt;
 
-namespace Entropy.Projectiles
-{
+namespace Entropy.Projectiles{
 
     public class SovnusAbility : EntModProjectile {
         static readonly Color[] colors = new Color[]{Color.DodgerBlue,Color.LightGoldenrodYellow};

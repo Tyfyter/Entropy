@@ -9,8 +9,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Entropy.NPCs.EntropyGlobalNPC;
 
-namespace Entropy.Projectiles
-{
+namespace Entropy.Projectiles{
 
     public class SovnusSpread : EntModProjectile {
         public override string Texture => "Terraria/Projectile_55";

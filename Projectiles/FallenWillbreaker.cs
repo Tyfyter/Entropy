@@ -8,15 +8,13 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace RefTheGun.Projectiles
-{
+namespace RefTheGun.Projectiles{
 
     public class FallenWillbreaker : ModProjectile
     {
         public override String Texture => "Entropy/Items/Willbreaker";
         public override bool CloneNewInstances => true;
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Willbreaker");
 		}
         public override void SetDefaults()
@@ -50,8 +48,8 @@ namespace RefTheGun.Projectiles
         }
         public override void ModifyHitPlayer(Player target, ref int damage, ref bool crit){
             damage = -1;
-            Item.NewItem(projectile.Center, new Vector2(), mod.ItemType<Willbreaker>(), noGrabDelay:true);
-            mod.GetModWorld<EntropyWorld>().gotSword = true;
+            Item.NewItem(projectile.Center, new Vector2(), ModContent.ItemType<Willbreaker>(), noGrabDelay:true);
+            ModContent.GetInstance<EntropyWorld>().gotSword = true;
             projectile.Kill();
         }
         /* public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough){

@@ -11,28 +11,26 @@ using Entropy.Buffs;
 using static Entropy.NPCs.EntropyGlobalNPC;
 using Terraria.Localization;
 
-namespace Entropy.Items
-{
+namespace Entropy.Items{
 	//Abilities:
 	//Shield
 	//Slash
 	//Renewal
 	//Smite
-	public class Vizen : CompModItem
-	{
+	public class Vizen : CompModItem{
 		public override string Texture => "Entropy/Items/Vizen";
 		public override int maxabilities => 4;
+		public override bool realCombo => true;
 		public override bool isGun => true;
 		int time = 0;
         public static short customGlowMask = 0;
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Vizen");
 			Tooltip.SetDefault("A brutal thorn...\n-Aurdeorum");
           	customGlowMask = Entropy.SetStaticDefaultsGlowMask(this);
 		}
 		public override void SetDefaults() {
-			realdmg = dmgbase = 150;
+			realdmg = dmgbase = 50;
 			statchance = basestat = 27;
 			realcrit = basecrit = 30;
 			item.damage = 1;//realdmg = dmgbase = mode==0?60:50;
@@ -57,7 +55,7 @@ namespace Entropy.Items
 			item.shootSpeed = 13.5f;
 			item.useStyle = 5;
 			item.useAmmo = AmmoID.Bullet;
-			item.shoot = mod.ProjectileType<VizenShot>();
+			item.shoot = ModContent.ProjectileType<VizenShot>();
 			dmgratio = dmgratiobase = new float[15]{0.34f, 0.33f, 0.33f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
             item.glowMask = customGlowMask;
 		}
@@ -108,17 +106,17 @@ namespace Entropy.Items
 			switch(i){
 				case 1:
 				if(!player.CheckMana(50, true))return;
-				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, mod.ProjectileType<VoxAbility>(), realdmg, 15, player.whoAmI);
+				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<VoxAbility>(), realdmg, 15, player.whoAmI);
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:-0.55f);
 				break;
 				case 2:
 				if(!player.CheckMana(75, true))return;
-				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, mod.ProjectileType<SovnusAbility>(), realdmg/3, 1, player.whoAmI);
+				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<SovnusAbility>(), realdmg/3, 1, player.whoAmI);
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.55f);
 				break;
 				case 3:
 				if(!player.CheckMana(75, true))return;
-				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, mod.ProjectileType<SovnusAbility>(), realdmg, 15, player.whoAmI, 1);
+				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<SovnusAbility>(), realdmg, 15, player.whoAmI, 1);
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.55f);
 				break;
 			}
@@ -128,9 +126,14 @@ namespace Entropy.Items
 				//Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0f);
 				switch (ability){
 					case 0:
+					if(!player.CheckMana(35, true))break;
+					type = ModContent.ProjectileType<VizenSmite>();
+					Projectile.NewProjectileDirect(Main.MouseWorld, new Vector2(), type, damage, 0, item.owner, 1).penetrate = 60;
+					Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 68, pitchOffset:0.15f).Volume = 0.45f;
+					Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 117, pitchOffset:0.15f);
 					break;
 					case 1:
-					type = mod.ProjectileType<VizenSlash>();
+					type = ModContent.ProjectileType<VizenSlash>();
 					speedX*=0.75f;
 					speedY*=0.75f;
 					knockBack*=3;
@@ -146,7 +149,7 @@ namespace Entropy.Items
 					break;
 					case 2:
 					if(!player.CheckMana(50, true))break;
-					int id = mod.BuffType<Renewal>();
+					int id = ModContent.BuffType<Renewal>();
 					for (int i = 0; i < Main.player.Length; i++){
 						Player target = Main.player[i];
 						if(target.active && target.team==player.team){
@@ -156,7 +159,7 @@ namespace Entropy.Items
 					break;
 					case 3:
 					if(!player.CheckMana(35, true))break;
-					type = mod.ProjectileType<VizenSmite>();
+					type = ModContent.ProjectileType<VizenSmite>();
 					Vector2 vec2 = new Vector2(Main.lastMouseX+Main.screenPosition.X, Main.lastMouseY+Main.screenPosition.Y);
 					Vector2 vec3 = Main.MouseWorld;
 					vec3 = (vec3 - vec2).SafeNormalize(new Vector2())*32;
@@ -172,7 +175,7 @@ namespace Entropy.Items
 				}
 				return false;
 			}else{
-				type = mod.ProjectileType<VizenShot>();
+				type = ModContent.ProjectileType<VizenShot>();
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0.15f).Volume = 0.55f;
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 40, pitchOffset:0.15f).Volume = 0.45f;
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 89, pitchOffset:0.15f);
@@ -186,17 +189,15 @@ namespace Entropy.Items
 			return false;
 		}
 	}
-	/* public class Valhalla2 : Valhalla
-	{
+	/* public class Valhalla2 : Valhalla{
 		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
 		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Valhalla");
 			Tooltip.SetDefault("");
 		}
 		public override void SetDefaults() {
-			item.type = mod.ItemType("Trinity1");
+			item.type = ModContent.ItemType("Trinity1");
 			item.SetDefaults(item.type);
 			item.damage = 50;
 			item.melee = true;
@@ -222,22 +223,20 @@ namespace Entropy.Items
 			}
 		}
 		public override bool CanRightClick(){
-			item.type = mod.ItemType<Trinity3>();
+			item.type = ModContent.ItemType<Trinity3>();
 			return false;
 		}
 	}
-	public class Valhalla3 : Valhalla
-	{
+	public class Valhalla3 : Valhalla{
 		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
 		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Valhalla");
 			Tooltip.SetDefault("");
 			Item.staff[item.type] = true;
 		}
 		public override void SetDefaults() {
-			item.type = mod.ItemType("Trinity1");
+			item.type = ModContent.ItemType("Trinity1");
 			item.SetDefaults(item.type);
 			item.damage = 50;
 			item.melee = true;
@@ -257,7 +256,7 @@ namespace Entropy.Items
 		}
 
 		public override bool CanRightClick(){
-			item.type = mod.ItemType<Trinity1>();
+			item.type = ModContent.ItemType<Trinity1>();
 			return false;
 		}
 	} */

@@ -11,17 +11,14 @@ using Entropy.Buffs;
 using static Entropy.NPCs.EntropyGlobalNPC;
 using Microsoft.Xna.Framework.Audio;
 
-namespace Entropy.Items
-{
-	public class Sekkal : CompModItem
-	{
+namespace Entropy.Items{
+	public class Sekkal : CompModItem{
 		public override string Texture => "Entropy/Items/Sekkal";
 		int time = 0;
 		int charge = 0;
 		int combo = 0;
 		public int element = 0;
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Sekkal");
 			Tooltip.SetDefault("Untold Destruction\n-Aurdeorum");
 		}
@@ -35,7 +32,7 @@ namespace Entropy.Items
 				item.melee = false;
 				item.noMelee = true;
 				item.noUseGraphic = false;
-				item.shoot = mod.ProjectileType<ValhallaArrow>();
+				item.shoot = ModContent.ProjectileType<ValhallaArrow>();
 				item.useTime = 20;
 				item.useAnimation = 20;
 				break;
@@ -78,7 +75,7 @@ namespace Entropy.Items
 			item.noMelee = false;
 			item.noUseGraphic = false;
 			item.useStyle = 1;
-			item.shoot = mod.ProjectileType<SekkalWave>();
+			item.shoot = ModContent.ProjectileType<SekkalWave>();
 			item.useAmmo = 0;
 			realcrit = basecrit = 25;
 			statchance = basestat = 25;
@@ -145,7 +142,7 @@ namespace Entropy.Items
 			switch(i){
 				case 3:
 				if(i==3&&!player.CheckMana(75, true))return;
-				EntModProjectile emp2 = Projectile.NewProjectileDirect(player.Center, new Vector2(), mod.ProjectileType<SekkalAbility2>(), (int)(realdmg*1.5f), 0, player.whoAmI, el).modProjectile as EntModProjectile;
+				EntModProjectile emp2 = Projectile.NewProjectileDirect(player.Center, new Vector2(), ModContent.ProjectileType<SekkalAbility2>(), (int)(realdmg*1.5f), 0, player.whoAmI, el).modProjectile as EntModProjectile;
 				if(emp2!=null){
 					emp2.dmgratio[el] = 1;
 				}
@@ -189,7 +186,7 @@ namespace Entropy.Items
 				if(vec.X!=0)player.direction = vec.X>1?1:-1;
 				for(float i2 = -2; i2 < 3; i2++){
 					if(element==2)i2 = (Main.rand.NextFloat(4)-2);
-					EntModProjectile emp = (Projectile.NewProjectileDirect(player.Top+new Vector2(player.direction*3, 14), vec.SafeNormalize(new Vector2()).RotatedBy(i2*spread)*speed, mod.ProjectileType<SekkalAbility>(), dmg, 1, player.whoAmI).modProjectile as EntModProjectile);
+					EntModProjectile emp = (Projectile.NewProjectileDirect(player.Top+new Vector2(player.direction*3, 14), vec.SafeNormalize(new Vector2()).RotatedBy(i2*spread)*speed, ModContent.ProjectileType<SekkalAbility>(), dmg, 1, player.whoAmI).modProjectile as EntModProjectile);
 					if(emp!=null){
 						emp.dmgratio[el] = 1;
 					}
@@ -254,17 +251,15 @@ namespace Entropy.Items
 			base.ModifyHitNPC(player, target, ref damage, ref knockBack, ref crit);
         }
 	}
-	/* public class Valhalla2 : Valhalla
-	{
+	/* public class Valhalla2 : Valhalla{
 		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
 		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Valhalla");
 			Tooltip.SetDefault("");
 		}
 		public override void SetDefaults() {
-			item.type = mod.ItemType("Trinity1");
+			item.type = ModContent.ItemType("Trinity1");
 			item.SetDefaults(item.type);
 			item.damage = 50;
 			item.melee = true;
@@ -290,22 +285,20 @@ namespace Entropy.Items
 			}
 		}
 		public override bool CanRightClick(){
-			item.type = mod.ItemType<Trinity3>();
+			item.type = ModContent.ItemType<Trinity3>();
 			return false;
 		}
 	}
-	public class Valhalla3 : Valhalla
-	{
+	public class Valhalla3 : Valhalla{
 		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
 		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Valhalla");
 			Tooltip.SetDefault("");
 			Item.staff[item.type] = true;
 		}
 		public override void SetDefaults() {
-			item.type = mod.ItemType("Trinity1");
+			item.type = ModContent.ItemType("Trinity1");
 			item.SetDefaults(item.type);
 			item.damage = 50;
 			item.melee = true;
@@ -325,7 +318,7 @@ namespace Entropy.Items
 		}
 
 		public override bool CanRightClick(){
-			item.type = mod.ItemType<Trinity1>();
+			item.type = ModContent.ItemType<Trinity1>();
 			return false;
 		}
 	} */

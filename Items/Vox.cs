@@ -10,16 +10,13 @@ using Entropy.Projectiles;
 using Entropy.Buffs;
 using static Entropy.NPCs.EntropyGlobalNPC;
 
-namespace Entropy.Items
-{
-	public class Vox : CompModItem
-	{
+namespace Entropy.Items{
+	public class Vox : CompModItem{
 		public override string Texture => "Entropy/Items/Vox";
 		public override int maxabilities => 3;
 		public override bool isGun => true;
 		int time = 0;
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Vox");
 			Tooltip.SetDefault("Wrath without sound\n-Aurdeorum");
 		}
@@ -49,7 +46,7 @@ namespace Entropy.Items
 			item.shootSpeed = 13.5f;
 			item.useStyle = 5;
 			item.useAmmo = AmmoID.Bullet;
-			item.shoot = mod.ProjectileType<VoxSlug>();
+			item.shoot = ModContent.ProjectileType<VoxSlug>();
 			dmgratio = dmgratiobase = new float[15] {0.1f,0.8f,0.1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
 		}
 		public override void PostSetDefaults(Player player){
@@ -81,7 +78,7 @@ namespace Entropy.Items
 					realdmg = dmgbase = 140;
 					statchance = basestat = 22;
 					realcrit = basecrit = 6;
-					item.shoot = mod.ProjectileType<VoxSlash>();
+					item.shoot = ModContent.ProjectileType<VoxSlash>();
 					return true;
 				}
 				if(ability == 1){
@@ -94,16 +91,15 @@ namespace Entropy.Items
 			}
 			return true;
 		}
-		public override void GetWeaponDamage(Player player, ref int damage){
-			base.GetWeaponDamage(player, ref damage);
-			if(player.detectCreature)damage=(int)(damage*1.25f);
+		public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat){
+			if(player.detectCreature)mult*=1.25f;
 		}
 		public void CastAbility(int i){
 			Player player = Main.player[item.owner];
 			switch(i){
 				case 1:
 				if(!player.CheckMana(50, true))return;
-				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, mod.ProjectileType<VoxAbility>(), realdmg, 15, player.whoAmI);
+				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<VoxAbility>(), realdmg, 15, player.whoAmI);
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:-0.55f);
 				break;
 				case 2:
@@ -128,14 +124,14 @@ namespace Entropy.Items
 		}
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack){
 			if(player.altFunctionUse==2){
-				type = mod.ProjectileType<VoxSlash>();
+				type = ModContent.ProjectileType<VoxSlash>();
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0.15f);
 			}else{
-				type = mod.ProjectileType<VoxSlug>();
+				type = ModContent.ProjectileType<VoxSlug>();
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0f);
 			}
-			if(type == mod.ProjectileType<VoxSlug>())return base.Shoot(player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
-			if(type == mod.ProjectileType<VoxSlash>()&&ability == 1){
+			if(type == ModContent.ProjectileType<VoxSlug>())return base.Shoot(player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
+			if(type == ModContent.ProjectileType<VoxSlash>()&&ability == 1){
 				return false;
 			}
 			damage/=7; 
@@ -149,17 +145,15 @@ namespace Entropy.Items
 			return false;
 		}
 	}
-	/* public class Valhalla2 : Valhalla
-	{
+	/* public class Valhalla2 : Valhalla{
 		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
 		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Valhalla");
 			Tooltip.SetDefault("");
 		}
 		public override void SetDefaults() {
-			item.type = mod.ItemType("Trinity1");
+			item.type = ModContent.ItemType("Trinity1");
 			item.SetDefaults(item.type);
 			item.damage = 50;
 			item.melee = true;
@@ -185,22 +179,20 @@ namespace Entropy.Items
 			}
 		}
 		public override bool CanRightClick(){
-			item.type = mod.ItemType<Trinity3>();
+			item.type = ModContent.ItemType<Trinity3>();
 			return false;
 		}
 	}
-	public class Valhalla3 : Valhalla
-	{
+	public class Valhalla3 : Valhalla{
 		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
 		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Valhalla");
 			Tooltip.SetDefault("");
 			Item.staff[item.type] = true;
 		}
 		public override void SetDefaults() {
-			item.type = mod.ItemType("Trinity1");
+			item.type = ModContent.ItemType("Trinity1");
 			item.SetDefaults(item.type);
 			item.damage = 50;
 			item.melee = true;
@@ -220,7 +212,7 @@ namespace Entropy.Items
 		}
 
 		public override bool CanRightClick(){
-			item.type = mod.ItemType<Trinity1>();
+			item.type = ModContent.ItemType<Trinity1>();
 			return false;
 		}
 	} */

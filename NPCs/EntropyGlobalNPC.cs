@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Entropy.Buffs;
+using Entropy.Items;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -75,8 +76,10 @@ namespace Entropy.NPCs {
         public override void AI(NPC npc){
             Buffs.RemoveAll(BuffBase.GC);
             rad = false;
-			if(Buffs.Count>0)for(int i = 0; i<Buffs.Count; i++){
-				Buffs[i].Update(npc);
+			if(Buffs.Count>0){
+                for(int i = 0; i<Buffs.Count; i++){
+                    Buffs[i].Update(npc, i);
+                }
             }
         }
         public override void PostAI(NPC npc){
@@ -107,9 +110,15 @@ namespace Entropy.NPCs {
                 damage+=a;
                 for(int i = 0; i < 5; i++)Dust.NewDustDirect(npc.position, npc.width, npc.height, 267, Alpha:100, newColor:Color.LimeGreen).noGravity = true;
             }
+            List<Action> post = new List<Action>();
 			for(int i = 0; i<Buffs.Count; i++){
 				Buffs[i].ModifyHitItem(player, item, npc, ref damage, ref crit);
+                if(Buffs[i] is IPostHitBuff b&&b.HitAction){
+                    b.HitAction = false;
+                    post.Add(b.postHitAction);
+                }
             }
+            for(int i = 0; i < post.Count; i++)post[i]();
         }
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection){
             List<CorrEffect> corrs = Buffs.FindAll(FindCorr).ConvertAll(MakeCorr);
@@ -119,9 +128,15 @@ namespace Entropy.NPCs {
                 damage+=a;
                 for(int i = 0; i < 5; i++)Dust.NewDustDirect(npc.position, npc.width, npc.height, 267, Alpha:100, newColor:Color.LimeGreen).noGravity = true;
             }
+            List<Action> post = new List<Action>();
 			for(int i = 0; i<Buffs.Count; i++){
-				Buffs[i].ModifyHitProjectile(projectile, npc, ref damage, ref crit);
+                Buffs[i].ModifyHitProjectile(projectile, npc, ref damage, ref crit);
+                if(Buffs[i] is IPostHitBuff b&&b.HitAction){
+                    b.HitAction = false;
+                    post.Add(b.postHitAction);
+                }
             }
+            for(int i = 0; i < post.Count; i++)post[i]();
         }
         public override void ModifyHitNPC(NPC npc, NPC target, ref int damage, ref float knockback, ref bool crit){
             Buffs.RemoveAll(BuffBase.GC);
@@ -161,8 +176,10 @@ namespace Entropy.NPCs {
             if(!npc.CanAttack())return false;
             return base.CanHitPlayer(npc, target, ref cooldownSlot);
         }
-        public override void OnHitNPC(NPC npc, NPC target, int damage, float knockback, bool crit){
-
+        public override void SetupShop(int type, Chest shop, ref int nextSlot){
+            if(type==NPCID.TravellingMerchant&&Main.rand.NextBool(10)&&(NPC.downedMechBoss1||NPC.downedMechBoss2||NPC.downedMechBoss3)){
+                shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Claw>());
+            }
         }
         public static bool FindRad(BuffBase b){
             return b is RadEffect;
@@ -174,7 +191,15 @@ namespace Entropy.NPCs {
             return b as CorrEffect;
         }
         public static void AddBuff(BuffBase buff){
-            buff.npc.GetGlobalNPC<EntropyGlobalNPC>().Buffs.Add(buff);
+            EntropyGlobalNPC npc = buff.npc.GetGlobalNPC<EntropyGlobalNPC>();
+            npc.Buffs.Add(buff);
+            npc.Buffs.Sort((x,y)=>x.priority!=y.priority?x.priority-y.priority:x.value-y.value);
+            if(buff.npc.CountBuff(buff.GetType())>7){
+                int i = npc.Buffs.FindIndex((x)=>{return buff.GetType()==x.GetType();});
+                npc.Buffs[i].PreUpdate(buff.npc, false);
+                npc.Buffs[i].Update(buff.npc);
+                npc.Buffs[i].isActive = false;
+            }
         }
         private static void CheckMeleeCollision(NPC npc){
             if (npc.dontTakeDamageFromHostiles)

@@ -9,8 +9,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Entropy.NPCs.EntropyGlobalNPC;
 
-namespace Entropy.Projectiles
-{
+namespace Entropy.Projectiles{
 
     public class SekkalAbility2 : EntModProjectile{
         Color? elCol;

@@ -1,8 +1,9 @@
-Entropy adds a better damage system for it's own weapons based heavily on Warframe's damage 2.0, some enemies are more or less vulnerable to different damage types.
-It also adds a basic mod system.
+Entropy adds warframe-style damage types and weapon modding.
 –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 Content:
 9 Unique weapons
 –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-Credits:
+Special Thanks to:
+The Tmodloader dev team, without them, this wouldn't be possible.
+The folks in the tmodloader discord server

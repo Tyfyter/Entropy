@@ -9,8 +9,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Entropy.NPCs.EntropyGlobalNPC;
 
-namespace Entropy.Projectiles
-{
+namespace Entropy.Projectiles{
 
     public class VoxAbility : EntModProjectile{
 		public override string Texture => "Entropy/Items/Mods/ComboSpeed";
@@ -42,6 +41,10 @@ namespace Entropy.Projectiles
         }
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockBack, ref bool crit, ref int hitDirection){
             AddBuff(new BlastEffect(target, 60));
+            if(Main.player[projectile.owner].HasBuff(BuffID.Hunter)){
+                damage = (int)(damage*1.25f);
+                crit = true;
+            }
             base.ModifyHitNPC(target, ref damage, ref knockBack, ref crit, ref hitDirection);
         }
         public override void ModifyDamageHitbox(ref Rectangle hitbox){

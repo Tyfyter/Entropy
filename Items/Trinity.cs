@@ -6,10 +6,8 @@ using Terraria.ModLoader;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Entropy.Items
-{
-	public class Trinity1 : EntModItem
-	{
+namespace Entropy.Items{
+	public class Trinity1 : EntModItem{
 		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
 		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
 		List<float>[] dmgratios = new List<float>[]{
@@ -18,8 +16,7 @@ namespace Entropy.Items
 			new List<float>(new float[15] {0.06f,0.06f,0.88f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f})};
 		int mode = 0;
 		int time = 0;
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Trinity (Blade)");
 			Tooltip.SetDefault("");
 		}
@@ -40,7 +37,7 @@ namespace Entropy.Items
 			dmgratio = dmgratiobase = dmgratios[mode].ToArray();
 			critDMG = baseCD = mode==2?2f:1.5f;
 			comboDMG = mode==1?0.75f:0.5f;
-			combohits = mode==0?6:8;
+			combohits = mode==0?10:15;
 			statchance = basestat = 25;
 		}
 		public override Vector2? HoldoutOffset(){
@@ -70,7 +67,7 @@ namespace Entropy.Items
 			}
 			time = 7;
 			mode = ++mode%3;
-			item.type = mod.ItemType("Trinity"+(mode+1));
+			item.type = ModContent.ItemType("Trinity"+(mode+1));
 			dmgratio = dmgratiobase = dmgratios[mode];
 			return false;
 		} */
@@ -81,22 +78,33 @@ namespace Entropy.Items
 			}
 			time = 7;
 			mode = ++mode%3;
-			item.type = mod.ItemType("Trinity"+(mode+1));
+			//item.type = ModContent.ItemType("Trinity"+(mode+1));
+			switch (mode){
+				case 0:
+				item.type = ModContent.ItemType<Trinity1>();
+				break;
+				case 1:
+				item.type = ModContent.ItemType<Trinity2>();
+				break;
+				case 2:
+				item.type = ModContent.ItemType<Trinity3>();
+				break;
+				default:
+				break;
+			}
 			dmgratio = dmgratiobase = dmgratios[mode].ToArray();
 			return false;
 		}
 	}
-	public class Trinity2 : EntModItem
-	{
+	public class Trinity2 : EntModItem{
 		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
 		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Trinity (Hammer)");
 			Tooltip.SetDefault("");
 		}
 		public override void SetDefaults() {
-			/*item.type = mod.ItemType("Trinity1");
+			/*item.type = ModContent.ItemType("Trinity1");
 			item.SetDefaults(item.type);*/
 			item.damage = 50;
 			item.melee = true;
@@ -115,29 +123,28 @@ namespace Entropy.Items
 			statchance = basestat = 25;
 		}
 
+		/*
 		public override void HoldItem(Player player){
 			SetDefaults();
 			for(int i = 0; i < modsobsolete.Length; i++){
-				/*Entropy.*/ModEffectobsolete(modsobsolete[i], modlevelsobsolete[i]);
+				ModEffectobsolete(modsobsolete[i], modlevelsobsolete[i]);
 			}
-		}
+		}//*/
 		public override bool CanRightClick(){
-			item.type = mod.ItemType<Trinity3>();
+			item.type = ModContent.ItemType<Trinity3>();
 			return false;
 		}
 	}
-	public class Trinity3 : EntModItem
-	{
+	public class Trinity3 : EntModItem{
 		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
 		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Trinity (Scythe)");
 			Tooltip.SetDefault("");
 			Item.staff[item.type] = true;
 		}
 		public override void SetDefaults() {
-			/*item.type = mod.ItemType("Trinity1");
+			/*item.type = ModContent.ItemType("Trinity1");
 			item.SetDefaults(item.type);*/
 			item.damage = 50;
 			item.melee = true;
@@ -157,7 +164,7 @@ namespace Entropy.Items
 		}
 
 		public override bool CanRightClick(){
-			item.type = mod.ItemType<Trinity1>();
+			item.type = ModContent.ItemType<Trinity1>();
 			return false;
 		}
 	}

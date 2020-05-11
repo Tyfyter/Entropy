@@ -8,8 +8,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Entropy.NPCs.EntropyGlobalNPC;
 
-namespace Entropy.Projectiles
-{
+namespace Entropy.Projectiles{
 
     public class CorrShotProj : EntModProjectile
     {
@@ -28,8 +27,7 @@ namespace Entropy.Projectiles
             projectile.light = 0;
 			dmgratio = dmgratiobase = new float[15] {0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f};
         }
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			//DisplayName.SetDefault("Crystal Shard"); Original name
 			DisplayName.SetDefault("Magnus Kirudo");
 		}
@@ -38,12 +36,11 @@ namespace Entropy.Projectiles
         }
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockBack, ref bool crit, ref int hitDirection){
             AddBuff(new CorrEffect(target, (int)(damage*0.75f), damage>66?(int)(damage*0.015f):1));
-			EntropyPlayer modPlayer = Main.player[projectile.owner].GetModPlayer<EntropyPlayer>(mod);
+			EntropyPlayer modPlayer = Main.player[projectile.owner].GetModPlayer<EntropyPlayer>();
 			modPlayer.comboadd(1);
             base.ModifyHitNPC(target, ref damage, ref knockBack, ref crit, ref hitDirection);
         }
-		public override bool PreDraw (SpriteBatch spriteBatch, Color lightColor)
-		{
+		public override bool PreDraw (SpriteBatch spriteBatch, Color lightColor){
             lightColor = Color.LimeGreen;
 			for(int i = 0; i < 6; i++){
 			    Dust.NewDustPerfect(projectile.Center-((projectile.velocity/6)*(i+1)), 264, projectile.velocity*0.5f, 0, Color.LimeGreen, 0.5f).noGravity = true;

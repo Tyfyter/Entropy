@@ -12,12 +12,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent.UI;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Entropy
-{
+namespace Entropy{
 	public class Entropy : Mod {
         /*public static void ModEffect(Items.EntModItem item, int modid, float level){
             switch (modid)
@@ -35,7 +35,7 @@ namespace Entropy
         public NarulSound ns = new NarulSound();
         public override void PostDrawInterface(SpriteBatch spriteBatch){
             Player player = Main.player[Main.myPlayer];
-			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>(mod);
+			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
             /* if(player.HeldItem.modItem == null){
                 return;
             }else  */
@@ -99,26 +99,30 @@ namespace Entropy
 			}
 			UI?.Update(gameTime);
 		}
-		public static string[] dmgtypes = new string[15] {"Slash", "Impact", "Puncture", "Cold", "Electric", "Heat", "Toxic", "Blast", "Corrosive", "Gas", "Magnetic", "Radiation", "Viral", "True", "Void"};
+        //s:❪ i: p:↞ Viral:☣ Something:⌬
+		public static string[] dmgtypes = new string[15] {" Slash", " Impact", " Puncture", " ❄ Cold", "⚡Electric", "♨Heat", "⎊Toxic", " Frostburn (❄+♨)", " Corrosive (⚡+⎊)", " Gas (♨+⎊)", " Magnetic (❄+⚡)", " Light (⚡+♨)", " Viral (❄+⎊)", "⚶True", " Dark"};
+		public static string[] dmgcolor = new string[15] {"DDDDDD", "DDDDDD", "DDDDDD", "64EBFF", "4700CC", "E63D00", "3CB340", "0DDFFF", "32CD32", "3CB340", "3219C8", "FFFFFF", "0E660E", "AAAAAA", "5C0073"};
+        
+		public const int id_slash = 0, id_impact = 1, id_puncture = 2, id_cold = 3, id_electric = 4, id_heat = 5, id_toxic = 6, id_frostburn = 7, id_corrosive = 8, id_gas = 9, id_magnetic = 10, id_light = 11, id_viral = 12, id_true = 13, id_dark = 14;
 
         public static float[] GetDmgRatio(int dmg, float[] ratioarr, bool outputtext = false)
         {
 			//int[ratioarr.Length] dmgarr;
 			float[] output = new float[15];
-            string[] namearray = {"Slash", "Impact", "Puncture", "Cold", "Electric", "Heat", "Toxic", "Blast", "Corrosive", "Gas", "Magnetic", "Radiation", "Viral", "True", "Void"};
+            //string[] namearray = {"Slash", "Impact", "Puncture", "Cold", "Electric", "Heat", "Toxic", "Blast", "Corrosive", "Gas", "Magnetic", "Radiation", "Viral", "True", "Void"};
             if(outputtext)Main.NewText("array:"+ratioarr.ToStringReal(", ")+"; damage:"+dmg, Color.White, true);
 			for(int i = 0; i < ratioarr.Length; i++){
 				//output.Add((int)(dmg*ratioarr[i]));
 				output[i] = (dmg*ratioarr[i]);
-                if(outputtext)Main.NewText(namearray[i]+":"+output[i], Color.White, true);
+                if(outputtext)Main.NewText(dmgtypes[i]+":"+output[i], Color.White, true);
 			}
             return output;
         }
         /* public override void PostAddRecipes(){
             Valhalla.InitClaws();
         } */
-        public override void Load()
-        {
+        //public List<int> Currencies = new List<int>(){};
+        public override void Load(){
             mod = this;
             Properties = new ModProperties()
             {
@@ -129,7 +133,22 @@ namespace Entropy
 			if (!Main.dedServ){
 				UI = new UserInterface();
 			}
-            AddSound(SoundType.Item, "Entropy/Sounds/Items/NarulSound", ns);
+            /*try{
+                EntropyPlayer.FireHelm = EntropyPlayer.GetFireArmor(0, 100);
+                EntropyPlayer.FireArm = EntropyPlayer.GetFireArmor(1, 100);
+                EntropyPlayer.FireLegs = EntropyPlayer.GetFireArmor(2, 100);
+                EntropyPlayer.FireChest = EntropyPlayer.GetFireArmor(3, 100);
+            }
+            catch (System.Exception e){
+                mod.Logger.Warn("Exception During PlayerLayer Loading: "+e);
+            }*/
+            //Currencies.Add(CustomCurrencyManager.RegisterCurrency(new CustomCData(ItemID.IronBar, 999L)));
+            //AddSound(SoundType.Item, "Entropy/Sounds/Items/NarulSound", ns);
+        }
+        public override void Unload(){
+            mod = null;
+            UI = null;
+            //Currencies = new List<int>(){};
         }
         public static short SetStaticDefaultsGlowMask(ModItem modItem, string suffix = "_Glow")
         {
@@ -154,15 +173,15 @@ namespace Entropy
 			if(stat >= Main.rand.NextFloat(0, 100)){
 				int stattype = Entropy.StatTypeCalc(item.dmgratio);
 				/*if(stattype == 0){
-					target.AddBuff(mod.BuffType("SlashProc"), 600);
+					target.AddBuff(ModContent.BuffType("SlashProc"), 600);
 				}else if(stattype == 1){
-					target.AddBuff(mod.BuffType("SlashProc"), 600);
+					target.AddBuff(ModContent.BuffType("SlashProc"), 600);
 				}else if(stattype == 2){
-					target.AddBuff(mod.BuffType("SlashProc"), 600);
+					target.AddBuff(ModContent.BuffType("SlashProc"), 600);
 				}else{*/
-				//if(Entropy.dmgtypes[stattype] == "Slash" && !target.HasBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc")))target.AddBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc"), 1);
+				//if(Entropy.dmgtypes[stattype] == "Slash" && !target.HasBuff(ModContent.BuffType(Entropy.dmgtypes[stattype]+"Proc")))target.AddBuff(ModContent.BuffType(Entropy.dmgtypes[stattype]+"Proc"), 1);
 				//Main.NewText(Entropy.dmgtypes[stattype]+"Proc");
-				//target.AddBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc"), (int)(item.item.damage*0.35));
+				//target.AddBuff(ModContent.BuffType(Entropy.dmgtypes[stattype]+"Proc"), (int)(item.item.damage*0.35));
                 BuffBase buff = BuffBase.GetFromIndex(target, stattype, damage, Main.player[item.item.owner]);
                 EntropyGlobalNPC.AddBuff(buff);
                 //Main.NewText(buff);
@@ -183,15 +202,15 @@ namespace Entropy
 			if(stat >= Main.rand.NextFloat(0, 100)){
 				int stattype = Entropy.StatTypeCalc(proj.dmgratio);
 				/*if(stattype == 0){
-					target.AddBuff(mod.BuffType("SlashProc"), 600);
+					target.AddBuff(ModContent.BuffType("SlashProc"), 600);
 				}else if(stattype == 1){
-					target.AddBuff(mod.BuffType("SlashProc"), 600);
+					target.AddBuff(ModContent.BuffType("SlashProc"), 600);
 				}else if(stattype == 2){
-					target.AddBuff(mod.BuffType("SlashProc"), 600);
+					target.AddBuff(ModContent.BuffType("SlashProc"), 600);
 				}else{*/
-				//if(Entropy.dmgtypes[stattype] == "Slash" && !target.HasBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc")))target.AddBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc"), 1);
+				//if(Entropy.dmgtypes[stattype] == "Slash" && !target.HasBuff(ModContent.BuffType(Entropy.dmgtypes[stattype]+"Proc")))target.AddBuff(ModContent.BuffType(Entropy.dmgtypes[stattype]+"Proc"), 1);
 				//Main.NewText(Entropy.dmgtypes[stattype]+"Proc");
-				//target.AddBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc"), (int)(item.item.damage*0.35));
+				//target.AddBuff(ModContent.BuffType(Entropy.dmgtypes[stattype]+"Proc"), (int)(item.item.damage*0.35));
                 BuffBase buff = BuffBase.GetFromIndex(target, stattype, damage, Main.player[proj.projectile.owner]);
                 EntropyGlobalNPC.AddBuff(buff);
                 //Main.NewText(buff);
@@ -208,15 +227,15 @@ namespace Entropy
 			if(proj.statchance >= Main.rand.NextFloat(0, 100)){
 				int stattype = Entropy.StatTypeCalc(proj.dmgratio);
 				/*if(stattype == 0){
-					target.AddBuff(mod.BuffType("SlashProc"), 600);
+					target.AddBuff(ModContent.BuffType("SlashProc"), 600);
 				}else if(stattype == 1){
-					target.AddBuff(mod.BuffType("SlashProc"), 600);
+					target.AddBuff(ModContent.BuffType("SlashProc"), 600);
 				}else if(stattype == 2){
-					target.AddBuff(mod.BuffType("SlashProc"), 600);
+					target.AddBuff(ModContent.BuffType("SlashProc"), 600);
 				}else{
-				//if(Entropy.dmgtypes[stattype] == "Slash" && !target.HasBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc")))target.AddBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc"), 1);
+				//if(Entropy.dmgtypes[stattype] == "Slash" && !target.HasBuff(ModContent.BuffType(Entropy.dmgtypes[stattype]+"Proc")))target.AddBuff(ModContent.BuffType(Entropy.dmgtypes[stattype]+"Proc"), 1);
 				//Main.NewText(Entropy.dmgtypes[stattype]+"Proc");
-				//target.AddBuff(mod.BuffType(Entropy.dmgtypes[stattype]+"Proc"), (int)(item.item.damage*0.35));
+				//target.AddBuff(ModContent.BuffType(Entropy.dmgtypes[stattype]+"Proc"), (int)(item.item.damage*0.35));
                 BuffBase buff = BuffBase.GetFromIndex(target, stattype, damage);
                 EntropyGlobalNPC.AddBuff(buff);
                 //Main.NewText(buff);
@@ -315,10 +334,8 @@ namespace Entropy
             return Math.Max(a, 0);
         }*/
 
-        public Entropy()
-		{
-			Properties = new ModProperties()
-			{
+        public Entropy(){
+			Properties = new ModProperties(){
 				Autoload = true,
 				AutoloadGores = true,
 				AutoloadSounds = true
@@ -337,9 +354,23 @@ namespace Entropy
             foreach (BuffBase item in npc.GetGlobalNPC<EntropyGlobalNPC>().Buffs)if(item is T)return true;
             return false;
         }
+        public static T GetBuff<T>(this NPC npc) where T : BuffBase{
+            foreach (BuffBase item in npc.GetGlobalNPC<EntropyGlobalNPC>().Buffs)if(item is T i)return i;
+            return null;
+        }
+        public static List<T> GetBuffs<T>(this NPC npc) where T : BuffBase{
+            List<T> buffs = new List<T>(){};
+            foreach (BuffBase item in npc.GetGlobalNPC<EntropyGlobalNPC>().Buffs)if(item is T i)buffs.Add(i);
+            return buffs;
+        }
         public static int CountBuff<T>(this NPC npc) where T : BuffBase{
             int o = 0;
             foreach (BuffBase item in npc.GetGlobalNPC<EntropyGlobalNPC>().Buffs)if(item is T)o++;
+            return o;
+        }
+        public static int CountBuff(this NPC npc, Type T){
+            int o = 0;
+            foreach (BuffBase item in npc.GetGlobalNPC<EntropyGlobalNPC>().Buffs)if(item.GetType()==T)o++;
             return o;
         }
         public static bool CanAttack(this NPC npc){
@@ -363,6 +394,12 @@ namespace Entropy
             return i<low?low:(i>high?high:i);
         }
         public static Vector2 constrain(Vector2 i, Vector2 low, Vector2 high){
+            //Main.NewText(high+">"+i+">"+low);
+            float x = i.X<low.X?low.X:(i.X>high.X?high.X:i.X);
+            float y = i.Y<low.Y?low.Y:(i.Y>high.Y?high.Y:i.Y);
+            return new Vector2(x, y);
+        }
+        public static Vector2 constrained(this Vector2 i, Vector2 low, Vector2 high){
             //Main.NewText(high+">"+i+">"+low);
             float x = i.X<low.X?low.X:(i.X>high.X?high.X:i.X);
             float y = i.Y<low.Y?low.Y:(i.Y>high.Y?high.Y:i.Y);

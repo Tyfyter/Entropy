@@ -5,7 +5,8 @@ namespace Entropy.Buffs {
     public class BleedEffect : BuffBase{
         int rate = 1;
         int damage = 1;
-        public BleedEffect(NPC npc, int damage, int duration, int rate = 10, Entity cause = null) : base(npc, cause){
+        public override int value => (int)(damage*(duration/(float)rate));
+        public BleedEffect(NPC npc, int damage, int duration, int rate = 12, Entity cause = null) : base(npc, cause){
             this.damage = damage;
             this.duration = duration;
             this.rate = rate;

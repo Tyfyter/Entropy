@@ -12,8 +12,7 @@ using Entropy.Items;
 using System;
 using Entropy.Items.Mods;
 
-namespace Entropy.UI
-{
+namespace Entropy.UI{
 	// This class represents the UIState for the "Gungeon Bandoleer"
 	public class ModItemsUI : UIState {
         public List<VanillaItemSlotWrapper> itemSlots = new List<VanillaItemSlotWrapper>(){};

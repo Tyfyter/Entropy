@@ -7,10 +7,8 @@ using Terraria.ModLoader;
 using Terraria.DataStructures;
 using Terraria.ModLoader.IO;
 
-namespace Entropy.Items
-{
-	public class Willbreaker : EntModItem
-	{
+namespace Entropy.Items{
+	public class Willbreaker : EntModItem{
 		int[] modsobsolete = new int[8] {6,3,0,0,0,0,0,0};
 		int[] modlevelsobsolete = new int[8] {0,0,0,0,0,0,0,0};
 		/*float[] dmgratiobase = new float[15] {0.47f,0.47f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
@@ -23,13 +21,11 @@ namespace Entropy.Items
 		int dmgbase = 30;*/
 		//public EntModItem entmoditem;
 		//Chest mods = new Chest();
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			DisplayName.SetDefault("Willbreaker");
 			Tooltip.SetDefault("Break your enemy's will! (and bones)");
 		}
-		public override void SetDefaults()
-		{
+		public override void SetDefaults(){
             //Player owner = Main.player[item.owner];
 			//item.name = "Willbreaker";
 			//entmoditem = ((EntModItem)this);
@@ -53,7 +49,7 @@ namespace Entropy.Items
 			dmgratio = dmgratiobase = new float[15] {0.47f,0.47f,0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0.06f, 0f};
 			statchance = basestat = 15;
 
-			//item.shoot = mod.ProjectileType("FakeGrapple");
+			//item.shoot = ModContent.ProjectileType("FakeGrapple");
 		}
 
 		/*void ME(){
@@ -148,7 +144,7 @@ namespace Entropy.Items
 
         /*public override void ModifyHitNPC(Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
         {
-			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>(mod);
+			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
             //Main.NewText("precalc:"+damage, Color.White, true);
 			//Main.NewText("ratio:"+Entropy.ToStringReal(dmgratio, ", "));
 			float[] dmgarray = Entropy.GetDmgRatio(damage, dmgratio);

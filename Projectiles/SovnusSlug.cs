@@ -9,8 +9,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Entropy.NPCs.EntropyGlobalNPC;
 
-namespace Entropy.Projectiles
-{
+namespace Entropy.Projectiles{
 
     public class SovnusSlug : EntModProjectile {
         public override string Texture => "Terraria/Projectile_55";
@@ -34,7 +33,7 @@ namespace Entropy.Projectiles
             return true;
         }
         public override void Kill(int timeLeft){
-            int proj = Projectile.NewProjectile(projectile.Center, new Vector2(), mod.ProjectileType<SovnusExpl>(), projectile.damage, projectile.knockBack, projectile.owner);
+            int proj = Projectile.NewProjectile(projectile.Center, new Vector2(), ModContent.ProjectileType<SovnusExpl>(), projectile.damage, projectile.knockBack, projectile.owner);
             EntModProjectile expl = Main.projectile[proj].modProjectile as EntModProjectile;
             if(expl!=null){
                 expl.critDMG = critDMG;

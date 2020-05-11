@@ -5,11 +5,9 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
 
-namespace Entropy.Buffs
-{
+namespace Entropy.Buffs{
 	public class Renewal : ModBuff{
-		public override void SetDefaults()
-		{
+		public override void SetDefaults(){
 			DisplayName.SetDefault("Renewal");
 			Description.SetDefault("");
 			//Main.buffNoTimeDisplay[Type] = true;

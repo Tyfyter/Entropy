@@ -2,8 +2,7 @@ using Microsoft.Xna.Framework.Audio;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Enrtopy.Items
-{
+namespace Enrtopy.Items{
     public class NarulSound : ModSound
     {
         public override SoundEffectInstance PlaySound(ref SoundEffectInstance soundInstance, float volume, float pan, SoundType type)

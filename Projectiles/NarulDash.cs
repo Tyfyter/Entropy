@@ -12,8 +12,7 @@ using static Entropy.EntropyExt;
 using Enrtopy.Items;
 using Microsoft.Xna.Framework.Audio;
 
-namespace Entropy.Projectiles
-{
+namespace Entropy.Projectiles{
 
     public class NarulDash : EntModProjectile {
         public override string Texture => "Terraria/Projectile_55";
@@ -60,7 +59,7 @@ namespace Entropy.Projectiles
 		    TeleportEffect(player.getRect());
             player.immuneTime+=15;
             player.immune = true;
-            player.GetModPlayer<EntropyPlayer>(mod).comboadd(3);
+            player.GetModPlayer<EntropyPlayer>().comboadd(3);
             /*int s = mod.GetSoundSlot(SoundType.Item, "Entropy/Sounds/Items/NarulSound");
             Main.NewText(Entropy.mod.ns.ToString());
             Main.NewText(s);

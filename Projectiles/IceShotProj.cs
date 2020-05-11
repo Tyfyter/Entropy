@@ -8,8 +8,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Entropy.NPCs.EntropyGlobalNPC;
 
-namespace Entropy.Projectiles
-{
+namespace Entropy.Projectiles{
 
     public class IceShotProj : EntModProjectile
     {
@@ -28,8 +27,7 @@ namespace Entropy.Projectiles
             projectile.aiStyle = 0;
 			dmgratio = dmgratiobase = new float[15] {0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
         }
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 			//DisplayName.SetDefault("Crystal Shard"); Original name
 			DisplayName.SetDefault("Ice Bullet");
 		}
@@ -45,8 +43,7 @@ namespace Entropy.Projectiles
                 }
             }
         }
-		public override bool PreDraw (SpriteBatch spriteBatch, Color lightColor)
-		{
+		public override bool PreDraw (SpriteBatch spriteBatch, Color lightColor){
             lightColor = Color.Cyan;
 			for(int i = 0; i < 3; i++){
 			    Dust.NewDustPerfect(projectile.Center, 264, projectile.velocity*-0.5f, 0, Color.Cyan, 0.5f).noGravity = true;

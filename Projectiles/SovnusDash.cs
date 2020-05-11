@@ -10,8 +10,7 @@ using Terraria.ModLoader;
 using static Entropy.NPCs.EntropyGlobalNPC;
 using static Entropy.EntropyExt;
 
-namespace Entropy.Projectiles
-{
+namespace Entropy.Projectiles{
 
     public class SovnusDash : EntModProjectile {
         public override string Texture => "Terraria/Projectile_55";
@@ -37,7 +36,7 @@ namespace Entropy.Projectiles
         public override bool OnTileCollide(Vector2 oldVelocity){
             bool f = Math.Abs(projectile.velocity.ToRotation()-oldVelocity.ToRotation())>0.1f;
             if(f&&projectile.timeLeft>15){
-                Projectile.NewProjectileDirect(projectile.Center, new Vector2(), mod.ProjectileType<SovnusExpl>(), projectile.damage/2, projectile.knockBack, projectile.owner).hostile = false;
+                Projectile.NewProjectileDirect(projectile.Center, new Vector2(), ModContent.ProjectileType<SovnusExpl>(), projectile.damage/2, projectile.knockBack, projectile.owner).hostile = false;
                 //Main.player[projectile.owner].velocity+=(projectile.velocity-oldVelocity) * new Vector2(0.5f, 1.5f);
             }
             return f;
@@ -53,7 +52,7 @@ namespace Entropy.Projectiles
             if(timeLeft>0){
                 if(player.itemAnimation>7)player.itemAnimation = 7;
             }
-            /* int proj = Projectile.NewProjectile(projectile.Center, new Vector2(), mod.ProjectileType<SovnusExpl>(), projectile.damage, projectile.knockBack, projectile.owner);
+            /* int proj = Projectile.NewProjectile(projectile.Center, new Vector2(), ModContent.ProjectileType<SovnusExpl>(), projectile.damage, projectile.knockBack, projectile.owner);
             EntModProjectile expl = Main.projectile[proj].modProjectile as EntModProjectile;
             if(expl!=null){
                 expl.critDMG = critDMG;
@@ -77,7 +76,7 @@ namespace Entropy.Projectiles
             AddBuff(new BlastEffect(target, 60));
             target.velocity = lerp(projectile.velocity*2, target.velocity, 0.75f);
             knockBack = 0;
-            Main.player[projectile.owner].GetModPlayer<EntropyPlayer>(mod).comboadd(1);
+            Main.player[projectile.owner].GetModPlayer<EntropyPlayer>().comboadd(1);
             base.ModifyHitNPC(target, ref damage, ref knockBack, ref crit, ref hitDirection);
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor){

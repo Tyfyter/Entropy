@@ -11,24 +11,24 @@ using Microsoft.Xna.Framework.Graphics;
 using Entropy.Items;
 using Terraria.GameInput;
 using Entropy.Buffs;
+using Terraria.Graphics.Shaders;
 
 namespace Entropy {
     public class EntropyPlayer : ModPlayer {
 		public int combocounter = 0;
-        
 		public int combocountertime = 0;
-
         public float QTeff = 1;
         public int lastmoddeditem = 0;
+		public int WorldonFiretime = 0;
+		public const float InfernoMax = 3000;
+		public float inferno = -1;
+		public float infernorate = 0.5f;
         public List<PlayerBuffBase> Buffs = new List<PlayerBuffBase>{};
         public override bool Autoload(ref string name) {
             return true;
         }
-        static float comboMult(float cc, float ch, float cd){
-            return (float)(Math.Max((Math.Floor(Math.Log(cc/ch, 4))*cd)+cd, 0)+1);
-        }
         public float comboget(float ch, float cd){
-            return comboMult(combocounter, ch, cd);
+            return EntModItem.comboMult(combocounter, ch, cd);
         }
         public float comboget(){
             EntModItem emi = player.HeldItem.modItem as EntModItem;
@@ -38,7 +38,7 @@ namespace Entropy {
                 ch = emi.combohits;
                 cd = emi.comboDMG;
             }
-            return comboMult(combocounter, ch, cd);
+            return EntModItem.comboMult(combocounter, ch, cd);
         }
         public float comboadd(int amount = 1, int duration = 180, float ch = 5, float cd = 0.5f){
             combocounter+=amount;
@@ -57,8 +57,22 @@ namespace Entropy {
                 i.Update(player);
             }
             Buffs.RemoveAll(PlayerBuffBase.GC);
+            if(inferno>0){
+                if(inferno>infernorate){
+                    inferno-=infernorate;
+                }else if(!player.CheckMana(player.manaRegenBuff?7:2, true)){
+                    inferno = -1;
+                }
+            }
         }
         public override void SetControls(){
+            if(WorldonFiretime>0){
+                player.itemAnimation = 2;
+                player.controlLeft = false;
+                player.controlRight = false;
+                player.controlJump = false;
+                WorldonFiretime--;
+            }
             if(!player.controlTorch)return;
             CompModItem item = player.HeldItem?.modItem as CompModItem;
             if(item==null)return;
@@ -85,10 +99,155 @@ namespace Entropy {
             }
         }
         public override void ModifyZoom(ref float zoom){
-            if(player.controlUseTile&&player.HeldItem.type==mod.ItemType<CorrSniper>())zoom+=1.7f;
+            if(player.controlUseTile&&player.HeldItem.type==ModContent.ItemType<CorrSniper>())zoom+=1.7f;
         }
-
-        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource){
+        public override void ModifyDrawLayers(List<PlayerLayer> layers){
+            if(inferno>0){
+                FireHelm.visible = true;
+                layers.Add(FireHelm);
+                FireArm.visible = true;
+                layers.Add(FireArm);
+                FireLegs.visible = true;
+                layers.Add(FireLegs);
+                FireChest.visible = true;
+                layers.Add(FireChest);
+            }
+        }
+#region PlayerLayers
+        public static PlayerLayer FireHelm = new PlayerLayer("Entropy", "FireArmorHead", PlayerLayer.Head, delegate(PlayerDrawInfo drawInfo2){
+            Player drawPlayer = drawInfo2.drawPlayer;
+            if(drawPlayer.shadow!=0)return;
+            Vector2 Position = new Vector2((float)((int)(drawInfo2.position.X - Main.screenPosition.X - (float)drawPlayer.bodyFrame.Width / 2f + (float)drawPlayer.width / 2f)), (float)((int)(drawInfo2.position.Y - Main.screenPosition.Y + (float)drawPlayer.height - (float)drawPlayer.bodyFrame.Height + 4f))) + drawPlayer.bodyPosition + drawInfo2.bodyOrigin;
+            Rectangle? Frame = new Rectangle?(drawPlayer.headFrame);
+            Texture2D Texture = drawPlayer.Male?Main.armorHeadTexture[134]:Main.armorHeadTexture[181];
+            SpriteEffects spriteEffects = SpriteEffects.None;
+            if (drawPlayer.direction == -1){
+                spriteEffects |= SpriteEffects.FlipHorizontally;
+            }
+            if (drawPlayer.gravDir == -1f){
+                spriteEffects |= SpriteEffects.FlipVertically;
+            }
+            int a = (int)Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.9)*drawPlayer.stealth*230)/EntropyPlayer.InfernoMax, 255);
+            DrawData item = new DrawData(Texture, Position, Frame, new Color(a,a,a,a), drawPlayer.bodyRotation, drawInfo2.bodyOrigin, 1f, spriteEffects, 0);
+            item.shader = GameShaders.Armor.GetShaderIdFromItemId(ItemID.SolarDye);
+            Main.playerDrawData.Add(item);
+        });
+        public static PlayerLayer FireArm = new PlayerLayer("Entropy", "FireArmorArm", PlayerLayer.Arms, delegate(PlayerDrawInfo drawInfo2){
+            Player drawPlayer = drawInfo2.drawPlayer;
+            if(drawPlayer.shadow!=0)return;
+            Vector2 Position = new Vector2((float)((int)(drawInfo2.position.X - Main.screenPosition.X - (float)drawPlayer.bodyFrame.Width / 2f + (float)drawPlayer.width / 2f)), (float)((int)(drawInfo2.position.Y - Main.screenPosition.Y + (float)drawPlayer.height - (float)drawPlayer.bodyFrame.Height + 4f))) + drawPlayer.bodyPosition + drawInfo2.bodyOrigin;
+            Rectangle? Frame = new Rectangle?(drawPlayer.bodyFrame);
+            Texture2D Texture = Main.armorArmTexture[177];
+            SpriteEffects spriteEffects = SpriteEffects.None;
+            if (drawPlayer.direction == -1){
+                spriteEffects |= SpriteEffects.FlipHorizontally;
+            }
+            if (drawPlayer.gravDir == -1f){
+                spriteEffects |= SpriteEffects.FlipVertically;
+            }
+            int a = (int)Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.9)*drawPlayer.stealth*230)/EntropyPlayer.InfernoMax, 255);
+            DrawData item = new DrawData(Texture, Position, Frame, new Color(a,a,a,a), drawPlayer.bodyRotation, drawInfo2.bodyOrigin, 1f, spriteEffects, 0);
+            item.shader = GameShaders.Armor.GetShaderIdFromItemId(ItemID.SolarDye);
+            Main.playerDrawData.Add(item);
+        });
+        public static PlayerLayer FireLegs = new PlayerLayer("Entropy", "FireArmorLegs", PlayerLayer.Legs, delegate(PlayerDrawInfo drawInfo2){
+            Player drawPlayer = drawInfo2.drawPlayer;
+            if(drawPlayer.shadow!=0)return;
+            Vector2 Position = new Vector2((float)((int)(drawInfo2.position.X - Main.screenPosition.X - (float)drawPlayer.bodyFrame.Width / 2f + (float)drawPlayer.width / 2f)), (float)((int)(drawInfo2.position.Y - Main.screenPosition.Y + (float)drawPlayer.height - (float)drawPlayer.bodyFrame.Height + 4f))) + drawPlayer.bodyPosition + drawInfo2.bodyOrigin;
+            Rectangle? Frame = new Rectangle?(drawPlayer.legFrame);
+            Texture2D Texture = Main.armorLegTexture[130];
+            SpriteEffects spriteEffects = SpriteEffects.None;
+            if (drawPlayer.direction == -1){
+                spriteEffects |= SpriteEffects.FlipHorizontally;
+            }
+            if (drawPlayer.gravDir == -1f){
+                spriteEffects |= SpriteEffects.FlipVertically;
+            }
+            int a = (int)Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.9)*drawPlayer.stealth*230)/EntropyPlayer.InfernoMax, 255);
+            DrawData item = new DrawData(Texture, Position, Frame, new Color(a,a,a,a), drawPlayer.bodyRotation, drawInfo2.bodyOrigin, 1f, spriteEffects, 0);
+            item.shader = GameShaders.Armor.GetShaderIdFromItemId(ItemID.SolarDye);
+            Main.playerDrawData.Add(item);
+        });
+        public static PlayerLayer FireChest = new PlayerLayer("Entropy", "FireArmorBody", PlayerLayer.Body, delegate(PlayerDrawInfo drawInfo2){
+            Player drawPlayer = drawInfo2.drawPlayer;
+            if(drawPlayer.shadow!=0)return;
+            Vector2 Position = new Vector2((float)((int)(drawInfo2.position.X - Main.screenPosition.X - (float)drawPlayer.bodyFrame.Width / 2f + (float)drawPlayer.width / 2f)), (float)((int)(drawInfo2.position.Y - Main.screenPosition.Y + (float)drawPlayer.height - (float)drawPlayer.bodyFrame.Height + 4f))) + drawPlayer.bodyPosition + drawInfo2.bodyOrigin;
+            Rectangle? Frame = new Rectangle?(drawPlayer.bodyFrame);
+            Texture2D Texture = drawPlayer.Male?Main.armorBodyTexture[177]:Main.femaleBodyTexture[177];
+            SpriteEffects spriteEffects = SpriteEffects.None;
+            if (drawPlayer.direction == -1){
+                spriteEffects |= SpriteEffects.FlipHorizontally;
+            }
+            if (drawPlayer.gravDir == -1f){
+                spriteEffects |= SpriteEffects.FlipVertically;
+            }
+            int a = (int)Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.9)*drawPlayer.stealth*230)/EntropyPlayer.InfernoMax, 255);
+            DrawData item = new DrawData(Texture, Position, Frame, new Color(a,a,a,a), drawPlayer.bodyRotation, drawInfo2.bodyOrigin, 1f, spriteEffects, 0);
+            item.shader = GameShaders.Armor.GetShaderIdFromItemId(ItemID.SolarDye);
+            Main.playerDrawData.Add(item);
+        });
+#endregion
+        /*
+        internal static PlayerLayer GetFireArmor(int type, int alpha){
+            string name = "";
+            switch (type){
+                    case 0:
+                    name = "Head";//currently 134 (spooky helmet), maybe 181 (Lazure's Valkyrie Circlet) or (Loki's helmet)
+                    break;
+                    case 1:
+                    name = "Arms";//same as body
+                    break;
+                    case 2:
+                    name = "Legs";//currently 130 (Stardust Legs)
+                    break;
+                    default:
+                    name = "Body";//drawPlayer.Male?"Body":"Body";//currently 171 (Solar Armor), Maybe 175 (Vortex) for female
+                    break;
+                }
+            //Texture2D Texture = Entropy.mod.GetTexture("Effects/FireArmor"+name);
+            return new PlayerLayer("Entropy", "FireArmor"+name, delegate(PlayerDrawInfo drawInfo2){
+	            Player drawPlayer = drawInfo2.drawPlayer;
+                Vector2 Position = new Vector2((float)((int)(drawInfo2.position.X - Main.screenPosition.X - (float)drawPlayer.bodyFrame.Width / 2f + (float)drawPlayer.width / 2f)), (float)((int)(drawInfo2.position.Y - Main.screenPosition.Y + (float)drawPlayer.height - (float)drawPlayer.bodyFrame.Height + 4f))) + drawPlayer.bodyPosition + drawInfo2.bodyOrigin;
+                Rectangle? Frame;
+                Texture2D Texture;
+                switch (type){
+                    case 0:
+                    Frame = new Rectangle?(drawPlayer.headFrame);
+                    //name = "Head";//currently 134 (spooky helmet), maybe 181 (Lazure's Valkyrie Circlet) or (Loki's helmet)
+                    Texture = Main.armorHeadTexture[drawPlayer.Male?134:181];
+                    break;
+                    case 1:
+                    Frame = new Rectangle?(drawPlayer.bodyFrame);
+                    //name = "Arms";//same as body
+                    Texture = Main.armorArmTexture[177];
+                    break;
+                    case 2:
+                    Frame = new Rectangle?(drawPlayer.legFrame);
+                    //name = "Legs";//currently 130 (Stardust Legs)
+                    Texture = Main.armorLegTexture[130];
+                    break;
+                    default:
+                    Frame = new Rectangle?(drawPlayer.bodyFrame);
+                    //name = "Body";//drawPlayer.Male?"Body":"Body";//currently 171 (Solar Armor), Maybe 175 (Vortex) for female
+                    Texture = drawPlayer.Male?Main.armorBodyTexture[177]:Main.femaleBodyTexture[177];
+                    break;
+                }
+                if (drawInfo2.shadow != 0f){
+					return;
+				}
+				SpriteEffects spriteEffects = SpriteEffects.None;
+				if (drawPlayer.direction == -1){
+					spriteEffects |= SpriteEffects.FlipHorizontally;
+				}
+				if (drawPlayer.gravDir == -1f){
+					spriteEffects |= SpriteEffects.FlipVertically;
+				}
+				DrawData item = new DrawData(Texture, Position, Frame, new Color(155,155,155,155), drawPlayer.bodyRotation, drawInfo2.bodyOrigin, 1f, spriteEffects, 0);
+				item.shader = GameShaders.Armor.GetShaderIdFromItemId(ItemID.SolarDye);
+				Main.playerDrawData.Add(item);
+			});
+        }//*/
+        /*public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource){
             if(damage >= player.statLife-1 && damage < player.statLife + player.statMana && QTeff != 0){
                 if(QTeff > 0){
                     if(player.CheckMana((int)(damage/QTeff), true)){
@@ -102,7 +261,7 @@ namespace Entropy {
                 }
             }
             return true;
-        }
+        }*/
         public static explicit operator EntropyPlayer(Player player){
             return player.GetModPlayer<EntropyPlayer>();
         }

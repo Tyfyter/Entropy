@@ -10,8 +10,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Entropy.EntropyExt;
  
-namespace Entropy.Items
-{
+namespace Entropy.Items{
     public class Ice_Revolver : EntModItem
     {
         public int RoundsLeft = 9;
@@ -22,7 +21,7 @@ namespace Entropy.Items
         public static short customGlowMask = 0;
 		bool boosted = false;
 		bool boosting = false;
-		public override bool realCombo => false;
+		public override bool isGun => true;
 		public override bool CloneNewInstances => true;
         public override void SetDefaults()
         {
@@ -40,7 +39,7 @@ namespace Entropy.Items
             item.rare = ItemRarityID.Cyan;
 			item.alpha = 100;
             item.autoReuse = false;
-			item.shoot = mod.ProjectileType<IceShotProj>();
+			item.shoot = ModContent.ProjectileType<IceShotProj>();
             item.shootSpeed = 12.5f;
 			realcrit = basecrit = 25;
 			dmgratio = dmgratiobase = new float[15] {0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
@@ -49,15 +48,12 @@ namespace Entropy.Items
             item.glowMask = customGlowMask;
         }      
 		
-		public override void SetStaticDefaults()
-		{
+		public override void SetStaticDefaults(){
 		  DisplayName.SetDefault("Ateriâ");
-		  Tooltip.SetDefault(@"
-		  DisplayAmmo");
+		  Tooltip.SetDefault("DisplayAmmo");
           customGlowMask = Entropy.SetStaticDefaultsGlowMask(this,"");
 		}
-		public override void AddRecipes()
-		{
+		public override void AddRecipes(){
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.StaffoftheFrostHydra, 1);
 			recipe.AddIngredient(ItemID.SoulofMight, 5);
@@ -73,7 +69,7 @@ namespace Entropy.Items
 			base.HoldItem(player);
 			addElement(3, 0.15f);
 			dmgratio[3]+=0.85f;
-            EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>(mod);
+            EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
 			modPlayer.combocounter = RoundsLeft>0?RoundsMax:0;
             item.autoReuse = false;
 			reloading = Math.Max(reloading, 0);   
@@ -133,7 +129,7 @@ namespace Entropy.Items
  
         public override bool CanUseItem(Player player)
         {
-            EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>(mod);
+            EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
 			//item.shoot = bullets[0].id;
 			if(RoundsLeft <= 0){
 				player.itemAnimation = 0;
@@ -192,7 +188,7 @@ namespace Entropy.Items
 			}
 			if(!CanUseItem(player))return false;
 			item.noUseGraphic = false;
-			if(boosted&&(player.itemAnimation==10||player.itemAnimation==13)){
+			if(boosted&&(player.itemAnimation==10||player.itemAnimation==11||player.itemAnimation==13||player.itemAnimation==14)){
 				Main.PlaySound(2, (int)position.X, (int)position.Y, 38).Volume*=0.5f;
 				Main.PlaySound(2, (int)position.X, (int)position.Y, 30);
 				SoundEffectInstance a = Main.PlaySound(13, (int)position.X, (int)position.Y);
@@ -203,7 +199,7 @@ namespace Entropy.Items
 					//DustID.PortalBoltTrail DustID.FlameBurst
 					Dust.NewDustDirect(position, 0, 0, DustID.PortalBoltTrail, speedX/0.4f, speedY/0.4f, 0, new Color(75, 255, 255, 200), 0.5f).noGravity = true;
 				}
-			}else if(!boosted&&player.itemAnimation==13){
+			}else if(!boosted&&(player.itemAnimation==13||player.itemAnimation==14)){
 				Main.PlaySound(2, (int)position.X, (int)position.Y, 38).Volume*=0.5f;
 				Main.PlaySound(2, (int)position.X, (int)position.Y, 30);
 				SoundEffectInstance a = Main.PlaySound(13, (int)position.X, (int)position.Y);

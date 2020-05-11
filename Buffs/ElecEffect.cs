@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -38,8 +39,8 @@ namespace Entropy.Buffs {
                     npc2.StrikeNPC(dmg, 0, 0, false, true, true);
                     npc2.immune = a;
                     (cause as Player)?.addDPS(dmg);
-                    if(damage>0){
-                        damage-=basedamage/10;
+                    if(damage>10){
+                        damage-=(int)Math.Ceiling(basedamage/7.5f);
                         trigger(npc2, false);
                     }
                 }

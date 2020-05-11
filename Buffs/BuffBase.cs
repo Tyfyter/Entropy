@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Entropy.NPCs;
 using Microsoft.Xna.Framework;
@@ -13,7 +14,9 @@ namespace Entropy.Buffs {
         public string Name{
             get{return this.GetType().Name;}
         }
+        public virtual int priority => 1;
         public int duration;
+        public virtual int value => duration;
         public NPC npc;
         public Entity cause;
         public virtual Color? color {get{return null;} set{}}
@@ -22,6 +25,7 @@ namespace Entropy.Buffs {
             this.cause = cause;
         }
         public virtual bool PreUpdate(NPC npc, bool canceled){return true;}
+        public virtual void Update(NPC npc, int index){Update(npc);}
         public virtual void Update(NPC npc){duration--;}
         public virtual void ModifyHit(NPC npc, Player target, ref int damage, ref bool crit){}
         public virtual void ModifyHitItem(Player attacker, Item item, NPC target, ref int damage, ref bool crit){}
@@ -43,7 +47,7 @@ namespace Entropy.Buffs {
                 case 0:
                 return new BleedEffect(npc, (int)(dmg*0.35f), 360, cause:player);
                 case 1:
-                return new ImpactEffect(npc, 10);
+                return new ImpactEffect(npc, 360);
                 case 2:
                 npc.StrikeNPC(dmg, 0, 0, false);
                 return new PuncEffect(npc, 360);
@@ -56,7 +60,7 @@ namespace Entropy.Buffs {
                 case 6:
                 return new ToxicEffect(npc, dmg/3, 360);
                 case 7:
-                return new BlastEffect(npc, npc.boss?10:30);
+                return new FrostburnEffect(npc, 360);
                 case 8:
                 return new CorrEffect(npc, 30);
                 case 9:
@@ -64,14 +68,23 @@ namespace Entropy.Buffs {
                 case 10:
                 return new MagEffect(npc, 360);
                 case 11:
-                return new RadEffect(npc, 360);
+                return new LightEffect(npc, 360);
                 case 12:
-                return npc.HasBuff<ViralEffect>()?new BuffBase(npc):new ViralEffect(npc, 360);
+                ViralEffect buff = npc.GetBuff<ViralEffect>();
+                if(buff != null){
+                    if(buff.duration < 360)buff.duration = 360;
+                    return new BuffBase(npc);
+                }
+                return new ViralEffect(npc, 360);
                 case 14:
                 return new VoidEffect(npc, 360);
                 default:
                 return new BuffBase(npc);
             }
         }
+    }
+    interface IPostHitBuff{
+        void postHitAction();
+        bool HitAction {get;set;}
     }
 }

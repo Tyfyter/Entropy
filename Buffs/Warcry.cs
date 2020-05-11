@@ -5,11 +5,9 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
 
-namespace Entropy.Buffs
-{
+namespace Entropy.Buffs{
 	public class Warcry : ModBuff{
-		public override void SetDefaults()
-		{
+		public override void SetDefaults(){
 			DisplayName.SetDefault("Warcry");
 			Description.SetDefault("");
 			//Main.buffNoTimeDisplay[Type] = true;
