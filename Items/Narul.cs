@@ -24,7 +24,7 @@ namespace Entropy.Items{
 			Tooltip.SetDefault("You will find no greater power than the simple thought of your own name, inscribed upon a grave.\n-Aurdeorum");
 		}
 		public override void SetDefaults() {
-			item.damage = 140;//realdmg = dmgbase = 140;
+			item.damage = 50;//realdmg = dmgbase = 140;
 			statchance = basestat = 17;
 			realcrit = basecrit = 36;
 			//item.ranged = mode == 0;

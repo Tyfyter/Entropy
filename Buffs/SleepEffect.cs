@@ -20,7 +20,7 @@ namespace Entropy.Buffs {
             duration = duration>0?1:0;
         }
         public override void Update(NPC npc){
-            if(Main.time%2!=0){
+            if((int)Main.time%2!=0){
                 Dust.NewDustDirect(npc.position, npc.width, npc.height, 267).shader = GameShaders.Armor.GetShaderFromItemId(3530);
             }
             base.Update(npc);

@@ -51,7 +51,7 @@ namespace Entropy.Projectiles{
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit){
             HeatEffect buff = target.GetBuff<HeatEffect>();
-            if(buff.duration<360)buff.duration = 360;
+            if(buff?.duration<360)buff.duration = 360;
             //if(buff.rate>7&&crit)buff.rate--;
             if(!target.buffImmune[BuffID.CursedInferno] && Main.rand.Next(6)==0)AddBuff(new HeatEffect(target, damage/(7+target.CountBuff<HeatEffect>()), 360, 10, Main.player[projectile.owner]));
         }

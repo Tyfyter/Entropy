@@ -46,6 +46,7 @@ namespace Entropy.Projectiles{
         }
         public override bool? CanHitNPC(NPC target){
             Player player = Main.player[projectile.owner];
+            EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
             Vector2 pos = projectile.Center.constrained(target.TopLeft,target.BottomRight);
             int dist = (120-projectile.timeLeft)*8;
             Vector2 targetPos = target.Center;
@@ -62,7 +63,7 @@ namespace Entropy.Projectiles{
                 target.velocity.Y-=(target.knockBackResist+0.25f)*12;
 			    Main.PlaySound(2, (int)pos.X, (int)pos.Y, 34, 1f, -0.35f);
                 projectile.localNPCImmunity[target.whoAmI] = projectile.localNPCHitCooldown;
-                player.GetModPlayer<EntropyPlayer>().inferno-=30;
+                if(modPlayer.inferno>0)modPlayer.inferno = Math.Max(modPlayer.inferno-30,1);
                 return true;
             }
             return false;

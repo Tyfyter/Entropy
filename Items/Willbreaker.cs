@@ -29,7 +29,7 @@ namespace Entropy.Items{
             //Player owner = Main.player[item.owner];
 			//item.name = "Willbreaker";
 			//entmoditem = ((EntModItem)this);
-            item.damage = 125;//realdmg = dmgbase = 125;
+            item.damage = 45;//realdmg = dmgbase = 125;
 			item.melee = true;
 			item.width = 40;
 			item.height = 40;

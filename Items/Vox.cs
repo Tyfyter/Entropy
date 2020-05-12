@@ -21,7 +21,7 @@ namespace Entropy.Items{
 			Tooltip.SetDefault("Wrath without sound\n-Aurdeorum");
 		}
 		public override void SetDefaults() {
-			item.damage = 210;//realdmg = dmgbase = 210;
+			item.damage = 70;//realdmg = dmgbase = 210;
 			statchance = basestat = 8;
 			realcrit = basecrit = 26;
 			//item.ranged = mode == 0;
@@ -74,7 +74,7 @@ namespace Entropy.Items{
 			if(!base.CanUseItem(player))return false;
 			if(player.altFunctionUse==2){
 				if(ability == 0){
-					item.damage = 140;//realdmg = dmgbase = 140;
+					item.damage = 50;//realdmg = dmgbase = 140;
 					statchance = basestat = 22;
 					realcrit = basecrit = 6;
 					item.shoot = ModContent.ProjectileType<VoxSlash>();

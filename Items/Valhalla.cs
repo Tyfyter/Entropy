@@ -45,7 +45,7 @@ namespace Entropy.Items{
 		public override void SetDefaults() {
 			switch (mode){
 				case 0:
-				item.damage = 40;//realdmg = dmgbase = 40;
+				item.damage = 15;//realdmg = dmgbase = 40;
 				item.useStyle = 5;
 				statchance = basestat = 22;
 				item.ranged = true;
@@ -57,13 +57,13 @@ namespace Entropy.Items{
 				item.useAnimation = 20;
 				break;
 				case 1:
-				item.damage = 60;//realdmg = dmgbase = 60;
+				item.damage = 20;//realdmg = dmgbase = 60;
 				statchance = basestat = 18;
 				item.useTime = 15;
 				item.useAnimation = 15;
 				goto default;
 				case 2:
-				item.damage = 90;//realdmg = dmgbase = 90;
+				item.damage = 30;//realdmg = dmgbase = 90;
 				statchance = basestat = 28;
 				item.useTime = 12;
 				item.useAnimation = 12;
@@ -77,7 +77,6 @@ namespace Entropy.Items{
 				item.shoot = 0;
 				break;
 			}
-			item.damage = 1;//realdmg = dmgbase = mode==0?60:50;
 			//item.ranged = mode == 0;
 			//item.melee = !item.ranged;
 			item.width = 40;
@@ -103,7 +102,7 @@ namespace Entropy.Items{
 			if(time>0)time--;
 			if(mode == 2){
 				player.manaRegenBuff = false;
-				if((Main.time%2==0)&&!player.CheckMana(1, true))mode = lastmode;
+				if(((int)Main.time%2==0)&&!player.CheckMana(1, true))mode = lastmode;
 			}
 		}
 		public override void tryScroll(int dir){

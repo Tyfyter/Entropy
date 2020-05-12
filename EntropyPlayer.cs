@@ -22,6 +22,7 @@ namespace Entropy {
 		public const float InfernoMax = 3000;
 		public float inferno = -1;
 		public float infernorate = 0.5f;
+		public int infernocost = 1;
         public List<PlayerBuffBase> Buffs = new List<PlayerBuffBase>{};
         public override bool Autoload(ref string name) {
             return true;
@@ -44,9 +45,22 @@ namespace Entropy {
             combocountertime = Math.Max(combocountertime, duration);
             return comboget(ch, cd);//(float)(Math.Floor(Math.Max((Math.Log(combocounter/5, 3)/2)+0.5f, 0)*2)/2)+1;//Math.Floor(Math.Max(Math.Log(combocounter/5,3)*2, 0))/2
         }
-
-        public override void ResetEffects()
-        {
+        public override void PostUpdateMiscEffects(){
+            if(inferno>0){
+                if(inferno>infernorate){
+                    inferno-=infernorate;
+                }else{
+                    player.manaRegenDelay = 20+player.manaRegenDelayBonus;
+                    player.manaRegenCount = 0;
+                    player.manaRegen = 0;
+                    player.manaRegenBonus = 0;
+                    player.manaRegenBuff = false;
+                    infernocost^=3;
+                    if(!player.CheckMana(infernocost, true))inferno = -1;
+                }
+            }
+        }
+        public override void ResetEffects(){
             combocountertime = Math.Max(combocountertime-1, 0);
             if(combocountertime == 0 && combocounter > 0){
                 combocounter--;
@@ -56,13 +70,6 @@ namespace Entropy {
                 i.Update(player);
             }
             Buffs.RemoveAll(PlayerBuffBase.GC);
-            if(inferno>0){
-                if(inferno>infernorate){
-                    inferno-=infernorate;
-                }else if(!player.CheckMana(player.manaRegenBuff?5:1, true)){
-                    inferno = -1;
-                }
-            }
         }
         public override void SetControls(){
             if(WorldonFiretime>0){

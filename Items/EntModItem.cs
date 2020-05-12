@@ -92,6 +92,7 @@ namespace Entropy.Items{
                 combocritmult = 0;
                 combostatmult = 0;
                 punchthrough = 0;
+                dmgmult = 1;
                 //combospeedmult = 0;
                 SetDefaults();
                 PostSetDefaults(player);
@@ -251,43 +252,29 @@ namespace Entropy.Items{
         {
 			//HoldItem(Main.player[item.owner]);
 			float[] dmgarray = Entropy.GetDmgRatio(Main.player[item.owner].GetWeaponDamage(item), dmgratio);
+            //bool changedDamage = false;
+            //int removepast = 0;
             #pragma warning disable 0618
-            bool changedDamage = false;
-            int removepast = 0;
-            for (int i = 0; i < tooltips.Count; i++)
-            {
-                if (tooltips[i].Name.Equals("Damage"))
-                {
-					String[] SplitText = tooltips[i].text.Split();
-                    //TooltipLine tip;
-					//tooltips[i].text.Substring(8, tooltips[i].text.Length-8);
-					//string alltypesstring = "";
-                    if(removepast<=0){
-                        tooltips.RemoveAt(i);
-                    } else removepast--;
-					if(!changedDamage){
-                        changedDamage = true;
-                        removepast--;
-                        for(int i2 = 0; i2 < dmgarray.Length; i2++){
-                            if(dmgratio[i2] != 0){
-                                //alltypesstring = alltypesstring + $"[c/{Entropy.dmgcolor[i2]}:"+(Math.Round(dmgarray[i2], 2)+" "+Entropy.dmgtypes[i2].ToLower()+" damage]");
-                                tooltips.Insert(i, new TooltipLine(mod, "Damage", $"[c/{Entropy.dmgcolor[i2]}:"+(Math.Round(dmgarray[i2], 2)+Entropy.dmgtypes[i2].ToLower()+" damage]")));
-                                removepast++;
-                            }
-                            /*if(i2 < dmgarray.Length-1){
-                                if(dmgarray[i2+1] != 0&&alltypesstring.Length>0){
-                                    alltypesstring = alltypesstring + "\n";
-                                }
-                            }*/
+            //bool initdmg = !tooltips.Exists(i=>i.Name.Equals("DamageComp"));
+            int ind = tooltips.FindIndex(i=>i.Name.Equals("DamageComp"));
+            if(ind != -1){
+                tooltips[ind] = new TooltipLine(mod, "Damage", "");
+                tooltips.RemoveAll(i=>i.Name.Equals("DamageComp"));
+            }
+            int a = 0;
+            for (int i = 0; i < tooltips.Count; i++){
+                if (tooltips[i].Name.Equals("Damage")){
+                    if(a++>=100)continue;
+                    tooltips.RemoveAt(i);
+                    for(int i2 = 0; i2 < dmgarray.Length; i2++){
+                        if(dmgratio[i2] > 0){
+                            tooltips.Insert(i++, new TooltipLine(mod, "DamageComp", $"[c/{Entropy.dmgcolor[i2]}:{Math.Round(dmgarray[i2])+Entropy.dmgtypes[i2].ToLower()} damage]"));
+                            //text+=(nl?"\n":"")+
+                            //$"[c/{Entropy.dmgcolor[i2]}:{Math.Round(dmgarray[i2])+Entropy.dmgtypes[i2].ToLower()} damage]";
+                            //nl = true;
                         }
                     }
-					//tip = new TooltipLine(mod, "Damage", alltypesstring);
-                    //tip = new TooltipLine(mod, "melee", dmgarray[0]+" slash damage\n"+dmgarray[1]+" puncture damage\n"+dmgarray[2]+" impact damage\n");
-                    //tip.overrideColor = new Color(255, 32, 174, 200);
-					//tip.overrideColor = new Color(255, 255, 255);
-                    //tooltips.RemoveAt(i);
-                    //tooltips.Insert(i, tip);
-                }else if (tooltips[i].Name.Equals("CritChance")){
+                } if (tooltips[i].Name.Equals("CritChance")){
 					//String[] St = tooltips[i].text.Split();
                     //tooltips[i].text.Replace("\\d+",realcrit+"");
                     string critd = Regex.Replace(Lang.tip[5].Value.Replace("%", "x"), " [^ ]+$", "")+Regex.Replace(Lang.tip[2].Value, ".+ ", " ");
@@ -364,27 +351,9 @@ namespace Entropy.Items{
             if(crit && critcomboboost!=0)modPlayer.comboadd(critcomboboost);
 			Entropy.Proc(this, target, damage);
         }
-#pragma warning disable 672
-        /*public override void GetWeaponDamage(Player player, ref int damage){
-            float dmg = realdmg;
-            if(item.melee){
-                dmg*=player.meleeDamage;
-            }if(item.ranged){
-                dmg*=player.rangedDamage;
-            }if(item.magic){
-                dmg*=player.magicDamage;
-            }if(item.thrown){
-                dmg*=player.thrownDamage;
-            }
-            if(realCombo)dmg*= comboMult(((EntropyPlayer)player).combocounter, combohits, comboDMG);
-            dmg/=3;
-            damage = (int)dmg;
-        }*/
-#pragma warning restore 672
         public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat){
             if(realCombo)mult*= comboMult(((EntropyPlayer)player).combocounter, combohits, comboDMG);
             mult*=(float)dmgmult;
-            mult/=3;
         }
         public override void GetWeaponCrit(Player player, ref int crit){
             crit = (int)(realcrit*(combocritmult==0?1:(combocritmult+1)*comboMult(Main.player[item.owner].GetModPlayer<EntropyPlayer>().combocounter, combohits, comboDMG)))-4;

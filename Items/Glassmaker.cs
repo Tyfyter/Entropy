@@ -38,7 +38,7 @@ namespace Entropy.Items{
             item.width = 44;
             item.height = 24;
 			if(!item.noUseGraphic){
-				item.damage = 35;//realdmg = dmgbase = 35;
+				item.damage = 15;//realdmg = dmgbase = 35;
 				item.useTime = 1;
 				item.useAnimation = 7;
 				item.shootSpeed = 15.5f;
@@ -49,9 +49,9 @@ namespace Entropy.Items{
 			}else{
 				item.useTime = 28;
 				item.useAnimation = 28;
-				if(ability == 0)item.damage = 140;//realdmg = dmgbase = 140;
-				else if(ability == 2)item.damage = 120;//realdmg = dmgbase = 120;
-				else if(ability == 3)item.damage = 180;//realdmg = dmgbase = 180;
+				if(ability == 0)item.damage = 50;//realdmg = dmgbase = 140;
+				else if(ability == 2)item.damage = 40;//realdmg = dmgbase = 120;
+				else if(ability == 3)item.damage = 60;//realdmg = dmgbase = 180;
 				realcrit = basecrit = 17;
 				statchance = basestat = 37;
 				item.shoot = ProjectileID.InfernoFriendlyBolt;
@@ -85,13 +85,13 @@ namespace Entropy.Items{
 				item.noUseGraphic = true;
 				item.useTime = 28;
 				item.useAnimation = 28;
-				//if(ability == 0)item.damage = 140;//realdmg = dmgbase = 140;
-				//else 
+				
+				if(ability == 0)item.damage = 50;
 				if(ability == 2){
-					//item.damage = 120;//realdmg = dmgbase = 120;
+					item.damage = 40;
 					if(!player.CheckMana(150))return false;
 				}
-				//else if(ability == 3)realdmg = dmgbase = 180;
+				else if(ability == 3)item.damage = 60;
 				realcrit = basecrit = 17;
 				statchance = basestat = 37;
 				item.magic = true;
@@ -117,38 +117,52 @@ namespace Entropy.Items{
 				break;
 				case 2:
 				if(!player.CheckMana(150, true))return;
-				modPlayer.infernorate = Math.Max(modPlayer.infernorate-2f, 0.25f);
-				modPlayer.inferno = Math.Min(modPlayer.inferno+EntropyPlayer.InfernoMax/4, EntropyPlayer.InfernoMax);
+                if(modPlayer.inferno>0) {
+					modPlayer.infernorate = Math.Max(modPlayer.infernorate-2f, 0.25f);
+					modPlayer.inferno = Math.Min(modPlayer.inferno+EntropyPlayer.InfernoMax/4, EntropyPlayer.InfernoMax);
+				}
 				Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<GlassmakerBlast>(), player.GetWeaponDamage(item), item.knockBack*1.5f, player.whoAmI);
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 34, 1f, -0.15f);
 				break;
 				case 3:
-				modPlayer.infernorate = Math.Min(modPlayer.infernorate+3f, 12.5f);
+                if(modPlayer.inferno>0) {
+					modPlayer.infernorate = Math.Min(modPlayer.infernorate+3f, 12.5f);
+				}
 				if(Projectile.NewProjectileDirect(player.Center, Vector2.Zero, ModContent.ProjectileType<GlassmakerTargeting>(), player.GetWeaponDamage(item), 0, player.whoAmI).modProjectile is GlassmakerTargeting p)p.dmgratio = dmgratio;
 				break;
 			}
 		}
+		float a;
+		float m;
+		float a2;
+		float m2;
 		public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat){
+			a = add;
+			m = mult;
 			base.ModifyWeaponDamage(player, ref add, ref mult, ref flat);
 			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
 			if(modPlayer.inferno>0){
-				float infernoPercent = 1-(modPlayer.inferno/EntropyPlayer.InfernoMax);
+				float infernoPercent = 1-(modPlayer.inferno/(float)EntropyPlayer.InfernoMax);
 				if(player.altFunctionUse==2){
 					switch (ability){
 						case 0:
-						add+=infernoPercent;
+						mult*=1+infernoPercent*4;
+						break;
+						case 1:
 						break;
 						case 2:
-						add+=infernoPercent/4;
+						mult*=1+infernoPercent;
 						break;
 						default:
-						add+=infernoPercent/2;
+						mult*=1+infernoPercent*2;
 						break;
 					}
 				}else{
-					add+=infernoPercent/4;
+					mult*=1+infernoPercent;
 				}
 			}
+			a2 = add;
+			m2 = mult;
 		}
 		public override void SetStaticDefaults(){
 		  DisplayName.SetDefault("Glassmaker");
@@ -181,7 +195,11 @@ namespace Entropy.Items{
             //EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
 		}
         public override void ModifyTooltips(List<TooltipLine> tooltips){
+			bool a = false;
+			if(dmgratio[5]<=0.15f)a=true;
+			if(a)dmgratio[5]+=1f;
 			base.ModifyTooltips(tooltips);
+			if(a)dmgratio[5]-=1f;
             for (int i = 0; i < tooltips.Count; i++){
                 if (tooltips[i].Name.Equals("ItemName")){
                     tooltips[i].overrideColor = new Color(230, 61, 0, 200);

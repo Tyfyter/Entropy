@@ -26,7 +26,7 @@ namespace Entropy.Items{
         public override void SetDefaults()
         {
             //item.name = "lightning";          
-            item.damage = 125;//realdmg = dmgbase = 125;                        
+            item.damage = 45;//realdmg = dmgbase = 125;                        
 			item.ranged = true;
             item.width = 24;
             item.height = 28;

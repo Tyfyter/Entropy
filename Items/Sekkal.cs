@@ -23,7 +23,7 @@ namespace Entropy.Items{
 			Tooltip.SetDefault("Untold Destruction\n-Aurdeorum");
 		}
 		public override void SetDefaults() {
-			item.damage = 160;//realdmg = dmgbase = 160;
+			item.damage = 55;//realdmg = dmgbase = 160;
 			item.knockBack = 8;
 			//item.ranged = mode == 0;
 			//item.melee = !item.ranged;
