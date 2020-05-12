@@ -101,12 +101,12 @@ namespace Entropy.Items{
 			Player player = Main.player[item.owner];
 			switch(i){
 				case 1:
-				if(!player.CheckMana(50, true))return;
+				if(!player.CheckMana((int)(50*player.manaCost), true))return;
 				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<VoxAbility>(), player.GetWeaponDamage(item), 15, player.whoAmI);
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:-0.55f);
 				break;
 				case 2:
-				if(!player.CheckMana(150, true))return;
+				if(!player.CheckMana((int)(150*player.manaCost), true))return;
 				player.AddBuff(BuffID.Hunter, 600);
 				/*for (int i2 = 0; i2 < Main.npc.Length; i2++){
 					if(Main.npc[i2]?.active==true){

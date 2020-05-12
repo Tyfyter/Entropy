@@ -176,7 +176,7 @@ namespace Entropy.Items{
 				for(int i = 0; i < 14-player.itemAnimation; i++)Dust.NewDustPerfect(position+new Vector2(6,0).RotatedBy(MathHelper.ToRadians(i*60)), 263, new Vector2(), 0, new Color(75, 255, 255, 200), 0.5f).noGravity = true;
 				if(player.itemAnimation<=4){
 					if(player.controlUseTile){
-						if(RoundsLeft<RoundsMax && player.CheckMana(35, true))RoundsLeft++;
+						if(RoundsLeft<RoundsMax && player.CheckMana((int)(35*player.manaCost), true))RoundsLeft++;
 						player.itemAnimation = 0;
 						return false;
 					}

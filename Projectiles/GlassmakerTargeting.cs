@@ -50,8 +50,8 @@ namespace Entropy.Projectiles{
             Vector2 pos = projectile.Center.constrained(target.TopLeft,target.BottomRight);
             int dist = (120-projectile.timeLeft)*8;
             Vector2 targetPos = target.Center;
-            if((pos-projectile.Center).Length()<=dist && ((pos-targetPos-targetPos)-projectile.Center).Length()>=dist && projectile.localNPCImmunity[target.whoAmI]==0){
-                if(!player.CheckMana(40, true, hits++>(player.statManaMax2/40)*5)){
+            if(!target.friendly && (pos-projectile.Center).Length()<=dist && ((pos-targetPos-targetPos)-projectile.Center).Length()>=dist && projectile.localNPCImmunity[target.whoAmI]==0){
+                if(!player.CheckMana(Entropy.ArbitraryCinder, (int)(40*player.manaCost), true, hits++>(player.statManaMax2/(40*player.manaCost))*5)){
                     projectile.Kill();
                     return false;
                 }

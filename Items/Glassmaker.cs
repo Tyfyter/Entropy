@@ -13,6 +13,7 @@ using Terraria.ModLoader;
 using static Entropy.EntropyExt;
 
 namespace Entropy.Items{
+	//Took 4 days, ~1.5 of which were just fixing the raging inferno helmet rendering
 	//Abilities:
 	//Fireball
 	//Raging Inferno
@@ -26,10 +27,14 @@ namespace Entropy.Items{
 		        Main.armorHeadLoaded[181] = true;
 		        Main.armorLegTexture[130] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Legs_130"}));
 		        Main.armorLegsLoaded[130] = true;
+		        Main.armorLegTexture[112] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Legs_112"}));
+		        Main.armorLegsLoaded[112] = true;
 		        Main.armorBodyTexture[177] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Body_177"}));
-		        Main.femaleBodyTexture[177] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Female_Body_177"}));
 		        Main.armorArmTexture[177] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Arm_177"}));
 		        Main.armorBodyLoaded[177] = true;
+		        Main.femaleBodyTexture[177] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Female_Body_175"}));
+		        Main.armorArmTexture[177] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Arm_175"}));
+		        Main.armorBodyLoaded[175] = true;
             return true;
         }
         public static short customGlowMask = 0;
@@ -89,7 +94,7 @@ namespace Entropy.Items{
 				if(ability == 0)item.damage = 50;
 				if(ability == 2){
 					item.damage = 40;
-					if(!player.CheckMana(150))return false;
+					if(!player.CheckMana((int)(150*player.manaCost)))return false;
 				}
 				else if(ability == 3)item.damage = 60;
 				realcrit = basecrit = 17;
@@ -110,15 +115,15 @@ namespace Entropy.Items{
 				    modPlayer.inferno = -1;
                     return;
                 }
-				if(!player.CheckMana(50, true))return;
-				modPlayer.infernorate = 0.5f;
+				if(!player.CheckMana(item, (int)(50*player.manaCost), true))return;
+				modPlayer.infernorate = 1f;
 				modPlayer.inferno = EntropyPlayer.InfernoMax;
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 34, pitchOffset:-0.55f);
 				break;
 				case 2:
-				if(!player.CheckMana(150, true))return;
+				if(!player.CheckMana(item, (int)(150*player.manaCost), true))return;
                 if(modPlayer.inferno>0) {
-					modPlayer.infernorate = Math.Max(modPlayer.infernorate-2f, 0.25f);
+					modPlayer.infernorate = Math.Max(modPlayer.infernorate-1.5f, 0.25f);
 					modPlayer.inferno = Math.Min(modPlayer.inferno+EntropyPlayer.InfernoMax/4, EntropyPlayer.InfernoMax);
 				}
 				Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<GlassmakerBlast>(), player.GetWeaponDamage(item), item.knockBack*1.5f, player.whoAmI);
@@ -126,7 +131,7 @@ namespace Entropy.Items{
 				break;
 				case 3:
                 if(modPlayer.inferno>0) {
-					modPlayer.infernorate = Math.Min(modPlayer.infernorate+3f, 12.5f);
+					modPlayer.infernorate = Math.Min(modPlayer.infernorate+2f, 12.5f);
 				}
 				if(Projectile.NewProjectileDirect(player.Center, Vector2.Zero, ModContent.ProjectileType<GlassmakerTargeting>(), player.GetWeaponDamage(item), 0, player.whoAmI).modProjectile is GlassmakerTargeting p)p.dmgratio = dmgratio;
 				break;
@@ -142,7 +147,7 @@ namespace Entropy.Items{
 			base.ModifyWeaponDamage(player, ref add, ref mult, ref flat);
 			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
 			if(modPlayer.inferno>0){
-				float infernoPercent = 1-(modPlayer.inferno/(float)EntropyPlayer.InfernoMax);
+				float infernoPercent = (float)(1-(Math.Round(modPlayer.inferno*0.9)/EntropyPlayer.InfernoMax)*0.9);
 				if(player.altFunctionUse==2){
 					switch (ability){
 						case 0:
@@ -217,7 +222,7 @@ namespace Entropy.Items{
 					//realdmg = dmgbase = 140;
 					//realcrit = basecrit = 17;
 					//statchance = basestat = 37;
-					if(!player.CheckMana(50, true))return false;
+					if(!player.CheckMana(item, (int)(50*player.manaCost), true))return false;
 					type = ProjectileID.InfernoFriendlyBolt;
 					Main.PlaySound(2, (int)position.X, (int)position.Y, 34, 1f, -0.35f);
 					damage*=5;

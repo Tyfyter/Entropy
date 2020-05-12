@@ -64,8 +64,8 @@ namespace Entropy.Projectiles{
             Main.NewText(Entropy.mod.ns.ToString());
             Main.NewText(s);
             //Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, s);*/
-            SoundEffectInstance n = null;
-            Main.PlaySoundInstance(Entropy.mod.ns.PlaySound(ref n, 1, 0, SoundType.Item));
+            //SoundEffectInstance n = null;
+            //Main.PlaySoundInstance(Entropy.mod.ns.PlaySound(ref n, 1, 0, SoundType.Item));
             projectile.Kill();
             base.ModifyHitNPC(target, ref damage, ref knockBack, ref crit, ref hitDirection);
         }

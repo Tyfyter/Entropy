@@ -113,7 +113,7 @@ namespace Entropy.Items{
 			}
 			switch(i){
 				case 3:
-				if(i==3&&!player.CheckMana(75, true))return;
+				if(i==3&&!player.CheckMana((int)(75*player.manaCost), true))return;
 				EntModProjectile emp2 = Projectile.NewProjectileDirect(player.Center, new Vector2(), ModContent.ProjectileType<SekkalAbility2>(), (int)(player.GetWeaponDamage(item)*1.5f), 0, player.whoAmI, el).modProjectile as EntModProjectile;
 				if(emp2!=null){
 					emp2.dmgratio[el] = 1;
@@ -127,14 +127,14 @@ namespace Entropy.Items{
 				if(eb!=null){
 					eb.isActive = false;
 					el = eb.type;
-					if(player.CheckMana(15, true))goto case 3;
+					if(player.CheckMana((int)(15*player.manaCost), true))goto case 3;
 					return;
 				}
-				if(!player.CheckMana(50, true))return;
+				if(!player.CheckMana((int)(50*player.manaCost), true))return;
 				EntropyPlayer.AddBuff(new ElementBuff(player, 1800, el));
 				break;
 				case 1:
-				if(!player.CheckMana(element==2?2:25, true))return;
+				if(!player.CheckMana((int)((element==2?2:25)*player.manaCost), true))return;
 				//int el = 13;
 				int dmg = player.GetWeaponDamage(item);
 				float speed = 9.5f;

@@ -85,7 +85,7 @@ namespace Entropy.Items{
 				if(ability == 1){
 					//CastAbility(1);
 					item.noUseGraphic = true;
-					return player.CheckMana(50, true);
+					return player.CheckMana((int)(50*player.manaCost), true);
 				}
 				if(time==0)CastAbility(ability);
 				time = 3;
@@ -102,12 +102,12 @@ namespace Entropy.Items{
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:-0.55f);
 				break; */
 				case 2:
-				if(!player.CheckMana(75, true))return;
+				if(!player.CheckMana((int)(75*player.manaCost), true))return;
 				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<SovnusAbility>(), realdmg/3, 1, player.whoAmI);
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.55f);
 				break;
 				case 3:
-				if(!player.CheckMana(75, true))return;
+				if(!player.CheckMana((int)(75*player.manaCost), true))return;
 				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<SovnusAbility>(), realdmg, 15, player.whoAmI, 1);
 				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.55f);
 				break;

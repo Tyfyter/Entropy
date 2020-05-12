@@ -125,7 +125,7 @@ namespace Entropy.Items{
 				//Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0f);
 				switch (ability){
 					case 0:
-					if(!player.CheckMana(35, true))break;
+					if(!player.CheckMana((int)(35*player.manaCost), true))break;
 					type = ModContent.ProjectileType<VizenSmite>();
 					Projectile.NewProjectileDirect(Main.MouseWorld, new Vector2(), type, damage, 0, item.owner, 1).penetrate = 60;
 					Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 68, pitchOffset:0.15f).Volume = 0.45f;
@@ -147,7 +147,7 @@ namespace Entropy.Items{
 					}
 					break;
 					case 2:
-					if(!player.CheckMana(50, true))break;
+					if(!player.CheckMana((int)(50*player.manaCost), true))break;
 					int id = ModContent.BuffType<Renewal>();
 					for (int i = 0; i < Main.player.Length; i++){
 						Player target = Main.player[i];
@@ -157,7 +157,7 @@ namespace Entropy.Items{
 					}
 					break;
 					case 3:
-					if(!player.CheckMana(35, true))break;
+					if(!player.CheckMana((int)(35*player.manaCost), true))break;
 					type = ModContent.ProjectileType<VizenSmite>();
 					Vector2 vec2 = new Vector2(Main.lastMouseX+Main.screenPosition.X, Main.lastMouseY+Main.screenPosition.Y);
 					Vector2 vec3 = Main.MouseWorld;

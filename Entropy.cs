@@ -5,6 +5,7 @@ using System.Linq;
 using Enrtopy.Items;
 using Entropy.Buffs;
 using Entropy.Items;
+using Entropy.Items.Mods;
 using Entropy.NPCs;
 using Entropy.Projectiles;
 using Entropy.UI;
@@ -32,7 +33,8 @@ namespace Entropy{
         public static Entropy mod;
 		internal UserInterface UI;
 		public ModItemsUI modItemUI;
-        public NarulSound ns = new NarulSound();
+        //public NarulSound ns = new NarulSound();
+        public static Item ArbitraryCinder;
         public override void PostDrawInterface(SpriteBatch spriteBatch){
             Player player = Main.player[Main.myPlayer];
 			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
@@ -118,9 +120,11 @@ namespace Entropy{
 			}
             return output;
         }
-        /* public override void PostAddRecipes(){
-            Valhalla.InitClaws();
-        } */
+        public override void PostAddRecipes(){
+            //Valhalla.InitClaws();
+            ArbitraryCinder = new Item();
+            ArbitraryCinder.SetDefaults(ModContent.ItemType<Cinder>(), true);
+        }
         //public List<int> Currencies = new List<int>(){};
         public override void Load(){
             mod = this;
@@ -148,6 +152,7 @@ namespace Entropy{
         public override void Unload(){
             mod = null;
             UI = null;
+            ArbitraryCinder = null;
             //Currencies = new List<int>(){};
         }
         public static short SetStaticDefaultsGlowMask(ModItem modItem, string suffix = "_Glow")

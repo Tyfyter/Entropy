@@ -179,11 +179,11 @@ namespace Entropy.Items{
 				if(player.statMana<3)return;
 				int dmg = player.statMana;
 				Projectile.NewProjectile(player.Center, new Vector2(), ModContent.ProjectileType<ValhallaAbility>(), dmg/2+1, 10, player.whoAmI);
-				player.CheckMana(dmg/3, true);
+				player.CheckMana((int)(dmg/3*player.manaCost), true);
 				Main.PlaySound(15, (int)player.Center.X, (int)player.Center.Y, 0, pitchOffset:0.55f);
 				break;
 				case 1:
-				if(!player.CheckMana(150, true))return;
+				if(!player.CheckMana((int)(150*player.manaCost), true))return;
 				Projectile.NewProjectile(player.Center, new Vector2(), ModContent.ProjectileType<ValhallaAbility>(), 1, 0, player.whoAmI);
 				Main.PlaySound(29, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.25f);
 				break;
