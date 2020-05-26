@@ -64,6 +64,7 @@ namespace Entropy {
                 //player.endurance+=infernoPercent/5;
                 player.statDefense+=(int)(player.statDefense*infernoPercent);
                 player.manaCost+=infernoPercent/6.5f;
+                player.magicDamageMult*=1+infernoPercent/6.5f;
                 if(inferno>infernorate){
                     inferno-=infernorate;
                     infernobonuscost = 0;

@@ -32,8 +32,8 @@ namespace Entropy.Items{
 		        Main.armorBodyTexture[177] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Body_177"}));
 		        Main.armorArmTexture[177] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Arm_177"}));
 		        Main.armorBodyLoaded[177] = true;
-		        Main.femaleBodyTexture[177] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Female_Body_175"}));
-		        Main.armorArmTexture[177] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Arm_175"}));
+		        Main.femaleBodyTexture[175] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Female_Body_175"}));
+		        Main.armorArmTexture[175] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Arm_175"}));
 		        Main.armorBodyLoaded[175] = true;
             return true;
         }
@@ -148,6 +148,7 @@ namespace Entropy.Items{
 			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
 			if(modPlayer.inferno>0){
 				float infernoPercent = (float)(1-(Math.Round(modPlayer.inferno*0.9)/EntropyPlayer.InfernoMax)*0.9);
+				mult/=1+infernoPercent/6.5f;
 				if(player.altFunctionUse==2){
 					switch (ability){
 						case 0:
