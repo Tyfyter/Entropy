@@ -16,7 +16,8 @@ namespace Entropy.Items{
 			DisplayName.SetDefault("∞+1 sword");
 			Tooltip.SetDefault("technically it's the same as an ∞ sword");
 		}
-		public override void SetDefaults(){
+        public override void SetDefaults() { SetEntropyDefaults(); }
+        public override void SetEntropyDefaults(){
             item.damage = 40;
 			item.melee = true;
 			item.width = 40;
@@ -27,7 +28,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 9;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			item.useTurn = true;
@@ -54,7 +55,8 @@ namespace Entropy.Items{
 			DisplayName.SetDefault("∞+2 sword");
 			Tooltip.SetDefault("technically it's the same as an ∞ + 1 sword");
 		}
-		public override void SetDefaults(){
+        public override void SetDefaults() { SetEntropyDefaults(); }
+        public override void SetEntropyDefaults(){
             item.damage = 40;
 			item.melee = true;
 			item.width = 40;
@@ -65,7 +67,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 9;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			item.useTurn = true;

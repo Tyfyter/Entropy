@@ -42,7 +42,7 @@ namespace Entropy.Projectiles{
         }
         public override bool OnTileCollide(Vector2 oldVelocity){
             projectile.velocity*=0;
-            projectile.position-=oldVelocity/2;
+            projectile.position+=(oldVelocity/2)*(projectile.wet?-1:1);
             projectile.tileCollide = false;
             projectile.penetrate = 25;
             projectile.aiStyle = 0;

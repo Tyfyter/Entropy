@@ -9,7 +9,7 @@ using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Entropy.EntropyExt;
- 
+
 namespace Entropy.Items{
     public class Ice_Revolver : EntModItem
     {
@@ -23,10 +23,10 @@ namespace Entropy.Items{
 		bool boosting = false;
 		public override bool isGun => true;
 		public override bool CloneNewInstances => true;
-        public override void SetDefaults()
-        {
-            //item.name = "lightning";          
-            item.damage = 45;//realdmg = dmgbase = 125;                        
+        public override void SetDefaults() { SetEntropyDefaults(); }
+        public override void SetEntropyDefaults(){
+            //item.name = "lightning";
+            item.damage = 45;//realdmg = dmgbase = 125;
 			item.ranged = true;
             item.width = 24;
             item.height = 28;
@@ -34,7 +34,7 @@ namespace Entropy.Items{
 			item.useAnimation = 15;
             item.useStyle = 5;
             item.noMelee = true;
-            item.knockBack = 7.5f;        
+            item.knockBack = 7.5f;
             item.value = 1000;
             item.rare = ItemRarityID.Cyan;
 			item.alpha = 100;
@@ -46,8 +46,8 @@ namespace Entropy.Items{
 			combohits = RoundsMax;
 			comboDMG = RoundsLeft>0?RoundsLeft-1:1;
             item.glowMask = customGlowMask;
-        }      
-		
+        }
+
 		public override void SetStaticDefaults(){
 		  DisplayName.SetDefault("Ateriâ");
 		  Tooltip.SetDefault("DisplayAmmo");
@@ -72,10 +72,10 @@ namespace Entropy.Items{
             EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
 			modPlayer.combocounter = RoundsLeft>0?RoundsMax:0;
             item.autoReuse = false;
-			reloading = Math.Max(reloading, 0);   
+			reloading = Math.Max(reloading, 0);
 			if(RoundsLeft <= 0 && reloading == 0)reloading = 1;
 		}
-		
+
 		public override void HoldStyle (Player player){
             //Main.dust[dust3].noGravity = true;
             //Main.dust[dust3].velocity = new Vector2(0, 0);
@@ -88,7 +88,7 @@ namespace Entropy.Items{
 					passivereload = 0;
 				}else if(passivereload>=228){
 					for(int i = 0; i < (passivereload/2)-113; i++){
-						//Dust d = 
+						//Dust d =
 						Dust.NewDustPerfect(player.getHandPos()+new Vector2(6,0).RotatedBy(MathHelper.ToRadians(i*60)), 263, new Vector2(), 0, new Color(75, 255, 255, 200), 0.5f).noGravity = true;
 						//d.noGravity = true;
 					}
@@ -120,13 +120,13 @@ namespace Entropy.Items{
 				}
 			}else if(reloaddelay>0)if(++reloaddelay>=15)reloaddelay = 0;
 		}
-		
+
         public override bool AltFunctionUse(Player player)
         {
             return true;
         }
-		
- 
+
+
         public override bool CanUseItem(Player player)
         {
             EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
@@ -169,7 +169,7 @@ namespace Entropy.Items{
 				}
             }
         }
-		
+
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack){
 			passivereload = 0;
 			if(player.altFunctionUse == 2){
@@ -189,9 +189,9 @@ namespace Entropy.Items{
 			if(!CanUseItem(player))return false;
 			item.noUseGraphic = false;
 			if(boosted&&(player.itemAnimation==10||player.itemAnimation==11||player.itemAnimation==13||player.itemAnimation==14)){
-				Main.PlaySound(2, (int)position.X, (int)position.Y, 38).Volume*=0.5f;
-				Main.PlaySound(2, (int)position.X, (int)position.Y, 30);
-				SoundEffectInstance a = Main.PlaySound(13, (int)position.X, (int)position.Y);
+				Main.PlaySound(SoundID.Item, (int)position.X, (int)position.Y, 38).Volume*=0.5f;
+				Main.PlaySound(SoundID.Item, (int)position.X, (int)position.Y, 30);
+				SoundEffectInstance a = Main.PlaySound(SoundID.Shatter, (int)position.X, (int)position.Y);
 				a.Volume*=0.15f;
 				a.Pitch*=0.5f;
 				RoundsLeft--;
@@ -200,9 +200,9 @@ namespace Entropy.Items{
 					Dust.NewDustDirect(position, 0, 0, DustID.PortalBoltTrail, speedX/0.4f, speedY/0.4f, 0, new Color(75, 255, 255, 200), 0.5f).noGravity = true;
 				}
 			}else if(!boosted&&(player.itemAnimation==13||player.itemAnimation==14)){
-				Main.PlaySound(2, (int)position.X, (int)position.Y, 38).Volume*=0.5f;
-				Main.PlaySound(2, (int)position.X, (int)position.Y, 30);
-				SoundEffectInstance a = Main.PlaySound(13, (int)position.X, (int)position.Y);
+				Main.PlaySound(SoundID.Item, (int)position.X, (int)position.Y, 38).Volume*=0.5f;
+				Main.PlaySound(SoundID.Item, (int)position.X, (int)position.Y, 30);
+				SoundEffectInstance a = Main.PlaySound(SoundID.Shatter, (int)position.X, (int)position.Y);
 				a.Volume*=0.15f;
 				a.Pitch*=0.5f;
 				RoundsLeft--;

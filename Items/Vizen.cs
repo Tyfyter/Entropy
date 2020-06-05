@@ -29,7 +29,8 @@ namespace Entropy.Items{
 			Tooltip.SetDefault("A brutal thorn...\n-Aurdeorum");
           	customGlowMask = Entropy.SetStaticDefaultsGlowMask(this);
 		}
-		public override void SetDefaults() {
+        public override void SetDefaults() { SetEntropyDefaults(); }
+        public override void SetEntropyDefaults() {
 			item.damage = 20;//realdmg = dmgbase = 50;
 			statchance = basestat = 27;
 			realcrit = basecrit = 30;
@@ -42,7 +43,7 @@ namespace Entropy.Items{
 			//item.useStyle = mode == 0?5:1;
 			//item.knockBack = mode==1?12:6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.useTime = 7;
 			item.useAnimation = 14;
 			//item.UseSound = SoundID.Item1;
@@ -106,30 +107,30 @@ namespace Entropy.Items{
 				case 1:
 				if(!player.CheckMana(50, true))return;
 				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<VoxAbility>(), realdmg, 15, player.whoAmI);
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:-0.55f);
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:-0.55f);
 				break;
 				case 2:
 				if(!player.CheckMana(75, true))return;
 				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<SovnusAbility>(), realdmg/3, 1, player.whoAmI);
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.55f);
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.55f);
 				break;
 				case 3:
 				if(!player.CheckMana(75, true))return;
 				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<SovnusAbility>(), realdmg, 15, player.whoAmI, 1);
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.55f);
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.55f);
 				break;
 			}
 		}//*/
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack){
 			if(player.altFunctionUse==2){
-				//Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0f);
+				//Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0f);
 				switch (ability){
 					case 0:
 					if(!player.CheckMana((int)(35*player.manaCost), true))break;
 					type = ModContent.ProjectileType<VizenSmite>();
 					Projectile.NewProjectileDirect(Main.MouseWorld, new Vector2(), type, damage, 0, item.owner, 1).penetrate = 60;
-					Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 68, pitchOffset:0.15f).Volume = 0.45f;
-					Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 117, pitchOffset:0.15f);
+					Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 68, pitchOffset:0.15f).Volume = 0.45f;
+					Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 117, pitchOffset:0.15f);
 					break;
 					case 1:
 					type = ModContent.ProjectileType<VizenSlash>();
@@ -168,16 +169,16 @@ namespace Entropy.Items{
 					knockBack = 0;
 					position = Main.MouseWorld;
 					base.Shoot(player, ref vec2, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
-					Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 68, pitchOffset:0.15f).Volume = 0.45f;
-					Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 117, pitchOffset:0.15f);
+					Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 68, pitchOffset:0.15f).Volume = 0.45f;
+					Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 117, pitchOffset:0.15f);
 					break;
 				}
 				return false;
 			}else{
 				type = ModContent.ProjectileType<VizenShot>();
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0.15f).Volume = 0.55f;
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 40, pitchOffset:0.15f).Volume = 0.45f;
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 89, pitchOffset:0.15f);
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0.15f).Volume = 0.55f;
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 40, pitchOffset:0.15f).Volume = 0.45f;
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 89, pitchOffset:0.15f);
 			}
 			Vector2 vec = new Vector2(speedX, speedY);
 			position+=vec;
@@ -207,7 +208,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			dmgratio = dmgratiobase = new float[15] {0.06f,0.88f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
@@ -246,7 +247,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			dmgratio = dmgratiobase = new float[15] {0.06f,0.06f,0.88f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};

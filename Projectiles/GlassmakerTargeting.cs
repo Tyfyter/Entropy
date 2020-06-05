@@ -61,7 +61,7 @@ namespace Entropy.Projectiles{
                 p.direction = target.Center.X<projectile.Center.X?-1:1;
                 p.magic = true;
                 target.velocity.Y-=(target.knockBackResist+0.25f)*12;
-			    Main.PlaySound(2, (int)pos.X, (int)pos.Y, 34, 1f, -0.35f);
+			    Main.PlaySound(SoundID.Item, (int)pos.X, (int)pos.Y, 34, 1f, -0.35f);
                 projectile.localNPCImmunity[target.whoAmI] = projectile.localNPCHitCooldown;
                 if(modPlayer.inferno>0)modPlayer.inferno = Math.Max(modPlayer.inferno-30,1);
                 return true;

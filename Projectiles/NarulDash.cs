@@ -63,7 +63,7 @@ namespace Entropy.Projectiles{
             /*int s = mod.GetSoundSlot(SoundType.Item, "Entropy/Sounds/Items/NarulSound");
             Main.NewText(Entropy.mod.ns.ToString());
             Main.NewText(s);
-            //Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, s);*/
+            //Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, s);*/
             //SoundEffectInstance n = null;
             //Main.PlaySoundInstance(Entropy.mod.ns.PlaySound(ref n, 1, 0, SoundType.Item));
             projectile.Kill();

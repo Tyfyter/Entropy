@@ -232,10 +232,10 @@ namespace Entropy.Items.Mods{
 		public override void SetStaticDefaults(){
 		  DisplayName.SetDefault("Metal Auger");
 		}
-		public override void SetDefaults(){
+        public override void SetDefaults(){
 			item.width = 13;
 			item.height = 5;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 		}
 		public override void ModifyTooltips(List<TooltipLine> tooltips){
 			TooltipLine tip = new TooltipLine(mod, "Desc", "+"+(level+1)+" pierce");
@@ -317,7 +317,7 @@ namespace Entropy.Items.Mods{
         }
 		public override void SetDefaults(){
 			item.width = item.height = 32;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			if(reenforcement<basereenforcement)reenforcement=basereenforcement;
 		}
         public override TagCompound Save(){
@@ -350,7 +350,7 @@ namespace Entropy.Items.Mods{
 						player.HeldItem.stack-=reenforcePrice[i].Item1;
 						Main.NewText(player.HeldItem.whoAmI);
 						reenforcement++;
-						Main.PlaySound(12, player.Center);
+						Main.PlaySound(SoundID.MenuTick, player.Center);
 					}
 				}
 				rcdelay = Main.time+4;

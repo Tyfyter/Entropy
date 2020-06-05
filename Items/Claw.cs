@@ -14,7 +14,8 @@ namespace Entropy.Items{
 			Tooltip.SetDefault("");
 			//Item.claw[item.type] = true;
 		}
-		public override void SetDefaults() {
+        public override void SetDefaults() { SetEntropyDefaults(); }
+        public override void SetEntropyDefaults(){
 			item.damage = 23;//realdmg = dmgbase = 23;
 			item.melee = true;
 			item.width = 26;
@@ -24,7 +25,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 3;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.useTurn = true;
 			item.shootSpeed = 14.5f;
@@ -37,7 +38,7 @@ namespace Entropy.Items{
 		public override bool AltFunctionUse(Player player){
 			return true;
 		}
-		
+
         public override bool CanUseItem(Player player){
             EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
             if (player.altFunctionUse == 2){

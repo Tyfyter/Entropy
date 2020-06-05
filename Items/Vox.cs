@@ -20,7 +20,8 @@ namespace Entropy.Items{
 			DisplayName.SetDefault("Vox");
 			Tooltip.SetDefault("Wrath without sound\n-Aurdeorum");
 		}
-		public override void SetDefaults() {
+        public override void SetDefaults() { SetEntropyDefaults(); }
+        public override void SetEntropyDefaults() {
 			item.damage = 70;//realdmg = dmgbase = 210;
 			statchance = basestat = 8;
 			realcrit = basecrit = 26;
@@ -33,7 +34,7 @@ namespace Entropy.Items{
 			//item.useStyle = mode == 0?5:1;
 			//item.knockBack = mode==1?12:6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.useTime = 15;
 			item.useAnimation = 15;
 			//item.UseSound = SoundID.Item1;
@@ -103,7 +104,7 @@ namespace Entropy.Items{
 				case 1:
 				if(!player.CheckMana((int)(50*player.manaCost), true))return;
 				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<VoxAbility>(), player.GetWeaponDamage(item), 15, player.whoAmI);
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:-0.55f);
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:-0.55f);
 				break;
 				case 2:
 				if(!player.CheckMana((int)(150*player.manaCost), true))return;
@@ -121,23 +122,23 @@ namespace Entropy.Items{
 					d.fadeIn = 0.7f;
 					d.noGravity = true;
 				}
-				Main.PlaySound(29, (int)player.Center.X, (int)player.Center.Y, 8).Pitch = 1;
+				Main.PlaySound(SoundID.Zombie, (int)player.Center.X, (int)player.Center.Y, 8).Pitch = 1;
 				break;
 			}
 		}
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack){
 			if(player.altFunctionUse==2){
 				type = ModContent.ProjectileType<VoxSlash>();
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0.15f);
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0.15f);
 			}else{
 				type = ModContent.ProjectileType<VoxSlug>();
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0f);
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0f);
 			}
 			if(type == ModContent.ProjectileType<VoxSlug>())return base.Shoot(player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
 			if(type == ModContent.ProjectileType<VoxSlash>()&&ability == 1){
 				return false;
 			}
-			damage/=7; 
+			damage/=7;
 			Vector2 vec = new Vector2(speedX, speedY);
 			for (int i = 0; i < 7; i++){
 				Vector2 vec2 = vec.RotatedByRandom(0.3f);
@@ -167,7 +168,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			dmgratio = dmgratiobase = new float[15] {0.06f,0.88f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
@@ -206,7 +207,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			dmgratio = dmgratiobase = new float[15] {0.06f,0.06f,0.88f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};

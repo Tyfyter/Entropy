@@ -9,17 +9,17 @@ using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Entropy.EntropyExt;
- 
+
 namespace Entropy.Items{
     public class CorrSniper : EntModItem{
         public static short customGlowMask = 0;
 		public override bool realCombo => true;
 		public override bool isGun => true;
 		public override bool CloneNewInstances => true;
-        public override void SetDefaults()
-        {
-            //item.name = "lightning";          
-            item.damage = 75;//realdmg = dmgbase = 225;                        
+        public override void SetDefaults() { SetEntropyDefaults(); }
+        public override void SetEntropyDefaults(){
+            //item.name = "lightning";
+            item.damage = 75;//realdmg = dmgbase = 225;
 			item.ranged = true;
             item.width = 96;
             item.height = 20;
@@ -27,7 +27,7 @@ namespace Entropy.Items{
 			item.useAnimation = 45;
             item.useStyle = 5;
             item.noMelee = true;
-            item.knockBack = 7.5f;        
+            item.knockBack = 7.5f;
             item.value = 1000;
             item.rare = ItemRarityID.Cyan;
 			item.alpha = 100;
@@ -40,8 +40,8 @@ namespace Entropy.Items{
 			combohits = 3;
 			comboDMG = 0.1f;
             item.glowMask = customGlowMask;
-        }      
-		
+        }
+
 		public override void SetStaticDefaults(){
 		  DisplayName.SetDefault("Magnus Kirudo");
 		  Tooltip.SetDefault("");
@@ -82,11 +82,11 @@ namespace Entropy.Items{
 				}
             }
         }
-		
+
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack){
 			if(type<ProjectileID.Count)type = ModContent.ProjectileType<CorrShotProj>();
-			Main.PlaySound(2, (int)position.X, (int)position.Y, 38).Volume = 1;
-			Main.PlaySound(2, (int)position.X, (int)position.Y, 40).Pitch = -1;
+			Main.PlaySound(SoundID.Item, (int)position.X, (int)position.Y, 38).Volume = 1;
+			Main.PlaySound(SoundID.Item, (int)position.X, (int)position.Y, 40).Pitch = -1;
 			return base.Shoot(player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
 		}
     }

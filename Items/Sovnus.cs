@@ -29,7 +29,8 @@ namespace Entropy.Items{
 			Tooltip.SetDefault("Eternal nights\n-Aurdeorum");
           	customGlowMask = Entropy.SetStaticDefaultsGlowMask(this);
 		}
-		public override void SetDefaults() {
+        public override void SetDefaults() { SetEntropyDefaults(); }
+        public override void SetEntropyDefaults() {
 			item.damage = 50;//realdmg = dmgbase = 140;
 			statchance = basestat = 17;
 			realcrit = basecrit = 36;
@@ -42,7 +43,7 @@ namespace Entropy.Items{
 			//item.useStyle = mode == 0?5:1;
 			//item.knockBack = mode==1?12:6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.useTime = 23;
 			item.useAnimation = 23;
 			//item.UseSound = SoundID.Item1;
@@ -106,27 +107,27 @@ namespace Entropy.Items{
 				/* case 1:
 				if(!player.CheckMana(50, true))return;
 				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<VoxAbility>(), realdmg, 15, player.whoAmI);
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:-0.55f);
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:-0.55f);
 				break; */
 				case 2:
 				if(!player.CheckMana((int)(75*player.manaCost), true))return;
 				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<SovnusAbility>(), player.GetWeaponDamage(item)/3, 1, player.whoAmI);
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.55f);
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.55f);
 				break;
 				case 3:
 				if(!player.CheckMana((int)(75*player.manaCost), true))return;
 				Projectile.NewProjectile(player.Center, (Main.MouseWorld-player.Center).SafeNormalize(new Vector2())*7.5f, ModContent.ProjectileType<SovnusAbility>(), player.GetWeaponDamage(item), 15, player.whoAmI, 1);
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.55f);
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.55f);
 				break;
 			}
 		}
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack){
 			if(player.altFunctionUse==2){
 				type = ModContent.ProjectileType<SovnusSlug>();
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0f);
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0f);
 			}else{
 				type = ModContent.ProjectileType<SovnusSpread>();
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0.15f).Volume = 0.65f;
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 38, pitchOffset:0.15f).Volume = 0.65f;
 			}
 			if(type == ModContent.ProjectileType<SovnusSlug>()){
 				if(ability == 1){
@@ -147,7 +148,7 @@ namespace Entropy.Items{
 				}
 				return base.Shoot(player, ref position, ref speedX, ref speedY, ref type, ref damage, ref knockBack);
 			}
-			damage/=5; 
+			damage/=5;
 			Vector2 vec = new Vector2(speedX, speedY);
 			position+=vec;
 			for (int i = 0; i < 6; i++){
@@ -178,7 +179,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			dmgratio = dmgratiobase = new float[15] {0.06f,0.88f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
@@ -217,7 +218,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			dmgratio = dmgratiobase = new float[15] {0.06f,0.06f,0.88f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};

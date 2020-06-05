@@ -22,7 +22,8 @@ namespace Entropy.Items{
 			DisplayName.SetDefault("Sekkal");
 			Tooltip.SetDefault("Untold Destruction\n-Aurdeorum");
 		}
-		public override void SetDefaults() {
+        public override void SetDefaults() { SetEntropyDefaults(); }
+        public override void SetEntropyDefaults() {
 			item.damage = 55;//realdmg = dmgbase = 160;
 			item.knockBack = 8;
 			//item.ranged = mode == 0;
@@ -34,7 +35,7 @@ namespace Entropy.Items{
 			//item.useStyle = mode == 0?5:1;
 			//item.knockBack = mode==1?12:6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			//item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			item.useTurn = false;
@@ -42,7 +43,7 @@ namespace Entropy.Items{
 			item.useTime = 1;
 			item.useAnimation = 12;
 			//item.useAmmo = AmmoID.Bullet;
-			item.useStyle = 5;
+			//item.useStyle = 5;
 			item.melee = true;
 			item.ranged = false;
 			item.noMelee = false;
@@ -118,7 +119,7 @@ namespace Entropy.Items{
 				if(emp2!=null){
 					emp2.dmgratio[el] = 1;
 				}
-				SoundEffectInstance eff = Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 20);
+				SoundEffectInstance eff = Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 20);
 				eff.Volume = 1f;
 				eff.Pitch =-1f;
 				break;
@@ -175,11 +176,11 @@ namespace Entropy.Items{
 			if(charge<=0&&combo!=2){
 				if(player.controlUseItem){
 					if(charge>-30)charge--;
-					player.itemAnimation = player.itemAnimationMax-1;	
+					player.itemAnimation = player.itemAnimationMax-1;
 				}else{
 					charge = Math.Abs(charge);
-					Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 1).Volume = 0.3f;
-					Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 71, pitchOffset:-0.75f);
+					Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 1).Volume = 0.3f;
+					Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 71, pitchOffset:-0.75f);
 				}
 			}else{
 				if(combo==2){
@@ -242,7 +243,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			dmgratio = dmgratiobase = new float[15] {0.06f,0.88f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
@@ -281,7 +282,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			dmgratio = dmgratiobase = new float[15] {0.06f,0.06f,0.88f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};

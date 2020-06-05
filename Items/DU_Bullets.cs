@@ -17,7 +17,8 @@ namespace Entropy.Items {
 		public override void SetStaticDefaults() {
 			DisplayName.SetDefault("Depleted Uranium Rounds");
 		}
-		public override void SetDefaults() {
+        public override void SetDefaults() { SetEntropyDefaults(); }
+        public override void SetEntropyDefaults(){
 			//item.name = "jfdjfrbh";
 			item.damage = 50;
 			item.ranged = true;
@@ -26,7 +27,7 @@ namespace Entropy.Items {
 			item.useStyle = 0;
 			item.knockBack = 6;
 			item.value = 25000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.ammo = AmmoID.Bullet;
 			item.shoot = ModContent.ProjectileType<DU_Bullets_P>();

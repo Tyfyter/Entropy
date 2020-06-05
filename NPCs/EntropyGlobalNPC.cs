@@ -12,7 +12,7 @@ using static Entropy.EntropyExt;
 namespace Entropy.NPCs {
     public class EntropyGlobalNPC : GlobalNPC {
 		public override bool InstancePerEntity => true;
-        
+
         //{0:"Slash", 1:"Impact", 2:"Puncture", 3:"Cold", 4:"Electric", 5:"Heat", 6:"Toxic", 7:"Blast", 8:"Corrosive", 9:"Gas", 10:"Magnetic", 11:"Radiation", 12:"Viral", 13:"True", 14:"Void"}
         public float[] dmgResist = new float[15]{1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f,1f};
         public float[] dmgDodge = new float[15]{0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f};
@@ -83,7 +83,7 @@ namespace Entropy.NPCs {
             }
         }
         public override void PostAI(NPC npc){
-            if(npc.HasBuff<RadEffect>())if(!(npc.friendly || npc.type == 46 || npc.type == 55 || npc.type == 74 || npc.type == 148 || npc.type == 149 || npc.type == 230 || npc.type == 297 || npc.type == 298 || npc.type == 299 || npc.type == 303 || npc.type == 355 || npc.type == 356 || npc.type == 358 || npc.type == 359 || npc.type == 360 || npc.type == 361 || npc.type == 362 || npc.type == 363 || npc.type == 364 || npc.type == 365 || npc.type == 366 || npc.type == 367 || npc.type == 377 || npc.type == 357 || npc.type == 374 || (npc.type >= 442 && npc.type <= 448 && npc.type != 447)) || npc.type == 538 || npc.type == 539 || npc.type == 337 || npc.type == 540 || (npc.type >= 484 && npc.type <= 487)){
+            if(npc.HasBuff<RadEffect>())if(!(npc.friendly || NPCID.Sets.TownCritter[npc.type])){
                 CheckMeleeCollision(npc);
             }
         }
@@ -210,7 +210,7 @@ namespace Entropy.NPCs {
             if (npc.immune[255] == 0)
             {
                 int num2 = 30;
-                if (npc.type == 548)
+                if (npc.type == NPCID.DD2EterniaCrystal)
                 {
                     num2 = 20;
                 }
@@ -224,21 +224,21 @@ namespace Entropy.NPCs {
                         float num3 = 1f;
                         NPC.GetMeleeCollisionData(hitbox, i, ref num, ref num3, ref hitbox2);
                         bool? flag = NPCLoader.CanHitNPC(Main.npc[i], npc);
-                        if ((!flag.HasValue || flag.Value) && hitbox.Intersects(hitbox2) && ((flag.HasValue && flag.Value) || npc.type != 453 || !NPCID.Sets.Skeletons.Contains(nPC.netID)))
+                        if ((!flag.HasValue || flag.Value) && hitbox.Intersects(hitbox2) && ((flag.HasValue && flag.Value) || npc.type != NPCID.SkeletonMerchant || !NPCID.Sets.Skeletons.Contains(nPC.netID)))
                         {
                             int num4 = nPC.damage;
                             float num5 = 6f;
                             int num6 = 1;
-                            if (nPC.position.X + (float)(nPC.width / 2) > npc.position.X + (float)(npc.width / 2))
+                            if (nPC.position.X + nPC.width / 2 > npc.position.X + npc.width / 2)
                             {
                                 num6 = -1;
                             }
                             bool crit = false;
                             NPCLoader.ModifyHitNPC(nPC, npc, ref num4, ref num5, ref crit);
                             double num7 = npc.StrikeNPCNoInteraction(num4, num5, num6, crit, false, false);
-                            if (Main.netMode != 0)
+                            if (Main.netMode != NetmodeID.SinglePlayer)
                             {
-                                NetMessage.SendData(28, -1, -1, null, npc.whoAmI, (float)num4, num5, (float)num6, 0, 0, 0);
+                                NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, npc.whoAmI, num4, num5, num6, 0, 0, 0);
                             }
                             npc.netUpdate = true;
                             npc.immune[255] = num2;
@@ -258,9 +258,9 @@ namespace Entropy.NPCs {
                                 num5 = 6f;
                                 num6 *= -1;
                                 nPC.StrikeNPCNoInteraction(num4, num5, num6, false, false, false);
-                                if (Main.netMode != 0)
+                                if (Main.netMode != NetmodeID.SinglePlayer)
                                 {
-                                    NetMessage.SendData(28, -1, -1, null, i, (float)num4, num5, (float)num6, 0, 0, 0);
+                                    NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, i, num4, num5, num6, 0, 0, 0);
                                 }
                                 nPC.netUpdate = true;
                                 nPC.immune[255] = num2;
@@ -281,7 +281,7 @@ namespace Entropy.NPCs {
             float num4 = 9999999f;
             for (int j = 0; j < 200; j++){
                 NPC nPC = Main.npc[j];
-                if (nPC.active && nPC.type == 548){
+                if (nPC.active && nPC.type == NPCID.DD2EterniaCrystal){
                     float num6 = Vector2.Distance(center, nPC.Center);
                     if (num4 > num6){
                         num3 = j;

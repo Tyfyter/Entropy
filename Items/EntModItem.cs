@@ -86,6 +86,7 @@ namespace Entropy.Items{
             if(mod!=null)ModEffectobsolete(mod.type, mod.level, mod.reenforcement);
         }
         public virtual void PostSetDefaults(Player player){}
+        public virtual void SetEntropyDefaults(){}
         public override void HoldItem(Player player){
             try{
                 critcomboboost = 0;
@@ -94,7 +95,7 @@ namespace Entropy.Items{
                 punchthrough = 0;
                 dmgmult = 1;
                 //combospeedmult = 0;
-                SetDefaults();
+                SetEntropyDefaults();
                 PostSetDefaults(player);
                 for(int i = 0; i < mods.Length; i++){
                     /*Entropy.*/ModEffect(mods[i]?.modItem as EntModItemMod);

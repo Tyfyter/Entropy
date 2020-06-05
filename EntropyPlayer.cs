@@ -64,7 +64,7 @@ namespace Entropy {
                 //player.endurance+=infernoPercent/5;
                 player.statDefense+=(int)(player.statDefense*infernoPercent);
                 player.manaCost+=infernoPercent/6.5f;
-                player.magicDamageMult*=1+infernoPercent/6.5f;
+                player.magicDamageMult*=1+infernoPercent/4.5f;
                 if(inferno>infernorate){
                     inferno-=infernorate;
                     infernobonuscost = 0;
@@ -104,7 +104,7 @@ namespace Entropy {
             if(item==null)return;
             player.controlTorch = false;
             if(Math.Abs(PlayerInput.ScrollWheelDelta)>=60){
-                Main.PlaySound(12, player.Center);
+                Main.PlaySound(SoundID.MenuTick, player.Center);
                 item.tryScroll(PlayerInput.ScrollWheelDelta / -120);
                 PlayerInput.ScrollWheelDelta = 0;
             }
@@ -118,7 +118,7 @@ namespace Entropy {
                     PlayerInput.Triggers.JustPressed.KeyStatus[s] = false;
                     PlayerInput.Triggers.JustReleased.KeyStatus[s] = false;
                     //player.controlUseTile = true;
-                    Main.PlaySound(12, player.Center);
+                    Main.PlaySound(SoundID.MenuTick, player.Center);
                     //player.selectedItem = h;
                     break;
                 }
@@ -129,13 +129,16 @@ namespace Entropy {
         }
         public override void ModifyDrawLayers(List<PlayerLayer> layers){
             if(inferno>0){
+                mod.Logger.Info("reached rendering");
                 if(player.Male){
                     FireHelm.visible = true;
                     layers.Add(FireHelm);
                 }else{
                     FireHelm.visible = true;
-                    int hi = layers.IndexOf(PlayerLayer.Head);
-                    layers[hi] = FireHelm;
+                    layers.Add(FireHelm);
+                    layers[layers.IndexOf(PlayerLayer.Head)].visible = false;
+                    //int hi = layers.IndexOf(PlayerLayer.Head);
+                    //layers[hi] = FireHelm;
                 }
                 FireArm.visible = true;
                 layers.Add(FireArm);
@@ -149,16 +152,18 @@ namespace Entropy {
             if(inferno>0 && !player.Male){
                 drawInfo.drawHair = true;
                 drawInfo.drawPlayer.head = 0;
+                drawInfo.headArmorShader = 0;
             }
         }
 #region PlayerLayers
         public static PlayerLayer FireHelm = new PlayerLayer("Entropy", "FireArmorHead", null, delegate(PlayerDrawInfo drawInfo2){
+            Entropy.mod.Logger.Info("reached helm rendering");
             Player drawPlayer = drawInfo2.drawPlayer;
-            if(drawPlayer.shadow!=0)return;
+            if(drawPlayer.shadow!=0||!Main.armorHeadLoaded[drawPlayer.Male?134:ArmorIDs.Head.LazuresValkyrieCirclet])return;
             Vector2 Position = new Vector2((float)((int)(drawInfo2.position.X - Main.screenPosition.X - (float)drawPlayer.bodyFrame.Width / 2f + (float)drawPlayer.width / 2f)), (float)((int)(drawInfo2.position.Y - Main.screenPosition.Y + (float)drawPlayer.height - (float)drawPlayer.bodyFrame.Height + 4f))) + drawPlayer.headPosition + drawInfo2.headOrigin;
             Rectangle? Frame = new Rectangle?(drawPlayer.bodyFrame);
-            Texture2D Texture = Main.armorHeadTexture[drawPlayer.Male?134:181];
-            if(!drawPlayer.Male)drawPlayer.head = 191;
+            Texture2D Texture = Main.armorHeadTexture[drawPlayer.Male?134:ArmorIDs.Head.LazuresValkyrieCirclet];
+            //if(!drawPlayer.Male)drawPlayer.head = ArmorIDs.Head.LazuresValkyrieCirclet;
             SpriteEffects spriteEffects = SpriteEffects.None;
             if (drawPlayer.direction == -1){
                 spriteEffects |= SpriteEffects.FlipHorizontally;
@@ -166,14 +171,17 @@ namespace Entropy {
             if (drawPlayer.gravDir == -1f){
                 spriteEffects |= SpriteEffects.FlipVertically;
             }
-            int a = (int)Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.9)*(drawPlayer.stealth*0.75+0.25)*255)/EntropyPlayer.InfernoMax, 255);
+            Entropy.mod.Logger.Info("helm rendering: "+(Texture!=null));
+            int a = (int)Math.Max(Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.9)*(drawPlayer.stealth*0.75+0.25)*255)/EntropyPlayer.InfernoMax, 255), 1);
             DrawData item = new DrawData(Texture, Position, Frame, new Color(a,a,a,a), drawPlayer.headRotation, drawInfo2.headOrigin, 1f, spriteEffects, 0);
             item.shader = GameShaders.Armor.GetShaderIdFromItemId(ItemID.SolarDye);
             Main.playerDrawData.Add(item);
+
         });
         public static PlayerLayer FireArm = new PlayerLayer("Entropy", "FireArmorArm", PlayerLayer.Arms, delegate(PlayerDrawInfo drawInfo2){
+            Entropy.mod.Logger.Info("reached arm rendering");
             Player drawPlayer = drawInfo2.drawPlayer;
-            if(drawPlayer.shadow!=0)return;
+            if(drawPlayer.shadow!=0||!Main.armorBodyLoaded[drawPlayer.Male?177:175])return;
             Vector2 Position = new Vector2((float)((int)(drawInfo2.position.X - Main.screenPosition.X - (float)drawPlayer.bodyFrame.Width / 2f + (float)drawPlayer.width / 2f)), (float)((int)(drawInfo2.position.Y - Main.screenPosition.Y + (float)drawPlayer.height - (float)drawPlayer.bodyFrame.Height + 4f))) + drawPlayer.bodyPosition + drawInfo2.bodyOrigin;
             Rectangle? Frame = new Rectangle?(drawPlayer.bodyFrame);
             Texture2D Texture = Main.armorArmTexture[drawPlayer.Male?177:175];
@@ -184,14 +192,16 @@ namespace Entropy {
             if (drawPlayer.gravDir == -1f){
                 spriteEffects |= SpriteEffects.FlipVertically;
             }
+            Entropy.mod.Logger.Info("arm rendering: "+(Texture!=null));
             int a = (int)Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.75)*(drawPlayer.stealth*0.75+0.25)*190)/EntropyPlayer.InfernoMax, 255);
             DrawData item = new DrawData(Texture, Position, Frame, new Color(a,a,a,a), drawPlayer.bodyRotation, drawInfo2.bodyOrigin, 1f, spriteEffects, 0);
             item.shader = GameShaders.Armor.GetShaderIdFromItemId(ItemID.SolarDye);
             Main.playerDrawData.Add(item);
         });
         public static PlayerLayer FireLegs = new PlayerLayer("Entropy", "FireArmorLegs", PlayerLayer.Legs, delegate(PlayerDrawInfo drawInfo2){
+            Entropy.mod.Logger.Info("reached leg rendering");
             Player drawPlayer = drawInfo2.drawPlayer;
-            if(drawPlayer.shadow!=0)return;
+            if(drawPlayer.shadow!=0||!Main.armorLegsLoaded[drawPlayer.Male?177:130])return;
             Vector2 Position = new Vector2((float)((int)(drawInfo2.position.X - Main.screenPosition.X - (float)drawPlayer.bodyFrame.Width / 2f + (float)drawPlayer.width / 2f)), (float)((int)(drawInfo2.position.Y - Main.screenPosition.Y + (float)drawPlayer.height - (float)drawPlayer.bodyFrame.Height + 4f))) + drawPlayer.legPosition + drawInfo2.legOrigin;
             Rectangle? Frame = new Rectangle?(drawPlayer.legFrame);
             Texture2D Texture = Main.armorLegTexture[drawPlayer.Male?177:130];
@@ -202,14 +212,16 @@ namespace Entropy {
             if (drawPlayer.gravDir == -1f){
                 spriteEffects |= SpriteEffects.FlipVertically;
             }
+            Entropy.mod.Logger.Info("leg rendering: "+(Texture!=null));
             int a = (int)Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.75)*(drawPlayer.stealth*0.75+0.25)*190)/EntropyPlayer.InfernoMax, 255);
             DrawData item = new DrawData(Texture, Position, Frame, new Color(a,a,a,a), drawPlayer.legRotation, drawInfo2.legOrigin, 1f, spriteEffects, 0);
             item.shader = GameShaders.Armor.GetShaderIdFromItemId(ItemID.SolarDye);
             Main.playerDrawData.Add(item);
         });
         public static PlayerLayer FireChest = new PlayerLayer("Entropy", "FireArmorBody", PlayerLayer.Body, delegate(PlayerDrawInfo drawInfo2){
+            Entropy.mod.Logger.Info("reached chest rendering");
             Player drawPlayer = drawInfo2.drawPlayer;
-            if(drawPlayer.shadow!=0)return;
+            if(drawPlayer.shadow!=0||!Main.armorBodyLoaded[drawPlayer.Male?177:175])return;
             Vector2 Position = new Vector2((float)((int)(drawInfo2.position.X - Main.screenPosition.X - (float)drawPlayer.bodyFrame.Width / 2f + (float)drawPlayer.width / 2f)), (float)((int)(drawInfo2.position.Y - Main.screenPosition.Y + (float)drawPlayer.height - (float)drawPlayer.bodyFrame.Height + 4f))) + drawPlayer.bodyPosition + drawInfo2.bodyOrigin;
             Rectangle? Frame = new Rectangle?(drawPlayer.bodyFrame);
             Texture2D Texture = drawPlayer.Male?Main.armorBodyTexture[177]:Main.femaleBodyTexture[175];
@@ -220,6 +232,7 @@ namespace Entropy {
             if (drawPlayer.gravDir == -1f){
                 spriteEffects |= SpriteEffects.FlipVertically;
             }
+            Entropy.mod.Logger.Info("chest rendering: "+(Texture!=null));
             int a = (int)Math.Min(((EntropyPlayer.InfernoMax-drawPlayer.GetModPlayer<EntropyPlayer>().inferno*0.75)*(drawPlayer.stealth*0.75+0.25)*190)/EntropyPlayer.InfernoMax, 255);
             DrawData item = new DrawData(Texture, Position, Frame, new Color(a,a,a,a), drawPlayer.bodyRotation, drawInfo2.bodyOrigin, 1f, spriteEffects, 0);
             item.shader = GameShaders.Armor.GetShaderIdFromItemId(ItemID.SolarDye);

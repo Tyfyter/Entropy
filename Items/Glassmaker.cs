@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 using static Entropy.EntropyExt;
 
 namespace Entropy.Items{
-	//Took 4 days, ~1.5 of which were just fixing the raging inferno helmet rendering
+	//Took 4 days before jorney's end released, 1 day fixing raging inferno rendering after, ~1.5 of which were just fixing the raging inferno helmet rendering
 	//Abilities:
 	//Fireball
 	//Raging Inferno
@@ -22,9 +22,9 @@ namespace Entropy.Items{
     public class Glassmaker : CompModItem{
         public override bool Autoload(ref string name) {
 		        Main.armorHeadTexture[134] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Head_134"}));
-		        Main.armorHeadTexture[181] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Head_181"}));
+		        Main.armorHeadTexture[ArmorIDs.Head.LazuresValkyrieCirclet] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Head_"+ArmorIDs.Head.LazuresValkyrieCirclet}));
 		        Main.armorHeadLoaded[134] = true;
-		        Main.armorHeadLoaded[181] = true;
+		        Main.armorHeadLoaded[ArmorIDs.Head.LazuresValkyrieCirclet] = true;
 		        Main.armorLegTexture[130] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Legs_130"}));
 		        Main.armorLegsLoaded[130] = true;
 		        Main.armorLegTexture[112] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Legs_112"}));
@@ -38,7 +38,24 @@ namespace Entropy.Items{
             return true;
         }
         public static short customGlowMask = 0;
-        public override void SetDefaults(){
+        public override void SetDefaults() {
+            SetEntropyDefaults();
+		    Main.armorHeadTexture[134] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Head_134"}));
+		    Main.armorHeadTexture[181] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Head_181"}));
+		    Main.armorHeadLoaded[134] = true;
+		    Main.armorHeadLoaded[181] = true;
+		    Main.armorLegTexture[130] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Legs_130"}));
+		    Main.armorLegsLoaded[130] = true;
+		    Main.armorLegTexture[112] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Legs_112"}));
+		    Main.armorLegsLoaded[112] = true;
+		    Main.armorBodyTexture[177] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Body_177"}));
+		    Main.armorArmTexture[177] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Arm_177"}));
+		    Main.armorBodyLoaded[177] = true;
+		    Main.femaleBodyTexture[175] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Female_Body_175"}));
+		    Main.armorArmTexture[175] = Main.instance.OurLoad<Texture2D>(string.Concat(new object[]{"Images",Path.DirectorySeparatorChar,"Armor_Arm_175"}));
+		    Main.armorBodyLoaded[175] = true;
+        }
+        public override void SetEntropyDefaults(){
 			item.ranged = true;
             item.width = 44;
             item.height = 24;
@@ -90,7 +107,7 @@ namespace Entropy.Items{
 				item.noUseGraphic = true;
 				item.useTime = 28;
 				item.useAnimation = 28;
-				
+
 				if(ability == 0)item.damage = 50;
 				if(ability == 2){
 					item.damage = 40;
@@ -118,7 +135,7 @@ namespace Entropy.Items{
 				if(!player.CheckMana(item, (int)(50*player.manaCost), true))return;
 				modPlayer.infernorate = 1f;
 				modPlayer.inferno = EntropyPlayer.InfernoMax;
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 34, pitchOffset:-0.55f);
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 34, pitchOffset:-0.55f);
 				break;
 				case 2:
 				if(!player.CheckMana(item, (int)(150*player.manaCost), true))return;
@@ -127,7 +144,7 @@ namespace Entropy.Items{
 					modPlayer.inferno = Math.Min(modPlayer.inferno+EntropyPlayer.InfernoMax/4, EntropyPlayer.InfernoMax);
 				}
 				Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<GlassmakerBlast>(), player.GetWeaponDamage(item), item.knockBack*1.5f, player.whoAmI);
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 34, 1f, -0.15f);
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 34, 1f, -0.15f);
 				break;
 				case 3:
                 if(modPlayer.inferno>0) {
@@ -137,18 +154,18 @@ namespace Entropy.Items{
 				break;
 			}
 		}
-		float a;
-		float m;
-		float a2;
-		float m2;
+		//float a;
+		//float m;
+		//float a2;
+		//float m2;
 		public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat){
-			a = add;
-			m = mult;
+			//a = add;
+			//m = mult;
 			base.ModifyWeaponDamage(player, ref add, ref mult, ref flat);
 			EntropyPlayer modPlayer = player.GetModPlayer<EntropyPlayer>();
 			if(modPlayer.inferno>0){
 				float infernoPercent = (float)(1-(Math.Round(modPlayer.inferno*0.9)/EntropyPlayer.InfernoMax)*0.9);
-				mult/=1+infernoPercent/6.5f;
+				mult/=1+infernoPercent/4.5f;
 				if(player.altFunctionUse==2){
 					switch (ability){
 						case 0:
@@ -167,8 +184,8 @@ namespace Entropy.Items{
 					mult*=1+infernoPercent;
 				}
 			}
-			a2 = add;
-			m2 = mult;
+			//a2 = add;
+			//m2 = mult;
 		}
 		public override void SetStaticDefaults(){
 		  DisplayName.SetDefault("Glassmaker");
@@ -225,7 +242,7 @@ namespace Entropy.Items{
 					//statchance = basestat = 37;
 					if(!player.CheckMana(item, (int)(50*player.manaCost), true))return false;
 					type = ProjectileID.InfernoFriendlyBolt;
-					Main.PlaySound(2, (int)position.X, (int)position.Y, 34, 1f, -0.35f);
+					Main.PlaySound(SoundID.Item, (int)position.X, (int)position.Y, 34, 1f, -0.35f);
 					damage*=5;
 					speed = new Vector2(speedX, speedY).SafeNormalize(Vector2.Zero);
 					position+=speed*16;
@@ -234,8 +251,8 @@ namespace Entropy.Items{
 				else player.itemRotation = -player.direction;
 				return false;
 			}
-			Main.PlaySound(2, (int)position.X, (int)position.Y, 34, 1f, -0.5f);
-			//Main.PlaySound(2, (int)position.X, (int)position.Y, 14, 1f, -0.15f);
+			Main.PlaySound(SoundID.Item, (int)position.X, (int)position.Y, 34, 1f, -0.5f);
+			//Main.PlaySound(SoundID.Item, (int)position.X, (int)position.Y, 14, 1f, -0.15f);
 			speed = new Vector2(speedX, speedY).SafeNormalize(Vector2.Zero);
 			position+=speed*24;
 			position-=speed.RotatedBy(Math.PI/2)*6*player.direction;

@@ -42,7 +42,8 @@ namespace Entropy.Items{
 			DisplayName.SetDefault("Valhalla");
 			Tooltip.SetDefault("Trapped and tortured"/*\n-Aurdeorum*/);
 		}
-		public override void SetDefaults() {
+        public override void SetDefaults() { SetEntropyDefaults(); }
+        public override void SetEntropyDefaults() {
 			switch (mode){
 				case 0:
 				item.damage = 15;//realdmg = dmgbase = 40;
@@ -86,7 +87,7 @@ namespace Entropy.Items{
 			//item.useStyle = mode == 0?5:1;
 			//item.knockBack = mode==1?12:6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			//item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			item.useTurn = mode != 0;
@@ -143,12 +144,12 @@ namespace Entropy.Items{
 				return false;
 			}
             if(mode!=0){
-				Main.PlaySound(2, player.Center, 1);
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 71, pitchOffset:0.55f).Volume=0.3f;
+				Main.PlaySound(SoundID.Item, player.Center, 1);
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 71, pitchOffset:0.55f).Volume=0.3f;
 				DashOnMovement.Invoke(player.GetModPlayer(ModLoader.GetMod("WeaponOut"), "ModPlayerFists"), new object[]{10, 24f, 0.992f, 0.96f, true, 0});
 			}else{
-				Main.PlaySound(2, player.Center, 5);
-				Main.PlaySound(2, (int)player.Center.X, (int)player.Center.Y, 71, pitchOffset:0.55f).Volume=0.3f;
+				Main.PlaySound(SoundID.Item, player.Center, 5);
+				Main.PlaySound(SoundID.Item, (int)player.Center.X, (int)player.Center.Y, 71, pitchOffset:0.55f).Volume=0.3f;
 			}
 			return true;
 		}
@@ -180,12 +181,12 @@ namespace Entropy.Items{
 				int dmg = player.statMana;
 				Projectile.NewProjectile(player.Center, new Vector2(), ModContent.ProjectileType<ValhallaAbility>(), dmg/2+1, 10, player.whoAmI);
 				player.CheckMana((int)(dmg/3*player.manaCost), true);
-				Main.PlaySound(15, (int)player.Center.X, (int)player.Center.Y, 0, pitchOffset:0.55f);
+				Main.PlaySound(SoundID.Roar, (int)player.Center.X, (int)player.Center.Y, 0, pitchOffset:0.55f);
 				break;
 				case 1:
 				if(!player.CheckMana((int)(150*player.manaCost), true))return;
 				Projectile.NewProjectile(player.Center, new Vector2(), ModContent.ProjectileType<ValhallaAbility>(), 1, 0, player.whoAmI);
-				Main.PlaySound(29, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.25f);
+				Main.PlaySound(SoundID.Zombie, (int)player.Center.X, (int)player.Center.Y, 8, pitchOffset:-0.25f);
 				break;
 				default:
 				mode = mode==1?0:1;
@@ -226,7 +227,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			dmgratio = dmgratiobase = new float[15] {0.06f,0.88f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
@@ -265,7 +266,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			dmgratio = dmgratiobase = new float[15] {0.06f,0.06f,0.88f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};

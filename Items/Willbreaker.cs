@@ -25,7 +25,8 @@ namespace Entropy.Items{
 			DisplayName.SetDefault("Willbreaker");
 			Tooltip.SetDefault("Break your enemy's will! (and bones)");
 		}
-		public override void SetDefaults(){
+        public override void SetDefaults() { SetEntropyDefaults(); }
+        public override void SetEntropyDefaults(){
             //Player owner = Main.player[item.owner];
 			//item.name = "Willbreaker";
 			//entmoditem = ((EntModItem)this);
@@ -42,7 +43,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 9;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			item.useTurn = true;
@@ -72,7 +73,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 9;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			dmgratio = dmgratiobase = new float[15] {0.47f,0.47f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
@@ -82,7 +83,7 @@ namespace Entropy.Items{
 				/*Entropy.ModEffectobsolete(modsobsolete[i], modlevelsobsolete[i]);
 			}
 		}*/
-		
+
 		/*public void ModEffect(int modid, float level){
             switch (modid)
             {

@@ -20,7 +20,8 @@ namespace Entropy.Items{
 			DisplayName.SetDefault("Trinity (Blade)");
 			Tooltip.SetDefault("");
 		}
-		public override void SetDefaults() {
+        public override void SetDefaults() { SetEntropyDefaults(); }
+        public override void SetEntropyDefaults() {
 			item.damage = mode==0?60:50;//realdmg = dmgbase = mode==0?60:50;
 			item.melee = true;
 			item.width = 40;
@@ -30,7 +31,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = mode==1?12:6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			item.useTurn = true;
@@ -103,7 +104,8 @@ namespace Entropy.Items{
 			DisplayName.SetDefault("Trinity (Hammer)");
 			Tooltip.SetDefault("");
 		}
-		public override void SetDefaults() {
+        public override void SetDefaults() { SetEntropyDefaults(); }
+        public override void SetEntropyDefaults() {
 			/*item.type = ModContent.ItemType("Trinity1");
 			item.SetDefaults(item.type);*/
 			item.damage = 50;
@@ -115,7 +117,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			dmgratio = dmgratiobase = new float[15] {0.06f,0.88f,0.06f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
@@ -143,7 +145,8 @@ namespace Entropy.Items{
 			Tooltip.SetDefault("");
 			Item.staff[item.type] = true;
 		}
-		public override void SetDefaults() {
+        public override void SetDefaults() { SetEntropyDefaults(); }
+        public override void SetEntropyDefaults() {
 			/*item.type = ModContent.ItemType("Trinity1");
 			item.SetDefaults(item.type);*/
 			item.damage = 50;
@@ -155,7 +158,7 @@ namespace Entropy.Items{
 			item.useStyle = 1;
 			item.knockBack = 6;
 			item.value = 10000;
-			item.rare = 2;
+			item.rare = ItemRarityID.Green;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = true;
 			dmgratio = dmgratiobase = new float[15] {0.06f,0.06f,0.88f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
