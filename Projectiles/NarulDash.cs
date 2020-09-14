@@ -9,7 +9,6 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Entropy.NPCs.EntropyGlobalNPC;
 using static Entropy.EntropyExt;
-using Enrtopy.Items;
 using Microsoft.Xna.Framework.Audio;
 
 namespace Entropy.Projectiles{
@@ -60,6 +59,7 @@ namespace Entropy.Projectiles{
             player.immuneTime+=15;
             player.immune = true;
             player.GetModPlayer<EntropyPlayer>().comboadd(3);
+            Entropy.PlaySound("NarulSound", player.Center);
             /*int s = mod.GetSoundSlot(SoundType.Item, "Entropy/Sounds/Items/NarulSound");
             Main.NewText(Entropy.mod.ns.ToString());
             Main.NewText(s);

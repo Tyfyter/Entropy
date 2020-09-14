@@ -338,7 +338,7 @@ namespace Entropy.Items.Mods{
 		double rcdelay = 0;
         public override bool CanRightClick(){
 			if(reenforcement>=maxlevel)return false;
-			if(rcdelay<Main.time){
+			if(rcdelay<Main.GameUpdateCount){
 				Player player = Main.player[item.owner];
 				if(player.HeldItem!=null){
 					int i = Math.Min(reenforcement,reenforcePrice.Length-1);
@@ -353,10 +353,10 @@ namespace Entropy.Items.Mods{
 						Main.PlaySound(SoundID.MenuTick, player.Center);
 					}
 				}
-				rcdelay = Main.time+4;
+				rcdelay = Main.GameUpdateCount+4;
 				return false;
 			}else{
-				rcdelay = Main.time+4;
+				rcdelay = Main.GameUpdateCount+4;
 				return false;
 			}
         }

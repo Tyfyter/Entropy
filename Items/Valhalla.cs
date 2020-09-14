@@ -103,7 +103,7 @@ namespace Entropy.Items{
 			if(time>0)time--;
 			if(mode == 2){
 				player.manaRegenBuff = false;
-				if(((int)Main.time%2==0)&&!player.CheckMana(1, true))mode = lastmode;
+				if((Main.GameUpdateCount%2==0)&&!player.CheckMana(1, true))mode = lastmode;
 			}
 		}
 		public override void tryScroll(int dir){

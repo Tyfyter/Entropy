@@ -31,7 +31,7 @@ namespace Entropy.Projectiles{
             
             float f = 6;
             if(Main.rand.NextBool())f = -6;
-            int t = (int)Main.time;
+            int t = (int)Main.GameUpdateCount;
             for (int y = t; y < t+60; y++){
                 Vector2 velocity = new Vector2(((y&3)<<(y%3))/2+6,0).RotatedBy(MathHelper.ToRadians(y*f));
                 Dust d = Dust.NewDustPerfect(projectile.Center+velocity, 267, null, 0, Color.DodgerBlue, 0.6f);

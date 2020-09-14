@@ -30,7 +30,7 @@ namespace Entropy.Buffs {
         }
         public override void Update(NPC npc){
             base.Update(npc);
-            if((int)Main.time%(++dusts*2)!=0)return;
+            if(Main.GameUpdateCount%(++dusts*2)!=0)return;
             Dust d = Dust.NewDustDirect(npc.position,npc.width,npc.height,135);
             d.noGravity = true;
             d.fadeIn = 1.5f;

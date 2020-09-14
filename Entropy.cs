@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Enrtopy.Items;
 using Entropy.Buffs;
 using Entropy.Items;
 using Entropy.Items.Mods;
@@ -104,7 +103,7 @@ namespace Entropy{
         //s:❪ i: p:↞ Viral:☣ Something:⌬
 		public static string[] dmgtypes = new string[15] {" Slash", " Impact", " Puncture", " ❄ Cold", "⚡Electric", "♨Heat", "⎊Toxic", " Frostburn (❄+♨)", " Corrosive (⚡+⎊)", " Gas (♨+⎊)", " Magnetic (❄+⚡)", " Light (⚡+♨)", " Viral (❄+⎊)", "⚶True", " Dark"};
 		public static string[] dmgcolor = new string[15] {"DDDDDD", "DDDDDD", "DDDDDD", "64EBFF", "4700CC", "E63D00", "3CB340", "0DDFFF", "32CD32", "3CB340", "3219C8", "FFFFFF", "0E660E", "AAAAAA", "5C0073"};
-        
+
 		public const int id_slash = 0, id_impact = 1, id_puncture = 2, id_cold = 3, id_electric = 4, id_heat = 5, id_toxic = 6, id_frostburn = 7, id_corrosive = 8, id_gas = 9, id_magnetic = 10, id_light = 11, id_viral = 12, id_true = 13, id_dark = 14;
 
         public static float[] GetDmgRatio(int dmg, float[] ratioarr, bool outputtext = false)
@@ -279,7 +278,13 @@ namespace Entropy{
             float damage = 0;
             for(int i = 0; i<15; i++)damage+=DmgCalcs.dmgFuncs[i].Invoke(dmg[i],target);//target.GetGlobalNPC<EntropyGlobalNPC>().dmgResist[i];
             return Math.Max(damage, 0);
-        }/*
+        }
+        public static void PlaySound(string Name, Vector2 Position, float Volume = 1f, float PitchVariance = 1f){
+            if (Main.dedServ || string.IsNullOrEmpty(Name)) return;
+            var sound = mod.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/" + Name);
+            Main.PlaySound(sound.WithVolume(Volume).WithPitchVariance(PitchVariance), Position);
+        }
+        /*
         public static float SlashCalcNPC(float dmg, NPC target)
         {
             dmg = dmg * target.GetGlobalNPC<EntropyGlobalNPC>().dmgResist[0];
